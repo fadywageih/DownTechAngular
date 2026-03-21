@@ -1,0 +1,49 @@
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8 bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 transition-all duration-500">
+    <div>
+      <div class="flex justify-center">
+        <i class="fas fa-envelope-open-text text-6xl text-indigo-600 animate-bounce"></i>
+      </div>
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        {{ currentLang === 'en' ? 'Check Your Email' : 'تحقق من بريدك الإلكتروني' }}
+      </h2>
+      <p class="mt-2 text-center text-sm text-gray-600">
+        {{ currentLang === 'en' ? 'We\'ve sent a password reset link to:' : 'لقد أرسلنا رابط إعادة تعيين كلمة المرور إلى:' }}
+      </p>
+      <p class="mt-1 text-center text-lg font-semibold text-indigo-600">
+        {{ email }}
+      </p>
+    </div>
+    <div class="space-y-6">
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div class="flex items-start gap-3">
+          <i class="fas fa-info-circle text-blue-600 mt-0.5"></i>
+          <div class="text-sm text-blue-800">
+            <p class="font-semibold mb-1">{{ currentLang === 'en' ? 'Instructions sent' : 'تم إرسال التعليمات' }}</p>
+            <p>{{ currentLang === 'en' ? 'Please check your email inbox and click on the link to reset your password.' : 'يرجى التحقق من صندوق الوارد في بريدك الإلكتروني والنقر على الرابط لإعادة تعيين كلمة المرور.' }}</p>
+            <p class="mt-2 text-xs">{{ currentLang === 'en' ? 'Didn\'t receive the email? Check your spam folder.' : 'لم تستلم البريد الإلكتروني؟ تحقق من مجلد البريد العشوائي.' }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="space-y-3">
+        <button
+          (click)="goToLogin()"
+          class="w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all transform hover:scale-105"
+        >
+          <i class="fas fa-arrow-left mr-2"></i>
+          {{ currentLang === 'en' ? 'Back to Login' : 'العودة إلى تسجيل الدخول' }}
+        </button>
+        <button
+          (click)="resendEmail()"
+          class="w-full flex justify-center py-2.5 px-4 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all"
+        >
+          <i class="fas fa-redo-alt mr-2"></i>
+          {{ currentLang === 'en' ? 'Resend Email' : 'إعادة إرسال البريد' }}
+        </button>
+      </div>
+      <div class="text-center text-xs text-gray-500">
+        <p>{{ currentLang === 'en' ? 'If you still don\'t receive the email, please contact support.' : 'إذا لم تستلم البريد الإلكتروني، يرجى الاتصال بالدعم الفني.' }}</p>
+      </div>
+    </div>
+  </div>
+</div>

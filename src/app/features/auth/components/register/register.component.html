@@ -1,0 +1,216 @@
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8 bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 transition-all duration-500">
+    <div>
+      <div class="flex justify-center">
+        <i class="fas fa-user-plus text-5xl text-indigo-600 animate-pulse"></i>
+      </div>
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        {{ currentLang === 'en' ? 'Create your account' : 'إنشاء حساب جديد' }}
+      </h2>
+      <p class="mt-2 text-center text-sm text-gray-600">
+        {{ currentLang === 'en' ? 'Or' : 'أو' }}
+        <button (click)="goToLogin()" class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
+          {{ currentLang === 'en' ? 'sign in to existing account' : 'تسجيل الدخول إلى حساب موجود' }}
+        </button>
+      </p>
+    </div>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="mt-8 space-y-6">
+      <div class="space-y-4">
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+            {{ currentLang === 'en' ? 'Full Name' : 'الاسم الكامل' }}
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-user text-gray-400"></i>
+            </div>
+            <input
+              id="name"
+              type="text"
+              formControlName="name"
+              class="appearance-none rounded-lg relative block w-full pl-10 pr-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              [class.border-red-500]="name?.invalid && name?.touched"
+              [placeholder]="currentLang === 'en' ? 'Enter your full name' : 'أدخل اسمك الكامل'"
+            >
+          </div>
+          <div *ngIf="name?.invalid && name?.touched" class="mt-1 text-xs text-red-600">
+            <span *ngIf="name?.errors?.['required']">
+              {{ currentLang === 'en' ? 'Name is required' : 'الاسم مطلوب' }}
+            </span>
+            <span *ngIf="name?.errors?.['minlength']">
+              {{ currentLang === 'en' ? 'Name must be at least 2 characters' : 'الاسم يجب أن يكون حرفين على الأقل' }}
+            </span>
+          </div>
+        </div>
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+            {{ currentLang === 'en' ? 'Email address' : 'البريد الإلكتروني' }}
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-envelope text-gray-400"></i>
+            </div>
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              class="appearance-none rounded-lg relative block w-full pl-10 pr-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              [class.border-red-500]="email?.invalid && email?.touched"
+              [placeholder]="currentLang === 'en' ? 'Enter your email' : 'أدخل بريدك الإلكتروني'"
+            >
+            <div *ngIf="email?.pending" class="absolute right-3 top-1/2 transform -translate-y-1/2">
+              <i class="fas fa-spinner fa-spin text-gray-400"></i>
+            </div>
+          </div>
+          <div *ngIf="email?.invalid && email?.touched" class="mt-1 text-xs text-red-600">
+            <span *ngIf="email?.errors?.['required']">
+              {{ currentLang === 'en' ? 'Email is required' : 'البريد الإلكتروني مطلوب' }}
+            </span>
+            <span *ngIf="email?.errors?.['email']">
+              {{ currentLang === 'en' ? 'Please enter a valid email' : 'يرجى إدخال بريد إلكتروني صحيح' }}
+            </span>
+            <span *ngIf="email?.errors?.['emailExists']">
+              {{ currentLang === 'en' ? 'This email is already registered' : 'هذا البريد الإلكتروني مسجل بالفعل' }}
+            </span>
+          </div>
+        </div>
+        <div>
+          <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+            {{ currentLang === 'en' ? 'Phone Number' : 'رقم الهاتف' }}
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-phone text-gray-400"></i>
+            </div>
+            <input
+              id="phone"
+              type="tel"
+              formControlName="phone"
+              class="appearance-none rounded-lg relative block w-full pl-10 pr-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              [class.border-red-500]="phone?.invalid && phone?.touched"
+              [placeholder]="currentLang === 'en' ? 'Enter your phone number' : 'أدخل رقم هاتفك'"
+            >
+          </div>
+          <div *ngIf="phone?.invalid && phone?.touched" class="mt-1 text-xs text-red-600">
+            <span *ngIf="phone?.errors?.['required']">
+              {{ currentLang === 'en' ? 'Phone number is required' : 'رقم الهاتف مطلوب' }}
+            </span>
+            <span *ngIf="phone?.errors?.['pattern']">
+              {{ currentLang === 'en' ? 'Please enter a valid phone number (10-15 digits)' : 'يرجى إدخال رقم هاتف صحيح (10-15 رقم)' }}
+            </span>
+          </div>
+        </div>
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+            {{ currentLang === 'en' ? 'Password' : 'كلمة المرور' }}
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-lock text-gray-400"></i>
+            </div>
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              id="password"
+              formControlName="password"
+              class="appearance-none rounded-lg relative block w-full pl-10 pr-10 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              [class.border-red-500]="password?.invalid && password?.touched"
+              [placeholder]="currentLang === 'en' ? 'Create a password' : 'أنشئ كلمة مرور'"
+            >
+            <button
+              type="button"
+              (click)="togglePasswordVisibility()"
+              class="absolute inset-y-0 right-0 pr-3 flex items-center"
+            >
+              <i [class]="showPassword ? 'fas fa-eye-slash text-gray-400' : 'fas fa-eye text-gray-400'"></i>
+            </button>
+          </div>
+          <div *ngIf="password?.value && password?.touched" class="mt-2">
+            <div class="flex gap-1 mb-1">
+              <div class="h-1 flex-1 rounded-full bg-gray-200">
+                <div class="h-full rounded-full transition-all" 
+                     [class.bg-red-500]="!getPasswordStrengthErrors()?.hasUpperCase"
+                     [class.bg-yellow-500]="getPasswordStrengthErrors()?.hasUpperCase && !getPasswordStrengthErrors()?.hasNumber"
+                     [class.bg-green-500]="getPasswordStrengthErrors()?.hasUpperCase && getPasswordStrengthErrors()?.hasNumber && getPasswordStrengthErrors()?.hasSpecialChar"
+                     [style.width]="getPasswordStrength() + '%'">
+                </div>
+              </div>
+            </div>
+            <div class="text-xs space-y-1">
+              <div class="flex items-center gap-1" [class.text-green-600]="getPasswordStrengthErrors()?.isValidLength" [class.text-red-600]="!getPasswordStrengthErrors()?.isValidLength">
+                <i class="fas" [class]="getPasswordStrengthErrors()?.isValidLength ? 'fa-check-circle' : 'fa-circle'"></i>
+                <span>{{ currentLang === 'en' ? 'At least 8 characters' : '8 أحرف على الأقل' }}</span>
+              </div>
+              <div class="flex items-center gap-1" [class.text-green-600]="getPasswordStrengthErrors()?.hasUpperCase && getPasswordStrengthErrors()?.hasLowerCase" [class.text-red-600]="!getPasswordStrengthErrors()?.hasUpperCase || !getPasswordStrengthErrors()?.hasLowerCase">
+                <i class="fas" [class]="(getPasswordStrengthErrors()?.hasUpperCase && getPasswordStrengthErrors()?.hasLowerCase) ? 'fa-check-circle' : 'fa-circle'"></i>
+                <span>{{ currentLang === 'en' ? 'Uppercase & lowercase letters' : 'أحرف كبيرة وصغيرة' }}</span>
+              </div>
+              <div class="flex items-center gap-1" [class.text-green-600]="getPasswordStrengthErrors()?.hasNumber" [class.text-red-600]="!getPasswordStrengthErrors()?.hasNumber">
+                <i class="fas" [class]="getPasswordStrengthErrors()?.hasNumber ? 'fa-check-circle' : 'fa-circle'"></i>
+                <span>{{ currentLang === 'en' ? 'Contains a number' : 'يحتوي على رقم' }}</span>
+              </div>
+              <div class="flex items-center gap-1" [class.text-green-600]="getPasswordStrengthErrors()?.hasSpecialChar" [class.text-red-600]="!getPasswordStrengthErrors()?.hasSpecialChar">
+                <i class="fas" [class]="getPasswordStrengthErrors()?.hasSpecialChar ? 'fa-check-circle' : 'fa-circle'"></i>
+                <span>{{ currentLang === 'en' ? 'Contains a special character' : 'يحتوي على رمز خاص' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">
+            {{ currentLang === 'en' ? 'Confirm Password' : 'تأكيد كلمة المرور' }}
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-check-circle text-gray-400"></i>
+            </div>
+            <input
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              id="confirmPassword"
+              formControlName="confirmPassword"
+              class="appearance-none rounded-lg relative block w-full pl-10 pr-10 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              [class.border-red-500]="confirmPassword?.touched && !isPasswordMatch()"
+              [placeholder]="currentLang === 'en' ? 'Confirm your password' : 'تأكيد كلمة المرور'"
+            >
+            <button
+              type="button"
+              (click)="toggleConfirmPasswordVisibility()"
+              class="absolute inset-y-0 right-0 pr-3 flex items-center"
+            >
+              <i [class]="showConfirmPassword ? 'fas fa-eye-slash text-gray-400' : 'fas fa-eye text-gray-400'"></i>
+            </button>
+          </div>
+          
+          <div *ngIf="confirmPassword?.touched && !isPasswordMatch()" class="mt-1 text-xs text-red-600">
+            <i class="fas fa-exclamation-circle mr-1"></i>
+            {{ currentLang === 'en' ? 'Passwords do not match' : 'كلمات المرور غير متطابقة' }}
+          </div>
+          
+          <div *ngIf="confirmPassword?.touched && isPasswordMatch() && confirmPassword?.value" class="mt-1 text-xs text-green-600">
+            <i class="fas fa-check-circle mr-1"></i>
+            {{ currentLang === 'en' ? 'Passwords match' : 'كلمات المرور متطابقة' }}
+          </div>
+        </div>
+        <div *ngIf="errorMessage" class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
+          <i class="fas fa-exclamation-circle mr-2"></i>
+          {{ errorMessage }}
+        </div>
+      </div>
+      <div>
+        <button
+          type="submit"
+          [disabled]="registerForm.invalid || !isPasswordMatch() || isLoading"
+          class="group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105"
+        >
+          <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+            <i class="fas fa-user-plus text-indigo-300 group-hover:text-indigo-200"></i>
+          </span>
+          <span *ngIf="!isLoading">{{ currentLang === 'en' ? 'Create Account' : 'إنشاء حساب' }}</span>
+          <span *ngIf="isLoading" class="flex items-center gap-2">
+            <i class="fas fa-spinner fa-spin"></i>
+            {{ currentLang === 'en' ? 'Creating account...' : 'جاري إنشاء الحساب...' }}
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,114 @@
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8 bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 transition-all duration-500">
+    <div>
+      <div class="flex justify-center">
+        <i class="fas fa-laptop-code text-5xl text-indigo-600 animate-pulse"></i>
+      </div>
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        {{ currentLang === 'en' ? 'Sign in to your account' : 'تسجيل الدخول إلى حسابك' }}
+      </h2>
+      <p class="mt-2 text-center text-sm text-gray-600">
+        {{ currentLang === 'en' ? 'Or' : 'أو' }}
+        <button (click)="goToRegister()" class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
+          {{ currentLang === 'en' ? 'create a new account' : 'إنشاء حساب جديد' }}
+        </button>
+      </p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="mt-8 space-y-6">
+      <div class="space-y-4">
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+            {{ currentLang === 'en' ? 'Email address' : 'البريد الإلكتروني' }}
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-envelope text-gray-400"></i>
+            </div>
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              class="appearance-none rounded-lg relative block w-full pl-10 pr-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm transition-all"
+              [class.border-red-500]="email?.invalid && email?.touched"
+              [placeholder]="currentLang === 'en' ? 'Enter your email' : 'أدخل بريدك الإلكتروني'"
+            >
+          </div>
+          <div *ngIf="email?.invalid && email?.touched" class="mt-1 text-xs text-red-600">
+            <span *ngIf="email?.errors?.['required']">
+              {{ currentLang === 'en' ? 'Email is required' : 'البريد الإلكتروني مطلوب' }}
+            </span>
+            <span *ngIf="email?.errors?.['email']">
+              {{ currentLang === 'en' ? 'Please enter a valid email' : 'يرجى إدخال بريد إلكتروني صحيح' }}
+            </span>
+          </div>
+        </div>
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+            {{ currentLang === 'en' ? 'Password' : 'كلمة المرور' }}
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-lock text-gray-400"></i>
+            </div>
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              id="password"
+              formControlName="password"
+              class="appearance-none rounded-lg relative block w-full pl-10 pr-10 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm transition-all"
+              [class.border-red-500]="password?.invalid && password?.touched"
+              [placeholder]="currentLang === 'en' ? 'Enter your password' : 'أدخل كلمة المرور'"
+            >
+            <button
+              type="button"
+              (click)="togglePasswordVisibility()"
+              class="absolute inset-y-0 right-0 pr-3 flex items-center"
+            >
+              <i [class]="showPassword ? 'fas fa-eye-slash text-gray-400' : 'fas fa-eye text-gray-400'"></i>
+            </button>
+          </div>
+          <div *ngIf="password?.invalid && password?.touched" class="mt-1 text-xs text-red-600">
+            <span *ngIf="password?.errors?.['required']">
+              {{ currentLang === 'en' ? 'Password is required' : 'كلمة المرور مطلوبة' }}
+            </span>
+            <span *ngIf="password?.errors?.['minlength']">
+              {{ currentLang === 'en' ? 'Password must be at least 6 characters' : 'كلمة المرور يجب أن تكون 6 أحرف على الأقل' }}
+            </span>
+          </div>
+        </div>
+        <div class="flex items-center justify-end">
+          <button type="button" (click)="forgotPassword()" class="text-sm text-indigo-600 hover:text-indigo-500 transition-colors">
+            {{ currentLang === 'en' ? 'Forgot your password?' : 'نسيت كلمة المرور؟' }}
+          </button>
+        </div>
+        <div *ngIf="errorMessage" class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
+          {{ errorMessage }}
+        </div>
+      </div>
+      <div>
+        <button
+          type="submit"
+          [disabled]="loginForm.invalid || isLoading"
+          class="group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105"
+        >
+          <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+            <i class="fas fa-sign-in-alt text-indigo-300 group-hover:text-indigo-200"></i>
+          </span>
+          <span *ngIf="!isLoading">{{ currentLang === 'en' ? 'Sign in' : 'تسجيل دخول' }}</span>
+          <span *ngIf="isLoading" class="flex items-center gap-2">
+            <i class="fas fa-spinner fa-spin"></i>
+            {{ currentLang === 'en' ? 'Signing in...' : 'جاري تسجيل الدخول...' }}
+          </span>
+        </button>
+      </div>
+    </form>
+    <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+      <p class="text-xs text-gray-500 text-center mb-2">
+        {{ currentLang === 'en' ? 'Developed By:' : 'تم التطوير بواسطة:' }}
+      </p>
+      <div class="text-xs text-gray-600 space-y-1 text-center">
+        <p>{{ currentLang === 'en' ? 'Email: fadywageih14@gmail.com' : 'البريد: fadywageih14@gmail.com' }}</p>
+      </div>
+    </div>
+  </div>
+</div>
