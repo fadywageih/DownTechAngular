@@ -1,13 +1,13 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  private baseUrl = 'https://localhost:7058/api'; 
+public readonly baseUrl = 'https://localhost:7058/api';
   constructor(private http: HttpClient) {}
+  
   get<T>(endpoint: string, params?: any): Observable<T> {
     const httpParams = this.buildParams(params);
     return this.http.get<T>(`${this.baseUrl}/${endpoint}`, { params: httpParams });

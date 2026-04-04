@@ -58,7 +58,9 @@ export class AdminLoginComponent implements OnInit, OnDestroy {
     const loginSub = this.adminService.login(credentials).subscribe({
       next: (response) => {
         this.isLoading = false;
-        this.router.navigate(['/admin/admins']);
+        // Redirect based on admin role
+        const redirectPath = response.role === 'SuperAdmin' ? '/admin/admins' : '/admin/products';
+        this.router.navigate([redirectPath]);
       },
       error: (error) => {
         this.isLoading = false;

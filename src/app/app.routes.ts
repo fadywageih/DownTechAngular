@@ -15,9 +15,14 @@ export const routes: Routes = [
     loadChildren: () => import('./features/admin/admin.routes').then(m => m.ADMIN_ROUTES)
   },
   {
+    path: 'products',
+    loadChildren: () => import('./features/products/product.routes').then(m => m.PRODUCT_ROUTES)
+  },
+  {
     path: 'home',
     loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent)
   },
+  
   {
     path: '**',
     redirectTo: '/home'

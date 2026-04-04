@@ -1,0 +1,16 @@
+{
+  "/uploads": {
+    "target": "https://localhost:7058",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/uploads": "/uploads"
+    }
+  },
+  "/api": {
+    "target": "https://localhost:7058",
+    "secure": true,
+    "changeOrigin": true
+  }
+}

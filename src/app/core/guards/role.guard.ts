@@ -6,12 +6,10 @@ import { AdminService } from "../services/admin.service";
   providedIn: 'root'
 })
 export class RoleGuard implements CanActivate {
-  
   constructor(
     private adminService: AdminService,
     private router: Router
   ) {}
-
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
@@ -23,13 +21,12 @@ export class RoleGuard implements CanActivate {
       });
       return false;
     }
-
     if (requiredRole === 'SuperAdmin') {
       const currentAdmin = this.adminService.getCurrentAdmin();
       const hasSuperAdminRole = currentAdmin?.role === 'SuperAdmin';
       
       if (!hasSuperAdminRole) {
-        this.router.navigate(['/admin/dashboard']);
+        this.router.navigate(['/admin']);
         return false;
       }
     }

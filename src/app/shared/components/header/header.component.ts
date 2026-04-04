@@ -3,6 +3,7 @@ import { Component, OnInit, OnDestroy } from "@angular/core";
 import { RouterModule, Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { AuthService } from "../../../core/services/auth.service";
+import { AdminService } from "../../../core/services/admin.service";
 import { LanguageService } from "../../../core/services/language.service";
 
 @Component({
@@ -17,8 +18,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isMobileMenuOpen = false;
   isUserMenuOpen = false;
   private langSubscription!: Subscription;
+  private adminSubscription!: Subscription;
   constructor(
     public authService: AuthService,
+    public adminService: AdminService,
     private languageService: LanguageService,
     private router: Router
   ) {}
@@ -26,46 +29,72 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.langSubscription = this.languageService.currentLang$.subscribe(lang => {
       this.currentLang = lang;
     });
+    this.adminSubscription = this.adminService.currentAdmin$.subscribe(admin => {
+    });
   }
-
   ngOnDestroy(): void {
     if (this.langSubscription) {
       this.langSubscription.unsubscribe();
     }
+    if (this.adminSubscription) {
+      this.adminSubscription.unsubscribe();
+    }
   }
-
   toggleLanguage() {
     this.languageService.toggleLanguage();
   }
-
   toggleMobileMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
-
   toggleUserMenu() {
     this.isUserMenuOpen = !this.isUserMenuOpen;
   }
-
+onImageError(event: any): void {
+  console.error('Logo image failed to load');
+  event.target.src = 'https://placehold.co/200x60/4f46e5/white?text=DownTech';
+}
   getBrandText(): string {
     return this.currentLang === 'en' ? 'Down Tech' : 'داون تك';
   }
-
   navigateToLogin() {
     this.router.navigate(['/auth/login']);
     this.isMobileMenuOpen = false;
   }
-
   navigateToSignUp() {
     this.router.navigate(['/auth/register']);
     this.isMobileMenuOpen = false;
   }
-
   logout() {
-    this.authService.logout();
+    if (this.adminService.getCurrentAdmin()) {
+      this.adminService.logout();
+    } else {
+      this.authService.logout();
+    }
     this.isUserMenuOpen = false;
     this.isMobileMenuOpen = false;
   }
-
+  isAdminAuthenticated(): boolean {
+    return this.adminService.isAuthenticated();
+  }
+  isUserAuthenticated(): boolean {
+    return this.authService.isAuthenticated();
+  }
+  getCurrentUserName(): string {
+    const admin = this.adminService.getCurrentAdmin();
+    if (admin) {
+      return admin.fullName || 'Admin';
+    }
+    const user = this.authService.getCurrentUser();
+    return user?.displayName || 'User';
+  }
+  getCurrentUserEmail(): string {
+    const admin = this.adminService.getCurrentAdmin();
+    if (admin) {
+      return admin.email || '';
+    }
+    const user = this.authService.getCurrentUser();
+    return user?.email || '';
+  }
   scrollToSection(sectionId: string) {
     const element = document.getElementById(sectionId);
     if (element) {

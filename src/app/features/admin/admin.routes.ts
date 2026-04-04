@@ -31,8 +31,28 @@ export const ADMIN_ROUTES: Routes = [
         data: { role: 'SuperAdmin' }
       },
       {
+        path: 'products',
+        loadComponent: () => import('./components/admin-products/admin-products-list/admin-products-list.component')
+          .then(m => m.AdminProductsListComponent)
+      },
+      {
+        path: 'products/create',
+        loadComponent: () => import('./components/admin-products/admin-product-form/admin-product-form.component')
+          .then(m => m.AdminProductFormComponent)
+      },
+      {
+        path: 'products/edit/:id',
+        loadComponent: () => import('./components/admin-products/admin-product-form/admin-product-form.component')
+          .then(m => m.AdminProductFormComponent)
+      },
+      {
+        path: 'products/:id',
+        loadComponent: () => import('./components/admin-products/admin-product-detail/admin-product-detail.component')
+          .then(m => m.AdminProductDetailComponent)
+      },
+      {
         path: '',
-        redirectTo: 'dashboard',
+        redirectTo: 'products',
         pathMatch: 'full'
       }
     ]
@@ -43,4 +63,3 @@ export const ADMIN_ROUTES: Routes = [
     pathMatch: 'full'
   }
 ];
-

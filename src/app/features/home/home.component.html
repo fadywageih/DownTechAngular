@@ -1,158 +1,327 @@
 <div class="min-h-screen">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-    <!-- Header with Laptops, Maintenance, Software -->
-    <header class="glass-header rounded-2xl shadow-2xl px-6 py-4 mb-8 mt-20 transition-all" data-aos="fade-down" data-aos-duration="800">
+    <div *ngIf="loading" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+      <div class="bg-white rounded-2xl p-8 flex flex-col items-center">
+        <i class="fas fa-spinner fa-spin text-4xl text-indigo-600 mb-4"></i>
+        <p class="text-gray-700">{{ currentLang === 'en' ? 'Loading products...' : 'جاري تحميل المنتجات...' }}</p>
+      </div>
+    </div>
+
+    <div class="full-width-slider mb-4 mt-20" data-aos="fade-down" data-aos-duration="800">
+      <div class="relative">
+        <div class="relative h-[250px] md:h-[400px] lg:h-[500px] overflow-hidden">
+          <div *ngFor="let slide of slides; let i = index"
+            class="slider-slide absolute inset-0 w-full h-full transition-all duration-700 ease-in-out"
+            [class.opacity-100]="currentSlide === i" [class.opacity-0]="currentSlide !== i"
+            [class.z-10]="currentSlide === i" [class.z-0]="currentSlide !== i">
+            <img [src]="slide.image" [alt]="currentLang === 'en' ? slide.titleEn : slide.titleAr"
+              class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+            <div class="absolute inset-0 flex items-center justify-center text-center px-4">
+              <div class="max-w-4xl mx-auto text-white">
+                <h3 class="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 animate__animated"
+                  [class.animate__fadeInUp]="currentSlide === i">
+                  {{ currentLang === 'en' ? slide.titleEn : slide.titleAr }}
+                </h3>
+                <p class="text-base md:text-xl lg:text-2xl mb-6 md:mb-8 opacity-90 animate__animated"
+                  [class.animate__fadeInUp]="currentSlide === i" [style.animation-delay]="'0.2s'">
+                  {{ currentLang === 'en' ? slide.descEn : slide.descAr }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 z-20">
+          <button *ngFor="let slide of slides; let i = index" (click)="goToSlide(i)"
+            class="w-2 h-2 md:w-3 md:h-3 rounded-full transition-all duration-300" [class.bg-white]="currentSlide === i"
+            [class.bg-white/50]="currentSlide !== i" [class.w-6]="currentSlide === i">
+          </button>
+        </div>
+        <button (click)="prevSlide()"
+          class="absolute left-4 md:left-8 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all z-20 hover:scale-110">
+          <i class="fas fa-chevron-left text-base md:text-xl"></i>
+        </button>
+        <button (click)="nextSlide()"
+          class="absolute right-4 md:right-8 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all z-20 hover:scale-110">
+          <i class="fas fa-chevron-right text-base md:text-xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <header class="glass-header rounded-2xl shadow-2xl px-6 py-4 mb-8 transition-all" data-aos="fade-down"
+      data-aos-duration="800">
       <div class="flex flex-wrap items-center justify-between gap-4">
-        <div class="flex items-center gap-3 cursor-pointer group">
+        <div class="flex items-center gap-3 cursor-pointer group" routerLink="/home">
           <i class="fas fa-laptop-code text-4xl text-indigo-600 group-hover:animate-bounce transition-all"></i>
           <span class="text-2xl font-extrabold gradient-text">{{ getBrandText() }}</span>
         </div>
-        
-        <div class="hidden md:flex flex-wrap gap-2 bg-white/50 backdrop-blur-sm p-1.5 rounded-full">
-          <button (click)="switchSection('shop')" class="nav-btn px-5 py-2.5 rounded-full font-semibold text-gray-700 hover:bg-indigo-100 transition-all flex items-center gap-2" [class.active-nav]="currentSection === 'shop'">
-            <i class="fas fa-laptop text-lg"></i> {{ currentLang === 'en' ? 'Laptops' : 'لابتوبات' }}
+
+        <div class="flex flex-wrap gap-2 bg-white/50 backdrop-blur-sm p-1.5 rounded-full">
+          <button (click)="switchSection('shop')"
+            class="nav-btn px-5 py-2.5 rounded-full font-semibold text-gray-700 hover:bg-indigo-100 transition-all flex items-center gap-2"
+            [class.active-nav]="currentSection === 'shop'">
+            <i class="fas fa-laptop text-lg"></i> {{ currentLang === 'en' ? 'Devices' : 'اجهزه' }}
           </button>
-          <button (click)="switchSection('maintenance')" class="nav-btn px-5 py-2.5 rounded-full font-semibold text-gray-700 hover:bg-indigo-100 transition-all flex items-center gap-2" [class.active-nav]="currentSection === 'maintenance'">
+          <button (click)="switchSection('maintenance')"
+            class="nav-btn px-5 py-2.5 rounded-full font-semibold text-gray-700 hover:bg-indigo-100 transition-all flex items-center gap-2"
+            [class.active-nav]="currentSection === 'maintenance'">
             <i class="fas fa-tools text-lg"></i> {{ currentLang === 'en' ? 'Maintenance' : 'الصيانة' }}
           </button>
-          <button (click)="switchSection('projects')" class="nav-btn px-5 py-2.5 rounded-full font-semibold text-gray-700 hover:bg-indigo-100 transition-all flex items-center gap-2" [class.active-nav]="currentSection === 'projects'">
+          <button (click)="switchSection('projects')"
+            class="nav-btn px-5 py-2.5 rounded-full font-semibold text-gray-700 hover:bg-indigo-100 transition-all flex items-center gap-2"
+            [class.active-nav]="currentSection === 'projects'">
             <i class="fas fa-code text-lg"></i> {{ currentLang === 'en' ? 'Software' : 'برمجيات' }}
           </button>
         </div>
       </div>
     </header>
-
-    <!-- Search Bar -->
     <div class="mb-8" data-aos="fade-up" data-aos-duration="600">
       <div class="max-w-2xl mx-auto">
         <div class="relative">
           <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-          <input
-            type="text"
-            [(ngModel)]="searchQuery"
+          <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="applyFilters()"
             [placeholder]="currentLang === 'en' ? 'Search products, services, projects...' : 'ابحث عن منتجات، خدمات، مشاريع...'"
-            class="w-full pl-12 pr-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-800 placeholder-gray-500"
-          >
-          <button *ngIf="searchQuery" (click)="searchQuery = ''" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+            class="w-full pl-12 pr-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-800 placeholder-gray-500">
+          <button *ngIf="searchQuery" (click)="searchQuery = ''; applyFilters()"
+            class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
             <i class="fas fa-times"></i>
           </button>
         </div>
       </div>
     </div>
+    <div class="glass-card rounded-2xl p-6 mb-6" data-aos="fade-up" data-aos-duration="600">
+      <div class="flex flex-wrap gap-4 items-center">
+        <select [(ngModel)]="selectedType" (change)="applyFilters()"
+          class="px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <option [ngValue]="null">{{ currentLang === 'en' ? 'All Types' : 'جميع الأنواع' }}</option>
+          <option *ngFor="let type of productTypes" [ngValue]="type.value">
+            {{ currentLang === 'en' ? type.labelEn : type.labelAr }}
+          </option>
+        </select>
+
+        <select [(ngModel)]="selectedCondition" (change)="applyFilters()"
+          class="px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <option [ngValue]="null">{{ currentLang === 'en' ? 'All Conditions' : 'جميع الحالات' }}</option>
+          <option *ngFor="let condition of conditions" [ngValue]="condition.value">
+            {{ currentLang === 'en' ? condition.labelEn : condition.labelAr }}
+          </option>
+        </select>
+
+        <input type="number" [(ngModel)]="minPrice" (change)="applyFilters()"
+          [placeholder]="currentLang === 'en' ? 'Min Price' : 'اقل سعر'"
+          class="px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-32">
+
+        <input type="number" [(ngModel)]="maxPrice" (change)="applyFilters()"
+          [placeholder]="currentLang === 'en' ? 'Max Price' : 'اقصى سعر'"
+          class="px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-32">
+
+        <button (click)="resetFilters()"
+          class="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all">
+          <i class="fas fa-undo-alt mr-2"></i>
+          {{ currentLang === 'en' ? 'Reset' : 'إعادة ضبط' }}
+        </button>
+      </div>
+
+      <div *ngIf="getActiveFiltersCount() > 0" class="mt-4 flex flex-wrap gap-2">
+        <span class="text-sm text-white/70">{{ currentLang === 'en' ? 'Active filters:' : 'الفلاتر النشطة:' }}</span>
+        <span *ngIf="selectedType" class="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-sm">
+          {{ currentLang === 'en' ? productTypes.find(t => t.value === selectedType)?.labelEn : productTypes.find(t =>
+          t.value === selectedType)?.labelAr }}
+          <i class="fas fa-times ml-2 cursor-pointer" (click)="selectedType = null; applyFilters()"></i>
+        </span>
+        <span *ngIf="selectedCondition" class="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-sm">
+          {{ currentLang === 'en' ? conditions.find(c => c.value === selectedCondition)?.labelEn : conditions.find(c =>
+          c.value === selectedCondition)?.labelAr }}
+          <i class="fas fa-times ml-2 cursor-pointer" (click)="selectedCondition = null; applyFilters()"></i>
+        </span>
+        <span *ngIf="minPrice" class="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-sm">
+          {{ currentLang === 'en' ? 'Min' : 'اقل' }}: {{ minPrice }} EGP
+          <i class="fas fa-times ml-2 cursor-pointer" (click)="minPrice = null; applyFilters()"></i>
+        </span>
+        <span *ngIf="maxPrice" class="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-sm">
+          {{ currentLang === 'en' ? 'Max' : 'اقصى' }}: {{ maxPrice }} EGP
+          <i class="fas fa-times ml-2 cursor-pointer" (click)="maxPrice = null; applyFilters()"></i>
+        </span>
+        <span *ngIf="searchQuery" class="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-sm">
+          "{{ searchQuery }}"
+          <i class="fas fa-times ml-2 cursor-pointer" (click)="searchQuery = ''; applyFilters()"></i>
+        </span>
+      </div>
+    </div>
 
     <main class="min-h-[70vh]">
-      <!-- SHOP SECTION with ID -->
       <div id="shop-section">
         <div *ngIf="currentSection === 'shop'" class="page-section">
           <div class="mb-12 text-center" data-aos="fade-up" data-aos-duration="600">
-            <div class="inline-flex items-center gap-3 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full mb-4 shadow-lg">
+            <div
+              class="inline-flex items-center gap-3 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full mb-4 shadow-lg">
               <i class="fas fa-store text-indigo-600 text-2xl animate-pulse"></i>
-              <span class="text-sm font-semibold text-indigo-600 uppercase tracking-wide">{{ currentLang === 'en' ? 'Latest Collection' : 'أحدث المجموعات' }}</span>
+              <span class="text-sm font-semibold text-indigo-600 uppercase tracking-wide">{{ currentLang === 'en' ?
+                'Latest Collection' : 'أحدث المجموعات' }}</span>
             </div>
-            <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-3 drop-shadow-lg">{{ currentLang === 'en' ? 'Premium Laptops & PCs' : 'لابتوبات وأجهزة كمبيوتر فاخرة' }}</h2>
-            <p class="text-white/90 text-lg max-w-2xl mx-auto">{{ currentLang === 'en' ? 'Discover cutting-edge performance for gaming, business, and creativity' : 'اكتشف أداءً متطورًا للألعاب والأعمال والإبداع' }}</p>
+            <div class="flex flex-col lg:flex-row justify-between items-center gap-8 mb-8">
+              <h2 class="premium-title text-4xl md:text-5xl mb-0 flex-1 text-left lg:text-left drop-shadow-2xl">
+                {{ currentLang === 'en' ? 'Premium Laptops & PCs & Accessories' : 'لابتوبات وأجهزة كمبيوتر وإكسسوارات
+                فاخرة' }}
+              </h2>
+              <a routerLink="/products" class="view-all-btn group">
+                <i class="fas fa-box-open text-indigo-600 group-hover:animate-bounce"></i>
+                {{ currentLang === 'en' ? 'View All Products' : 'عرض جميع المنتجات' }}
+              </a>
+            </div>
+
+
           </div>
-          
-          <div *ngIf="filteredProducts.length === 0" class="text-center py-12">
+          <div *ngIf="filteredProducts.length === 0 && !loading" class="text-center py-12">
             <i class="fas fa-search text-6xl text-white/50 mb-4"></i>
             <p class="text-white/80 text-lg">{{ currentLang === 'en' ? 'No products found' : 'لا توجد منتجات' }}</p>
           </div>
-          
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div *ngFor="let product of filteredProducts; let i = index" 
-                 class="glass-card rounded-2xl shadow-2xl overflow-hidden transition-all duration-500 hover:transform hover:scale-105"
-                 data-aos="fade-up" [attr.data-aos-delay]="i * 100">
+            <div *ngFor="let product of filteredProducts; let i = index"
+              class="glass-card rounded-2xl shadow-2xl overflow-hidden transition-all duration-500 hover:transform hover:scale-105 cursor-pointer"
+              data-aos="fade-up" [attr.data-aos-delay]="i * 100" (click)="handleProductClick(product)">
               <div class="img-zoom h-56 overflow-hidden">
-                <img [src]="product.image" [alt]="product.nameEn" class="w-full h-full object-cover">
+                <img [src]="getProductImage(product)" [alt]="currentLang === 'en' ? product.nameEn : product.nameAr"
+                  class="w-full h-full object-cover" loading="lazy" (error)="onImageError($event, product)">
               </div>
               <div class="p-6">
-                <h3 class="text-xl font-bold text-gray-800 mb-2">{{ currentLang === 'en' ? product.nameEn : product.nameAr }}</h3>
-                <p class="text-indigo-600 font-bold text-2xl mb-2">{{ product.price }}</p>
-                <p class="text-gray-500 text-sm"><i class="fas fa-microchip mr-2"></i> {{ product.specs }}</p>
-                <button (click)="handleProductClick(product)" class="mt-5 w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white py-3 rounded-xl transition-all transform hover:scale-105 font-semibold flex items-center justify-center gap-2 shadow-md btn-hover">
-                  <i class="fas fa-shopping-cart"></i> {{ currentLang === 'en' ? 'Buy Now' : 'اشتري الآن' }}
-                </button>
+                <div class="flex justify-between items-start mb-2">
+                  <h3 class="text-xl font-bold text-gray-800 line-clamp-1 flex-1">
+                    {{ currentLang === 'en' ? product.nameEn : product.nameAr }}
+                  </h3>
+                  <span *ngIf="product.condition === 1"
+                    class="px-2 py-1 bg-green-500 text-white text-xs rounded-full ml-2 whitespace-nowrap">
+                    {{ currentLang === 'en' ? 'New' : 'جديد' }}
+                  </span>
+                  <span *ngIf="product.condition === 2"
+                    class="px-2 py-1 bg-orange-500 text-white text-xs rounded-full ml-2 whitespace-nowrap">
+                    {{ currentLang === 'en' ? 'Used' : 'مستعمل' }}
+                  </span>
+                </div>
+                <p class="text-indigo-600 font-bold text-2xl mb-2">{{ getProductPrice(product) }}</p>
+                <p class="text-gray-500 text-sm line-clamp-2">
+                  <i class="fas fa-microchip mr-2"></i> {{ getProductSpecs(product) }}
+                </p>
               </div>
+            </div>
+          </div>
+          <div *ngIf="totalPages > 1" class="mt-8 flex justify-between items-center">
+            <p class="text-sm text-white/60">
+              {{ getDisplayRange() }} {{ currentLang === 'en' ? 'products' : 'منتج' }}
+            </p>
+            <div class="flex gap-2">
+              <button (click)="changePage(pageNumber - 1)" [disabled]="pageNumber === 1"
+                class="px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <span *ngFor="let page of getPageNumbers()" (click)="changePage(page)"
+                class="px-4 py-2 rounded-lg cursor-pointer transition-all" [class.bg-indigo-600]="page === pageNumber"
+                [class.hover:bg-white/20]="page !== pageNumber">
+                {{ page }}
+              </span>
+              <button (click)="changePage(pageNumber + 1)" [disabled]="pageNumber === totalPages"
+                class="px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                <i class="fas fa-chevron-right"></i>
+              </button>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- MAINTENANCE SECTION with ID -->
       <div id="services-section">
         <div *ngIf="currentSection === 'maintenance'" class="page-section">
           <div class="mb-12 text-center" data-aos="fade-up" data-aos-duration="600">
-            <div class="inline-flex items-center gap-3 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full mb-4 shadow-lg">
-              <i class="fas fa-screwdriver-wrench text-emerald-600 text-2xl animate-spin" style="animation-duration: 3s;"></i>
-              <span class="text-sm font-semibold text-emerald-600 uppercase tracking-wide">{{ currentLang === 'en' ? 'Professional Service' : 'خدمة احترافية' }}</span>
+            <div
+              class="inline-flex items-center gap-3 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full mb-4 shadow-lg">
+              <i class="fas fa-screwdriver-wrench text-emerald-600 text-2xl animate-spin"
+                style="animation-duration: 3s;"></i>
+              <span class="text-sm font-semibold text-emerald-600 uppercase tracking-wide">{{ currentLang === 'en' ?
+                'Professional Service' : 'خدمة احترافية' }}</span>
             </div>
-            <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-3 drop-shadow-lg">{{ currentLang === 'en' ? 'Expert Repair & Maintenance' : 'صيانة احترافية للابتوب والكمبيوتر' }}</h2>
-            <p class="text-white/90 text-lg max-w-2xl mx-auto">{{ currentLang === 'en' ? 'Same-day service, genuine parts, and certified engineers' : 'خدمة نفس اليوم، قطع أصلية، مهندسون معتمدون' }}</p>
+            <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-3 drop-shadow-lg">{{ currentLang === 'en' ?
+              'Expert Repair & Maintenance' : 'صيانة احترافية للابتوب والكمبيوتر' }}</h2>
+            <p class="text-white/90 text-lg max-w-2xl mx-auto">{{ currentLang === 'en' ? 'Same-day service, genuine
+              parts, and certified engineers' : 'خدمة نفس اليوم، قطع أصلية، مهندسون معتمدون' }}</p>
           </div>
-          
+
           <div *ngIf="filteredServices.length === 0" class="text-center py-12">
             <i class="fas fa-search text-6xl text-white/50 mb-4"></i>
             <p class="text-white/80 text-lg">{{ currentLang === 'en' ? 'No services found' : 'لا توجد خدمات' }}</p>
           </div>
-          
+
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-7">
-            <div *ngFor="let service of filteredServices; let i = index" 
-                 class="glass-card rounded-2xl shadow-2xl overflow-hidden transition-all duration-500 hover:transform hover:scale-105"
-                 data-aos="fade-up" [attr.data-aos-delay]="i * 100">
+            <div *ngFor="let service of filteredServices; let i = index"
+              class="glass-card rounded-2xl shadow-2xl overflow-hidden transition-all duration-500 hover:transform hover:scale-105"
+              data-aos="fade-up" [attr.data-aos-delay]="i * 100">
               <div class="img-zoom h-48 overflow-hidden">
-                <img [src]="service.image" [alt]="service.titleEn" class="w-full h-full object-cover">
+                <img [src]="service.image" [alt]="service.titleEn" class="w-full h-full object-cover" loading="lazy">
               </div>
               <div class="p-5">
                 <div class="text-3xl text-indigo-600 mb-3"><i [class]="'fas ' + service.icon"></i></div>
-                <h3 class="text-lg font-bold text-gray-800 mb-2">{{ currentLang === 'en' ? service.titleEn : service.titleAr }}</h3>
-                <p class="text-gray-500 text-sm">{{ currentLang === 'en' ? service.descEn : service.descAr }}</p>
-                <button class="mt-4 w-full bg-gray-100 hover:bg-indigo-100 text-indigo-600 py-2 rounded-xl transition-all font-semibold">{{ currentLang === 'en' ? 'Learn More' : 'اعرف أكثر' }}</button>
+                <h3 class="text-lg font-bold text-gray-800 mb-2 line-clamp-1">{{ currentLang === 'en' ? service.titleEn
+                  : service.titleAr }}</h3>
+                <p class="text-gray-500 text-sm line-clamp-2">{{ currentLang === 'en' ? service.descEn : service.descAr
+                  }}</p>
+                <button
+                  class="mt-4 w-full bg-gray-100 hover:bg-indigo-100 text-indigo-600 py-2 rounded-xl transition-all font-semibold">
+                  {{ currentLang === 'en' ? 'Learn More' : 'اعرف أكثر' }}
+                </button>
               </div>
             </div>
           </div>
-          <div class="mt-12 bg-white/90 backdrop-blur-sm rounded-2xl p-8 text-center border border-white/30 shadow-2xl" data-aos="zoom-in" data-aos-delay="200">
+
+          <div class="mt-12 bg-white/90 backdrop-blur-sm rounded-2xl p-8 text-center border border-white/30 shadow-2xl"
+            data-aos="zoom-in" data-aos-delay="200">
             <i class="fas fa-headset text-4xl text-indigo-600 mb-3 block animate-bounce"></i>
-            <p class="font-bold text-gray-800 text-lg">📞 24/7 Emergency Support: +20 123 456 789 | {{ currentLang === 'en' ? 'Walk-in repairs with 6-month warranty' : 'إصلاحات فورية مع ضمان 6 أشهر' }}</p>
-            <button class="mt-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-3 rounded-full font-semibold transition-all shadow-md hover:shadow-xl transform hover:scale-105 btn-hover">
+            <p class="font-bold text-gray-800 text-lg">📞 24/7 Emergency Support: +20 123 456 789 | {{ currentLang ===
+              'en' ? 'Walk-in repairs with 6-month warranty' : 'إصلاحات فورية مع ضمان 6 أشهر' }}</p>
+            <button
+              class="mt-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-3 rounded-full font-semibold transition-all shadow-md hover:shadow-xl transform hover:scale-105">
               <i class="fas fa-calendar-alt mr-2"></i> {{ currentLang === 'en' ? 'Book Appointment' : 'احجز موعد' }}
             </button>
           </div>
         </div>
       </div>
-
-      <!-- SOFTWARE PROJECTS SECTION with ID -->
       <div id="projects-section">
         <div *ngIf="currentSection === 'projects'" class="page-section">
           <div class="mb-12 text-center" data-aos="fade-up" data-aos-duration="600">
-            <div class="inline-flex items-center gap-3 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full mb-4 shadow-lg">
+            <div
+              class="inline-flex items-center gap-3 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full mb-4 shadow-lg">
               <i class="fas fa-rocket text-purple-600 text-2xl animate-pulse"></i>
-              <span class="text-sm font-semibold text-purple-600 uppercase tracking-wide">{{ currentLang === 'en' ? 'Innovation Hub' : 'مركز الابتكار' }}</span>
+              <span class="text-sm font-semibold text-purple-600 uppercase tracking-wide">{{ currentLang === 'en' ?
+                'Innovation Hub' : 'مركز الابتكار' }}</span>
             </div>
-            <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-3 drop-shadow-lg">{{ currentLang === 'en' ? 'Innovative Software Projects' : 'مشاريع برمجية مبتكرة' }}</h2>
-            <p class="text-white/90 text-lg max-w-2xl mx-auto">{{ currentLang === 'en' ? 'Modern web apps, AI dashboards, and enterprise solutions' : 'تطبيقات ويب حديثة، لوحات تحكم بالذكاء الاصطناعي' }}</p>
+            <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-3 drop-shadow-lg">{{ currentLang === 'en' ?
+              'Innovative Software Projects' : 'مشاريع برمجية مبتكرة' }}</h2>
+            <p class="text-white/90 text-lg max-w-2xl mx-auto">{{ currentLang === 'en' ? 'Modern web apps, AI
+              dashboards, and enterprise solutions' : 'تطبيقات ويب حديثة، لوحات تحكم بالذكاء الاصطناعي' }}</p>
           </div>
-          
+
           <div *ngIf="filteredProjects.length === 0" class="text-center py-12">
             <i class="fas fa-search text-6xl text-white/50 mb-4"></i>
             <p class="text-white/80 text-lg">{{ currentLang === 'en' ? 'No projects found' : 'لا توجد مشاريع' }}</p>
           </div>
-          
+
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div *ngFor="let project of filteredProjects; let i = index" 
-                 class="glass-card rounded-2xl shadow-2xl overflow-hidden transition-all duration-500 hover:transform hover:scale-105"
-                 data-aos="fade-up" [attr.data-aos-delay]="i * 100">
+            <div *ngFor="let project of filteredProjects; let i = index"
+              class="glass-card rounded-2xl shadow-2xl overflow-hidden transition-all duration-500 hover:transform hover:scale-105"
+              data-aos="fade-up" [attr.data-aos-delay]="i * 100">
               <div class="img-zoom h-52 overflow-hidden">
-                <img [src]="project.image" [alt]="project.titleEn" class="w-full h-full object-cover">
+                <img [src]="project.image" [alt]="project.titleEn" class="w-full h-full object-cover" loading="lazy">
               </div>
               <div class="p-6">
                 <div class="flex items-center gap-2 mb-3">
                   <i class="fas fa-code text-purple-500 text-xl"></i>
-                  <h3 class="text-xl font-bold text-gray-800">{{ currentLang === 'en' ? project.titleEn : project.titleAr }}</h3>
+                  <h3 class="text-xl font-bold text-gray-800 line-clamp-1">{{ currentLang === 'en' ? project.titleEn :
+                    project.titleAr }}</h3>
                 </div>
-                <p class="text-gray-600 text-sm mb-3">{{ currentLang === 'en' ? project.descEn : project.descAr }}</p>
+                <p class="text-gray-600 text-sm mb-3 line-clamp-2">{{ currentLang === 'en' ? project.descEn :
+                  project.descAr }}</p>
                 <div class="flex flex-wrap gap-2">
-                  <span class="bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 text-xs px-3 py-1.5 rounded-full font-semibold">{{ project.tech }}</span>
-                  <button class="bg-gray-100 hover:bg-indigo-100 text-gray-700 text-xs px-4 py-1.5 rounded-full transition-all flex items-center gap-1">
+                  <span
+                    class="bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 text-xs px-3 py-1.5 rounded-full font-semibold">{{
+                    project.tech }}</span>
+                  <button
+                    class="bg-gray-100 hover:bg-indigo-100 text-gray-700 text-xs px-4 py-1.5 rounded-full transition-all flex items-center gap-1">
                     <i class="fas fa-external-link-alt text-xs"></i> {{ currentLang === 'en' ? 'Demo' : 'عرض' }}
                   </button>
                 </div>
@@ -161,15 +330,8 @@
           </div>
         </div>
       </div>
-
-      <!-- ABOUT US SECTION with ID -->
-      <div id="about-section" class="mt-16 py-12 text-center">
-        <h2 class="text-3xl font-bold text-gray-800 mb-4">{{ currentLang === 'en' ? 'About Down Tech' : 'عن داون تك' }}</h2>
-        <p class="text-white/60 max-w-2xl mx-auto">
-          {{ currentLang === 'en' ? 'We are a leading technology company providing cutting-edge laptops, professional maintenance services, and innovative software solutions.' : 'نحن شركة تقنية رائدة نقدم أحدث أجهزة اللابتوب، خدمات الصيانة الاحترافية، وحلول برمجية مبتكرة.' }}
-        </p>
-      </div>
     </main>
+    <app-about></app-about>
 
     <app-footer></app-footer>
   </div>
