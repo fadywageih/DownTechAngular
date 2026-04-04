@@ -1,0 +1,51 @@
+.glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(0px);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.glass-header {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.active-nav {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.nav-btn {
+  transition: all 0.3s ease;
+}
+
+.nav-btn:hover:not(.active-nav) {
+  background: rgba(79, 70, 229, 0.1);
+  transform: translateY(-2px);
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  opacity: 0.5;
+}
+
+input[type="number"]:focus::-webkit-inner-spin-button,
+input[type="number"]:focus::-webkit-outer-spin-button {
+  opacity: 1;
+}
+
+/* RTL Support */
+:host-context(.rtl) .fa-chevron-left {
+  transform: rotate(180deg);
+}
+
+:host-context(.rtl) .fa-chevron-right {
+  transform: rotate(180deg);
+}

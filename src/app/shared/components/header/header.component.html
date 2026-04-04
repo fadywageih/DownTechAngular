@@ -1,0 +1,82 @@
+<header class="main-header fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 md:h-20">
+      <div class="flex items-center cursor-pointer group" routerLink="/home">
+        <img src="assets/images/logo.png" alt="Logo" class="h-10 md:h-12 w-auto cursor-pointer">
+      </div>
+      <div class="hidden md:flex items-center gap-8">
+        <a routerLink="/products" class="nav-link cursor-pointer">{{ currentLang === 'en' ? 'Devices' : 'اجهزه' }}</a>
+        <a (click)="scrollToSection('services-section')" class="nav-link cursor-pointer">{{ currentLang === 'en' ? 'Services' : 'خدمات' }}</a>
+        <a (click)="scrollToSection('projects-section')" class="nav-link cursor-pointer">{{ currentLang === 'en' ? 'Projects' : 'مشاريع' }}</a>
+        <a (click)="scrollToSection('about-section')" class="nav-link cursor-pointer">{{ currentLang === 'en' ? 'About Us' : 'من نحن' }}</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-1 bg-white/20 backdrop-blur-sm p-1 rounded-xl">
+          <button (click)="toggleLanguage()" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all" [class.active-lang]="currentLang === 'en'">
+             EN
+          </button>
+          <button (click)="toggleLanguage()" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all" [class.active-lang]="currentLang === 'ar'">
+             AR
+          </button>
+        </div>
+        <div *ngIf="!isUserAuthenticated() && !isAdminAuthenticated()" class="hidden sm:flex items-center gap-2">
+          <button (click)="navigateToLogin()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition-all text-sm">
+            <i class="fas fa-sign-in-alt mr-1"></i> {{ currentLang === 'en' ? 'Sign In' : 'تسجيل دخول' }}
+          </button>
+          <button (click)="navigateToSignUp()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition-all text-sm">
+            <i class="fas fa-user-plus mr-1"></i> {{ currentLang === 'en' ? 'Sign Up' : 'إنشاء حساب' }}
+          </button>
+        </div>
+        <div *ngIf="isUserAuthenticated() || isAdminAuthenticated()" class="relative">
+          <button (click)="toggleUserMenu()" class="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-2 rounded-xl hover:bg-white/30 transition-all">
+            <i class="fas fa-user-circle text-xl text-indigo-600"></i>
+            <span class="text-sm font-medium text-gray-700">{{ getCurrentUserName() }}</span>
+            <i class="fas fa-chevron-down text-xs text-gray-500"></i>
+          </button>
+          <div *ngIf="isUserMenuOpen" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 z-50">
+            <div class="px-4 py-2 border-b border-gray-100">
+              <p class="text-sm font-semibold text-gray-700">{{ getCurrentUserName() }}</p>
+              <p class="text-xs text-gray-500">{{ getCurrentUserEmail() }}</p>
+            </div>
+            <button (click)="logout()" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+              <i class="fas fa-sign-out-alt mr-2"></i> {{ currentLang === 'en' ? 'Logout' : 'تسجيل خروج' }}
+            </button>
+          </div>
+        </div>
+        <button (click)="toggleMobileMenu()" class="md:hidden flex items-center justify-center w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm">
+          <i class="fas fa-bars text-gray-700 text-xl"></i>
+        </button>
+      </div>
+    </div>
+    <div *ngIf="isMobileMenuOpen" class="md:hidden py-4 border-t border-white/20 animate-slideDown">
+      <div class="flex flex-col gap-3">
+        <a routerLink="/products" class="mobile-nav-link" (click)="isMobileMenuOpen = false">{{ currentLang === 'en' ? 'Devices' : 'اجهزه' }}</a>
+        <a (click)="scrollToSection('services-section')" class="mobile-nav-link">{{ currentLang === 'en' ? 'Services' : 'خدمات' }}</a>
+        <a (click)="scrollToSection('projects-section')" class="mobile-nav-link">{{ currentLang === 'en' ? 'Projects' : 'مشاريع' }}</a>
+        <a (click)="scrollToSection('about-section')" class="mobile-nav-link">{{ currentLang === 'en' ? 'About Us' : 'من نحن' }}</a>
+        <div *ngIf="!isUserAuthenticated() && !isAdminAuthenticated()" class="pt-3 border-t border-white/20 mt-2 flex flex-col gap-2">
+          <button (click)="navigateToLogin()" class="w-full py-2 rounded-xl bg-indigo-600 text-white font-semibold">
+            <i class="fas fa-sign-in-alt mr-2"></i> {{ currentLang === 'en' ? 'Sign In' : 'تسجيل دخول' }}
+          </button>
+          <button (click)="navigateToSignUp()" class="w-full py-2 rounded-xl bg-emerald-600 text-white font-semibold">
+            <i class="fas fa-user-plus mr-2"></i> {{ currentLang === 'en' ? 'Sign Up' : 'إنشاء حساب' }}
+          </button>
+        </div>
+        <div *ngIf="isUserAuthenticated() || isAdminAuthenticated()" class="pt-3 border-t border-white/20 mt-2">
+          <div class="flex items-center justify-between p-3 bg-white/10 rounded-xl">
+            <div class="flex items-center gap-2">
+              <i class="fas fa-user-circle text-2xl text-indigo-600"></i>
+              <div>
+                <p class="text-sm font-semibold text-gray-700">{{ getCurrentUserName() }}</p>
+                <p class="text-xs text-gray-500">{{ getCurrentUserEmail() }}</p>
+              </div>
+            </div>
+            <button (click)="logout()" class="px-3 py-1 rounded-lg bg-red-500 hover:bg-red-600 text-white text-sm transition-all">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

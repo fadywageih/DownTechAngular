@@ -1,0 +1,40 @@
+<footer class="mt-20 pt-12 pb-8 border-t border-white/20 text-center text-white/80">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-center gap-4 md:gap-6 mb-6 flex-wrap">
+      <a href="https://www.facebook.com/share/182Tqj1RLg/" target="_blank" 
+         class="w-10 h-10 md:w-12 md:h-12 bg-white/10 rounded-full flex items-center justify-center text-xl md:text-2xl transition-all duration-300 hover:bg-[#1877f2] hover:text-white hover:-translate-y-2 hover:scale-110">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+      <a href="https://www.instagram.com/downtechstore" target="_blank" 
+         class="w-10 h-10 md:w-12 md:h-12 bg-white/10 rounded-full flex items-center justify-center text-xl md:text-2xl transition-all duration-300 hover:bg-gradient-to-tr from-[#f09433] via-[#d62976] to-[#962fbf] hover:text-white hover:-translate-y-2 hover:scale-110">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a href="https://www.youtube.com/@DOWNTECHSTORE" target="_blank" 
+         class="w-10 h-10 md:w-12 md:h-12 bg-white/10 rounded-full flex items-center justify-center text-xl md:text-2xl transition-all duration-300 hover:bg-[#ff0000] hover:text-white hover:-translate-y-2 hover:scale-110">
+        <i class="fab fa-youtube"></i>
+      </a>
+      <a href="https://wa.me/201270114646" target="_blank" 
+         class="w-10 h-10 md:w-12 md:h-12 bg-white/10 rounded-full flex items-center justify-center text-xl md:text-2xl transition-all duration-300 hover:bg-[#25d366] hover:text-white hover:-translate-y-2 hover:scale-110">
+        <i class="fab fa-whatsapp"></i>
+      </a>
+      <a href="#" target="_blank" 
+         class="w-10 h-10 md:w-12 md:h-12 bg-white/10 rounded-full flex items-center justify-center text-xl md:text-2xl transition-all duration-300 hover:bg-[#333] hover:text-white hover:-translate-y-2 hover:scale-110">
+        <i class="fab fa-github"></i>
+      </a>
+      <a href="#" target="_blank" 
+         class="w-10 h-10 md:w-12 md:h-12 bg-white/10 rounded-full flex items-center justify-center text-xl md:text-2xl transition-all duration-300 hover:bg-[#0077b5] hover:text-white hover:-translate-y-2 hover:scale-110">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </div>
+    <div class="flex flex-wrap justify-center gap-4 md:gap-8 mb-6 text-sm">
+      <a routerLink="/home" class="cursor-pointer hover:text-indigo-400 transition-all duration-300 hover:-translate-y-0.5">{{ currentLang === 'en' ? 'Home' : 'الرئيسية' }}</a>
+      <a routerLink="/products" class="cursor-pointer hover:text-indigo-400 transition-all duration-300 hover:-translate-y-0.5">{{ currentLang === 'en' ? 'Devices' : 'المنتجات' }}</a>
+    </div>
+    <div class="relative flex justify-center mb-6">
+      <div class="w-16 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full animate-pulse"></div>
+    </div>
+    <p class="text-sm text-white/60 hover:text-white/80 transition-all duration-300">
+      © {{ currentYear }} DownTech — {{ getFooterText() }}
+    </p>
+  </div>
+</footer>

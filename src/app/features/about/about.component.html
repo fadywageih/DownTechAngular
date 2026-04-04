@@ -1,0 +1,121 @@
+<div id="about-section" class="py-16 px-4 rounded-3xl bg-gradient-to-br from-white/95 to-gray-50/95 backdrop-blur-sm shadow-2xl my-12" data-aos="fade-up">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-12" data-aos="fade-up">
+      <div class="bg-black inline-flex items-center gap-3 bg-gradient-to-r from-gray-900 to-black px-6 py-3 rounded-full mb-4 shadow-lg">
+        <i class="fas fa-info-circle text-white text-xl"></i>
+        <span class=" text-sm font-semibold text-white uppercase tracking-wide">{{ currentLang === 'en' ? 'About Us' : 'من نحن' }}</span>
+      </div>
+      <h2 class="about-premium-title text-4xl md:text-5xl mb-3">{{ currentLang === 'en' ? 'Welcome to DownTech' : 'مرحباً بكم في داون تك' }}</h2>
+      <div class="p-8 rounded-2xl shadow-xl mb-8">
+        <p class="text-black-900 text-lg leading-relaxed mb-6">{{ currentLang === 'en' ? 'Your trusted partner for devices, maintenance, and software solutions' : 'شريكك الموثوق للأجهزة والصيانة والحلول البرمجية' }}</p>
+      </div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-12 items-center mb-16">
+      <div class="relative group" data-aos="fade-right">
+        <div class="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-500"></div>
+        <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600&h=400&fit=crop" 
+             alt="About DownTech" 
+             class="relative rounded-2xl shadow-2xl w-full object-cover h-[300px] md:h-[400px]">
+      </div>
+      <div  class="bg-white p-8" data-aos="fade-left ">
+        <h3 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4">{{ currentLang === 'en' ? 'Our Story' : 'قصتنا' }}</h3>
+        <p class="text-gray-600 text-lg mb-4 leading-relaxed">
+          {{ currentLang === 'en' ? 'Founded in 2020, DownTech has grown to become a leading technology company in Egypt, specializing in selling high-quality laptops, PCs, and accessories, as well as providing professional maintenance services and innovative software solutions.' : 'تأسست داون تك في عام 2020، ونمت لتصبح شركة تقنية رائدة في مصر، متخصصة في بيع أجهزة اللابتوب والبي سي والإكسسوارات عالية الجودة، بالإضافة إلى تقديم خدمات صيانة احترافية وحلول برمجية مبتكرة.' }}
+        </p>
+        <p class="text-gray-600 text-lg leading-relaxed">
+          {{ currentLang === 'en' ? 'We believe in providing comprehensive technology solutions that meet our customers\' needs, from hardware to software, with exceptional after-sales support.' : 'نؤمن بتقديم حلول تقنية شاملة تلبي احتياجات عملائنا، من العتاد إلى البرمجيات، مع دعم استثنائي لما بعد البيع.' }}
+        </p>
+      </div>
+    </div>
+    <div class="mb-16">
+      <h3 class="text-2xl md:text-3xl font-bold text-gray-900 bg-gradient-to-r from-gray-900 to-gray-800 bg-clip-text text-transparent py-2 px-4 rounded-lg font-black shadow-lg mb-10"> {{ currentLang === 'en' ? 'What We Offer' : 'ماذا نقدم' }}</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="text-center p-6 glass-about-card service-card rounded-2xl hover:shadow-xl transition-all duration-300 hover:-translate-y-2" data-aos="fade-up">
+          <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-laptop text-2xl text-indigo-600"></i>
+          </div>
+          <h4 class="text-lg font-bold text-gray-800 mb-2">{{ currentLang === 'en' ? 'Devices' : 'الأجهزة' }}</h4>
+          <p class="text-gray-500 text-sm">{{ currentLang === 'en' ? 'Laptops, PCs, monitors & more' : 'لابتوبات، بي سي، شاشات والمزيد' }}</p>
+        </div>
+
+        <div class="text-center p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2" data-aos="fade-up" data-aos-delay="100">
+          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-tools text-2xl text-green-600"></i>
+          </div>
+          <h4 class="text-lg font-bold text-gray-800 mb-2">{{ currentLang === 'en' ? 'Maintenance' : 'الصيانة' }}</h4>
+          <p class="text-gray-500 text-sm">{{ currentLang === 'en' ? 'Professional repair services' : 'خدمات إصلاح احترافية' }}</p>
+        </div>
+
+        <div class="text-center p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2" data-aos="fade-up" data-aos-delay="200">
+          <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-code text-2xl text-purple-600"></i>
+          </div>
+          <h4 class="text-lg font-bold text-gray-800 mb-2">{{ currentLang === 'en' ? 'Software' : 'البرمجيات' }}</h4>
+          <p class="text-gray-500 text-sm">{{ currentLang === 'en' ? 'Custom web apps & AI solutions' : 'تطبيقات ويب وحلول ذكاء اصطناعي' }}</p>
+        </div>
+
+        <div class="text-center p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2" data-aos="fade-up" data-aos-delay="300">
+          <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-microchip text-2xl text-orange-600"></i>
+          </div>
+          <h4 class="text-lg font-bold text-gray-800 mb-2">{{ currentLang === 'en' ? 'Accessories' : 'الإكسسوارات' }}</h4>
+          <p class="text-gray-500 text-sm">{{ currentLang === 'en' ? 'All types of computer accessories' : 'جميع أنواع إكسسوارات الكمبيوتر' }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="offers-banner bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 text-center text-white mb-12" data-aos="zoom-in">
+      <i class="fas fa-gift text-4xl mb-4 animate-bounce"></i>
+      <h3 class="text-2xl md:text-3xl font-bold mb-3">{{ currentLang === 'en' ? 'Special Bundle Offers!' : 'عروض خاصة!' }}</h3>
+      <p class="text-lg mb-6">{{ currentLang === 'en' ? 'Buy a device + software package and get exclusive discount + free maintenance for 3 months!' : 'اشتري جهاز + حزمة برمجيات واحصل على خصم حصري + صيانة مجانية لمدة 3 أشهر!' }}</p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <div class="bg-white/20 backdrop-blur-sm rounded-xl px-6 py-3">
+          <p class="font-bold">{{ currentLang === 'en' ? 'Device + Software' : 'جهاز + برمجيات' }}</p>
+          <p class="text-2xl font-bold">{{ currentLang === 'en' ? '15% OFF' : 'خصم 15%' }}</p>
+        </div>
+        <div class="bg-white/20 backdrop-blur-sm rounded-xl px-6 py-3">
+          <p class="font-bold">{{ currentLang === 'en' ? 'Device + Maintenance' : 'جهاز + صيانة' }}</p>
+          <p class="text-2xl font-bold">{{ currentLang === 'en' ? 'Free 3 Months' : '3 أشهر مجانا' }}</p>
+        </div>
+        <div class="bg-white/20 backdrop-blur-sm rounded-xl px-6 py-3">
+          <p class="font-bold">{{ currentLang === 'en' ? 'Full Package' : 'حزمة كاملة' }}</p>
+          <p class="text-2xl font-bold">{{ currentLang === 'en' ? '20% OFF' : 'خصم 20%' }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="grid md:grid-cols-3 gap-8">
+        <div class="flex items-start gap-4 why-card p-4 rounded-xl hover:bg-white/50 transition-all duration-300" data-aos="fade-up">
+        <i class="fas fa-shield-alt text-3xl text-indigo-600"></i>
+        <div>
+          <h4 class="text-lg font-bold text-gray-800 mb-1">{{ currentLang === 'en' ? 'Quality Guarantee' : 'ضمان الجودة' }}</h4>
+          <p class="text-gray-500 text-sm">{{ currentLang === 'en' ? 'All products tested & warranted' : 'جميع المنتجات مختومة ومضمونة' }}</p>
+        </div>
+      </div>
+      <div class="bg-white/80 flex items-start gap-4 p-4 rounded-xl hover:bg-white/50 transition-all duration-300" data-aos="fade-up" data-aos-delay="100">
+        <i class="fas fa-truck text-3xl text-indigo-600"></i>
+        <div>
+          <h4 class="text-lg font-bold text-gray-800 mb-1">{{ currentLang === 'en' ? 'Fast Delivery' : 'توصيل سريع' }}</h4>
+          <p class="text-gray-500 text-sm">{{ currentLang === 'en' ? 'Same-day delivery in Cairo' : 'توصيل نفس اليوم في القاهرة' }}</p>
+        </div>
+      </div>
+      <div class="bg-white/80  flex items-start gap-4 p-4 rounded-xl hover:bg-white/50 transition-all duration-300" data-aos="fade-up" data-aos-delay="200">
+        <i class="fas fa-headset text-3xl text-indigo-600"></i>
+        <div>
+          <h4 class="text-lg font-bold text-gray-800 mb-1">{{ currentLang === 'en' ? '24/7 Support' : 'دعم فني' }}</h4>
+          <p class="text-gray-500 text-sm">{{ currentLang === 'en' ? 'Technical support always available' : 'دعم فني على مدار الساعة' }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-12 pt-8 border-t border-gray-200">
+      <a routerLink="/products" 
+         class="about-cta inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-3 rounded-full font-semibold transition-all transform hover:scale-105 shadow-lg">
+        <i class="fas fa-shopping-cart"></i>
+        {{ currentLang === 'en' ? 'Shop Now' : 'تسوق الآن' }}
+      </a>
+      <a href="https://wa.me/201270114646" target="_blank" 
+         class="about-cta inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-full font-semibold transition-all transform hover:scale-105 shadow-lg ml-4">
+        <i class="fab fa-whatsapp"></i>
+        {{ currentLang === 'en' ? 'Contact Us' : 'اتصل بنا' }}
+      </a>
+    </div>
+  </div>
+</div>

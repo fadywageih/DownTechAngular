@@ -1,0 +1,35 @@
+.admin-product-form {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+}
+
+/* RTL Support */
+:host-context(.rtl) .fa-chevron-left {
+  transform: rotate(180deg);
+  display: inline-block;
+}
+
+:host-context(.rtl) .fa-chevron-right {
+  transform: rotate(180deg);
+  display: inline-block;
+}

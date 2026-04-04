@@ -1,0 +1,140 @@
+<div class="admin-product-detail">
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-white mb-2">
+        {{ currentLang === 'en' ? 'Product Details' : 'تفاصيل المنتج' }}
+      </h1>
+      <p class="text-white/70">
+        {{ currentLang === 'en' ? 'View product information' : 'عرض معلومات المنتج' }}
+      </p>
+    </div>
+    <div class="flex gap-3">
+      <button (click)="goBack()" 
+              class="px-6 py-3 bg-gray-600 text-white rounded-xl hover:bg-gray-700 transition-all">
+        <i class="fas fa-arrow-left mr-2"></i>
+        {{ currentLang === 'en' ? 'Back' : 'رجوع' }}
+      </button>
+      <button (click)="editProduct()" 
+              class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:shadow-lg transition-all">
+        <i class="fas fa-edit mr-2"></i>
+        {{ currentLang === 'en' ? 'Edit Product' : 'تعديل المنتج' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="text-center py-20">
+    <i class="fas fa-spinner fa-spin text-4xl text-indigo-600"></i>
+    <p class="text-white/80 mt-4">{{ currentLang === 'en' ? 'Loading product details...' : 'جاري تحميل تفاصيل المنتج...' }}</p>
+  </div>
+
+  <div *ngIf="!loading && product" class="glass-card rounded-2xl p-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div>
+        <div class="rounded-2xl overflow-hidden mb-4 bg-white/10">
+          <img [src]="selectedImageIndex === 0 ? getMainImage() : getImages()[selectedImageIndex - 1]" 
+               [alt]="getDisplayName()" 
+               class="w-full h-96 object-cover">
+        </div>
+        <div class="flex gap-3 overflow-x-auto pb-2">
+          <div *ngFor="let image of getImages(); let i = index"
+               (click)="selectedImageIndex = i + 1"
+               class="w-20 h-20 rounded-xl overflow-hidden cursor-pointer transition-all hover:scale-105"
+               [class.ring-2]="selectedImageIndex === i + 1"
+               [class.ring-indigo-600]="selectedImageIndex === i + 1">
+            <img [src]="image" class="w-full h-full object-cover">
+          </div>
+          <div *ngIf="getVideo()"
+               (click)="showVideo = true"
+               class="w-20 h-20 rounded-xl overflow-hidden cursor-pointer transition-all hover:scale-105 bg-indigo-500/20 flex items-center justify-center">
+            <i class="fas fa-play-circle text-3xl text-indigo-400"></i>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="flex gap-2 mb-4">
+          <span *ngIf="product.condition === 1" class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-sm">
+            {{ currentLang === 'en' ? 'New' : 'جديد' }}
+          </span>
+          <span *ngIf="product.condition === 2" class="px-3 py-1 bg-orange-500/20 text-orange-300 rounded-full text-sm">
+            {{ currentLang === 'en' ? 'Used' : 'مستعمل' }}
+          </span>
+          <span *ngIf="product.productType === 1" class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
+            Laptop
+          </span>
+          <span *ngIf="product.productType === 2" class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
+            PC
+          </span>
+          <span *ngIf="product.productType === 3" class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
+            Accessory
+          </span>
+        </div>
+        <h1 class="text-3xl font-bold text-white mb-4">{{ getDisplayName() }}</h1>
+        <p class="text-white/70 text-lg mb-6 leading-relaxed">{{ getDisplayDescription() }}</p>
+        <div class="mb-6 p-4 bg-indigo-500/20 rounded-xl">
+          <div class="flex justify-between text-lg">
+            <span class="text-white/80">{{ currentLang === 'en' ? 'Base Price:' : 'السعر الأساسي:' }}</span>
+            <span class="font-bold text-indigo-300">{{ formatPrice(product.basePrice) }}</span>
+          </div>
+        </div>
+        <div class="mb-6">
+          <h3 class="font-bold text-white mb-3">{{ currentLang === 'en' ? 'Upgrade Options' : 'خيارات الترقية' }}</h3>
+          <div class="flex flex-wrap gap-3">
+            <span *ngIf="product.allowRamUpgrade" class="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-sm">
+              RAM Upgrade
+            </span>
+            <span *ngIf="product.allowStorageUpgrade" class="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-sm">
+              Storage Upgrade
+            </span>
+            <span *ngIf="product.allowGpuUpgrade" class="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-sm">
+              GPU Upgrade
+            </span>
+          </div>
+        </div>
+        <div class="mb-6">
+          <h3 class="font-bold text-white mb-3">{{ currentLang === 'en' ? 'Status' : 'الحالة' }}</h3>
+          <span *ngIf="product.isActive" class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-sm">
+            {{ currentLang === 'en' ? 'Active' : 'نشط' }}
+          </span>
+          <span *ngIf="!product.isActive" class="px-3 py-1 bg-red-500/20 text-red-300 rounded-full text-sm">
+            {{ currentLang === 'en' ? 'Inactive' : 'غير نشط' }}
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-8">
+      <h2 class="text-xl font-bold text-white mb-4">{{ currentLang === 'en' ? 'Technical Specifications' : 'المواصفات التقنية' }}</h2>
+      <div class="glass-card rounded-xl p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div *ngFor="let spec of product.specifications" 
+               class="flex justify-between py-3 border-b border-white/10">
+            <span class="font-semibold text-white/80">
+              {{ currentLang === 'en' ? spec.keyEn : spec.keyAr }}:
+            </span>
+            <span class="text-white/70">
+              {{ currentLang === 'en' ? spec.valueEn : spec.valueAr }}
+              <span *ngIf="spec.isUpgradable" class="text-xs text-green-400 ml-2">
+                ({{ currentLang === 'en' ? 'Upgradable' : 'قابل للترقية' }})
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+<div *ngIf="showVideo && getVideo()" 
+     class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+     (click)="showVideo = false">
+  <div class="relative max-w-4xl w-full" (click)="$event.stopPropagation()">
+    <button (click)="showVideo = false" 
+            class="absolute -top-12 right-0 text-white text-2xl hover:text-gray-300">
+      <i class="fas fa-times"></i>
+    </button>
+    <video controls autoplay class="w-full rounded-2xl">
+      <source [src]="getVideo()" type="video/mp4">
+      {{ currentLang === 'en' ? 'Your browser does not support the video tag.' : 'متصفحك لا يدعم تشغيل الفيديو.' }}
+    </video>
+  </div>
+</div>

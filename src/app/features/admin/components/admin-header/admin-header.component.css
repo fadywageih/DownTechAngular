@@ -1,0 +1,93 @@
+/* Navigation Links */
+.nav-link {
+  position: relative;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  transform: translateY(-1px);
+}
+
+.active-nav {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+.active-nav i {
+  color: white;
+}
+
+/* Mobile Navigation */
+.nav-mobile-item {
+  font-size: 1.1rem;
+  transition: all 0.2s ease;
+}
+
+.active-nav-mobile {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white !important;
+}
+
+.active-nav-mobile i {
+  color: white;
+}
+
+/* Animations */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-down {
+  animation: slideDown 0.2s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .admin-header {
+    backdrop-filter: blur(12px);
+  }
+}
+
+/* Custom scrollbar for mobile menu */
+.mobile-menu {
+  overflow-y: auto;
+  max-height: calc(100vh - 80px);
+}
+
+.mobile-menu::-webkit-scrollbar {
+  width: 4px;
+}
+
+.mobile-menu::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.mobile-menu::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+/* Profile dropdown animation */
+.profile-dropdown {
+  animation: slideDown 0.2s ease-out;
+  transform-origin: top right;
+}
+
+/* Hover effects */
+.nav-link:active {
+  transform: scale(0.98);
+}
+
+/* Badge styles */
+.badge {
+  transition: all 0.2s ease;
+}
