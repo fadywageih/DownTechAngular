@@ -1,186 +1,360 @@
 <div class="admin-products-container">
-  <div class="flex justify-between items-center mb-6">
-    <div>
-      <h1 class="text-2xl font-bold text-white mb-2">
-        {{ currentLang === 'en' ? 'Product Management' : 'إدارة المنتجات' }}
-      </h1>
-      <p class="text-white/70">
-        {{ currentLang === 'en' ? 'Manage your products, add new ones, edit or delete existing products.' : 'إدارة منتجاتك، إضافة منتجات جديدة، تعديل أو حذف المنتجات الموجودة.' }}
-      </p>
-    </div>
-    <button (click)="createProduct()" 
-            class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl transition-all flex items-center gap-2 shadow-lg">
-      <i class="fas fa-plus"></i>
-      {{ currentLang === 'en' ? 'Add Product' : 'إضافة منتج' }}
+  <!-- Tabs -->
+  <div class="flex gap-2 mb-6 border-b border-white/20">
+    <button (click)="activeTab = 'products'" 
+      class="px-6 py-3 rounded-t-xl font-semibold transition-all"
+      [class]="activeTab === 'products' ? 'bg-white/20 text-white border-b-2 border-indigo-500' : 'text-white/60 hover:text-white hover:bg-white/10'">
+      <i class="fas fa-box-open mr-2"></i>
+      {{ currentLang === 'en' ? 'Products' : 'المنتجات' }}
+    </button>
+    <button (click)="activeTab = 'maintenance'" 
+      class="px-6 py-3 rounded-t-xl font-semibold transition-all"
+      [class]="activeTab === 'maintenance' ? 'bg-white/20 text-white border-b-2 border-indigo-500' : 'text-white/60 hover:text-white hover:bg-white/10'">
+      <i class="fas fa-tools mr-2"></i>
+      {{ currentLang === 'en' ? 'Maintenance Issues' : 'مشاكل الصيانة' }}
     </button>
   </div>
-  <div class="glass-card rounded-2xl p-6 mb-6">
-    <div class="flex flex-wrap gap-4">
-      <div class="flex-1 min-w-[200px]">
-        <div class="relative">
-          <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-          <input
-            type="text"
-            [(ngModel)]="searchQuery"
-            (keyup.enter)="applyFilters()"
-            [placeholder]="currentLang === 'en' ? 'Search products...' : 'ابحث عن منتجات...'"
-            class="w-full pl-12 pr-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          >
+
+  <!-- Products Tab Content -->
+  <div *ngIf="activeTab === 'products'">
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-white mb-2">
+          {{ currentLang === 'en' ? 'Product Management' : 'إدارة المنتجات' }}
+        </h1>
+        <p class="text-white/70">
+          {{ currentLang === 'en' ? 'Manage your products, add new ones, edit or delete existing products.' : 'إدارة منتجاتك، إضافة منتجات جديدة، تعديل أو حذف المنتجات الموجودة.' }}
+        </p>
+      </div>
+      <button (click)="createProduct()" 
+              class="bg-black text-white px-6 py-3 rounded-xl transition-all flex items-center gap-2 shadow-lg">
+        <i class="fas fa-plus"></i>
+        {{ currentLang === 'en' ? 'Add Product' : 'إضافة منتج' }}
+      </button>
+    </div>
+
+    <!-- Filters -->
+    <div class="glass-card rounded-2xl p-6 mb-6">
+      <div class="flex flex-wrap gap-4">
+        <div class="flex-1 min-w-[200px]">
+          <div class="relative">
+            <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <input
+              type="text"
+              [(ngModel)]="searchQuery"
+              (keyup.enter)="applyFilters()"
+              [placeholder]="currentLang === 'en' ? 'Search products...' : 'ابحث عن منتجات...'"
+              class="w-full pl-12 pr-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+          </div>
+        </div>
+        <select [(ngModel)]="selectedType" (change)="applyFilters()" 
+                class="px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <option [ngValue]="null">{{ currentLang === 'en' ? 'All Types' : 'جميع الأنواع' }}</option>
+          <option *ngFor="let type of productTypes" [ngValue]="type.value">
+            {{ currentLang === 'en' ? type.labelEn : type.labelAr }}
+          </option>
+        </select>
+        <select [(ngModel)]="selectedCondition" (change)="applyFilters()" 
+                class="px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <option [ngValue]="null">{{ currentLang === 'en' ? 'All Conditions' : 'جميع الحالات' }}</option>
+          <option *ngFor="let condition of conditions" [ngValue]="condition.value">
+            {{ currentLang === 'en' ? condition.labelEn : condition.labelAr }}
+          </option>
+        </select>
+        
+        <button (click)="resetFilters()" 
+                class="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all">
+          <i class="fas fa-undo-alt mr-2"></i>
+          {{ currentLang === 'en' ? 'Reset' : 'إعادة ضبط' }}
+        </button>
+      </div>
+      
+      <!-- Active Filters -->
+      <div *ngIf="getActiveFiltersCount() > 0" class="mt-4 flex flex-wrap gap-2">
+        <span class="text-sm text-white/70">{{ currentLang === 'en' ? 'Active filters:' : 'الفلاتر النشطة:' }}</span>
+        <span *ngIf="selectedType" class="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-sm">
+          {{ currentLang === 'en' ? productTypes.find(t => t.value === selectedType)?.labelEn : productTypes.find(t => t.value === selectedType)?.labelAr }}
+          <i class="fas fa-times ml-2 cursor-pointer" (click)="selectedType = null; applyFilters()"></i>
+        </span>
+        <span *ngIf="selectedCondition" class="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-sm">
+          {{ currentLang === 'en' ? conditions.find(c => c.value === selectedCondition)?.labelEn : conditions.find(c => c.value === selectedCondition)?.labelAr }}
+          <i class="fas fa-times ml-2 cursor-pointer" (click)="selectedCondition = null; applyFilters()"></i>
+        </span>
+        <span *ngIf="searchQuery" class="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-sm">
+          "{{ searchQuery }}"
+          <i class="fas fa-times ml-2 cursor-pointer" (click)="searchQuery = ''; applyFilters()"></i>
+        </span>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="text-center py-12">
+      <i class="fas fa-spinner fa-spin text-4xl text-indigo-600"></i>
+      <p class="text-white/80 mt-4">{{ currentLang === 'en' ? 'Loading products...' : 'جاري تحميل المنتجات...' }}</p>
+    </div>
+
+    <!-- Products Table -->
+    <div *ngIf="!loading && products.length === 0" class="glass-card rounded-2xl p-12 text-center">
+      <i class="fas fa-box-open text-6xl text-white/50 mb-4"></i>
+      <p class="text-white/80 text-lg">{{ currentLang === 'en' ? 'No products found' : 'لا توجد منتجات' }}</p>
+      <button (click)="createProduct()" class="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all">
+        {{ currentLang === 'en' ? 'Add your first product' : 'أضف منتجك الأول' }}
+      </button>
+    </div>
+
+    <div *ngIf="!loading && products.length > 0" class="glass-card rounded-2xl overflow-hidden">
+      <!-- Products Table Content (نفس اللي عندك) -->
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-white/10">
+            <tr>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Product' : 'المنتج' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Type' : 'النوع' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Condition' : 'الحالة' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Price' : 'السعر' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Status' : 'الحالة' }}</th>
+              <th class="px-6 py-4 text-right text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Actions' : 'الإجراءات' }}</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-white/10">
+            <tr *ngFor="let product of products; trackBy: trackByProductId" class="hover:bg-white/5 transition-all">
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <img [src]="getProductImage(product)" class="w-12 h-12 rounded-lg object-cover">
+                  <div>
+                    <p class="font-semibold text-white">{{ currentLang === 'en' ? product.nameEn : product.nameAr }}</p>
+                    <p class="text-sm text-white/60 line-clamp-1">{{ currentLang === 'en' ? product.descriptionEn : product.descriptionAr }}</p>
+                  </div>
+                </div>
+               </td>
+              <td class="px-6 py-4">
+                <span class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
+                  {{ getProductTypeLabel(product) }}
+                </span>
+               </td>
+              <td class="px-6 py-4">
+                <span class="px-3 py-1 rounded-full text-sm" [ngClass]="getConditionClass(product)">
+                  {{ getConditionLabel(product) }}
+                </span>
+               </td>
+              <td class="px-6 py-4">
+                <span class="font-semibold text-indigo-300">{{ formatPrice(product.basePrice) }}</span>
+               </td>
+              <td class="px-6 py-4">
+                <span *ngIf="product.isActive" class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-sm">
+                  {{ currentLang === 'en' ? 'Active' : 'نشط' }}
+                </span>
+                <span *ngIf="!product.isActive" class="px-3 py-1 bg-red-500/20 text-red-300 rounded-full text-sm">
+                  {{ currentLang === 'en' ? 'Inactive' : 'غير نشط' }}
+                </span>
+               </td>
+              <td class="px-6 py-4 text-right">
+                <div class="flex justify-end gap-2">
+                  <button (click)="viewProduct(product)" class="p-2 bg-blue-500/20 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-all" title="View">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button (click)="editProduct(product)" class="p-2 bg-yellow-500/20 text-yellow-300 rounded-lg hover:bg-yellow-500/30 transition-all" title="Edit">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button (click)="softDeleteProduct(product)" class="p-2 bg-orange-500/20 text-orange-300 rounded-lg hover:bg-orange-500/30 transition-all" title="Soft Delete">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                  <button (click)="deleteProduct(product)" class="p-2 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-all" title="Hard Delete">
+                    <i class="fas fa-times-circle"></i>
+                  </button>
+                </div>
+               </td>
+             </tr>
+          </tbody>
+        </table>
+      </div>
+      <div *ngIf="pagedResult && pagedResult.totalPages > 1" class="px-6 py-4 border-t border-white/10 flex justify-between items-center">
+        <p class="text-sm text-white/60">{{ currentLang === 'en' ? 'Showing' : 'عرض' }} {{ getDisplayRange() }} {{ currentLang === 'en' ? 'products' : 'منتج' }}</p>
+        <div class="flex gap-2">
+          <button (click)="changePage(pagedResult.pageNumber - 1)" [disabled]="!pagedResult.hasPreviousPage" class="px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <span *ngFor="let page of getPageNumbers()" (click)="changePage(page)" class="px-4 py-2 rounded-lg cursor-pointer transition-all" [class.bg-indigo-600]="page === pagedResult.pageNumber" [class.hover:bg-white/20]="page !== pagedResult.pageNumber">
+            {{ page }}
+          </span>
+          <button (click)="changePage(pagedResult.pageNumber + 1)" [disabled]="!pagedResult.hasNextPage" class="px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+            <i class="fas fa-chevron-right"></i>
+          </button>
         </div>
       </div>
-      <select [(ngModel)]="selectedType" (change)="applyFilters()" 
-              class="px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-        <option [ngValue]="null">{{ currentLang === 'en' ? 'All Types' : 'جميع الأنواع' }}</option>
-        <option *ngFor="let type of productTypes" [ngValue]="type.value">
-          {{ currentLang === 'en' ? type.labelEn : type.labelAr }}
-        </option>
-      </select>
-      <select [(ngModel)]="selectedCondition" (change)="applyFilters()" 
-              class="px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-        <option [ngValue]="null">{{ currentLang === 'en' ? 'All Conditions' : 'جميع الحالات' }}</option>
-        <option *ngFor="let condition of conditions" [ngValue]="condition.value">
-          {{ currentLang === 'en' ? condition.labelEn : condition.labelAr }}
-        </option>
-      </select>
-      
-      <button (click)="resetFilters()" 
-              class="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all">
-        <i class="fas fa-undo-alt mr-2"></i>
-        {{ currentLang === 'en' ? 'Reset' : 'إعادة ضبط' }}
+    </div>
+  </div>
+
+  <!-- Maintenance Issues Tab Content -->
+  <div *ngIf="activeTab === 'maintenance'">
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-white mb-2">
+          {{ currentLang === 'en' ? 'Maintenance Issues' : 'مشاكل الصيانة' }}
+        </h1>
+        <p class="text-white/70">
+          {{ currentLang === 'en' ? 'Manage customer reported issues and maintenance requests.' : 'إدارة مشاكل العملاء وطلبات الصيانة.' }}
+        </p>
+      </div>
+      <div class="flex gap-3">
+        <button (click)="refreshIssues()" 
+                class="bg-black text-white px-6 py-3 rounded-xl transition-all flex items-center gap-2 shadow-lg">
+          <i class="fas fa-sync-alt"></i>
+          {{ currentLang === 'en' ? 'Refresh' : 'تحديث' }}
+        </button>
+        <button (click)="showIssueStats = true" 
+                class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl transition-all flex items-center gap-2 shadow-lg">
+          <i class="fas fa-chart-line"></i>
+          {{ currentLang === 'en' ? 'Statistics' : 'إحصائيات' }}
+        </button>
+      </div>
+    </div>
+    <div class="glass-card rounded-2xl p-6 mb-6">
+      <div class="flex flex-wrap gap-4">
+        <div class="flex-1 min-w-[200px]">
+          <div class="relative">
+            <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <input
+              type="text"
+              [(ngModel)]="issueSearchQuery"
+              (keyup.enter)="applyIssueFilters()"
+              [placeholder]="currentLang === 'en' ? 'Search by name, model, phone...' : 'ابحث بالاسم، الموديل، رقم الهاتف...'"
+              class="w-full pl-12 pr-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+          </div>
+        </div>
+        <select [(ngModel)]="issueStatusFilter" (change)="applyIssueFilters()" 
+                class="px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <option [ngValue]="null">{{ currentLang === 'en' ? 'All Status' : 'جميع الحالات' }}</option>
+          <option [ngValue]="1">{{ currentLang === 'en' ? 'Pending' : 'قيد الانتظار' }}</option>
+          <option [ngValue]="2">{{ currentLang === 'en' ? 'In Progress' : 'قيد المعالجة' }}</option>
+          <option [ngValue]="3">{{ currentLang === 'en' ? 'Resolved' : 'تم الحل' }}</option>
+          <option [ngValue]="4">{{ currentLang === 'en' ? 'Closed' : 'مغلق' }}</option>
+        </select>
+        <select [(ngModel)]="issueProductTypeFilter" (change)="applyIssueFilters()" 
+                class="px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <option [ngValue]="null">{{ currentLang === 'en' ? 'All Types' : 'جميع الأنواع' }}</option>
+          <option [ngValue]="1">{{ currentLang === 'en' ? 'Laptop' : 'لابتوب' }}</option>
+          <option [ngValue]="2">{{ currentLang === 'en' ? 'PC' : 'بي سي' }}</option>
+          <option [ngValue]="3">{{ currentLang === 'en' ? 'Accessory' : 'إكسسوار' }}</option>
+        </select>
+        <button (click)="resetIssueFilters()" 
+                class="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all">
+          <i class="fas fa-undo-alt mr-2"></i>
+          {{ currentLang === 'en' ? 'Reset' : 'إعادة ضبط' }}
+        </button>
+      </div>
+    </div>
+    <div *ngIf="issuesLoading" class="text-center py-12">
+      <i class="fas fa-spinner fa-spin text-4xl text-indigo-600"></i>
+      <p class="text-white/80 mt-4">{{ currentLang === 'en' ? 'Loading issues...' : 'جاري تحميل المشاكل...' }}</p>
+    </div>
+    <div *ngIf="!issuesLoading && issuesList.length === 0" class="glass-card rounded-2xl p-12 text-center">
+      <i class="fas fa-tools text-6xl text-white/50 mb-4"></i>
+      <p class="text-white/80 text-lg">{{ currentLang === 'en' ? 'No maintenance issues found' : 'لا توجد مشاكل صيانة' }}</p>
+    </div>
+    <div *ngIf="!issuesLoading && issuesList.length > 0" class="glass-card rounded-2xl overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-white/10">
+            <tr>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Customer' : 'العميل' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Device' : 'الجهاز' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Model' : 'الموديل' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Description' : 'الوصف' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Status' : 'الحالة' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Date' : 'التاريخ' }}</th>
+              <th class="px-6 py-4 text-right text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Actions' : 'الإجراءات' }}</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-white/10">
+            <tr *ngFor="let issue of issuesList" class="hover:bg-white/5 transition-all">
+              <td class="px-6 py-4">
+                <div>
+                  <p class="font-semibold text-white">{{ issue.customerName }}</p>
+                  <p class="text-sm text-white/60">{{ issue.phoneNumber }}</p>
+                </div>
+               </td>
+              <td class="px-6 py-4">
+                <span class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
+                  {{ issue.productTypeName }}
+                </span>
+               </td>
+              <td class="px-6 py-4 text-white">{{ issue.model }}</td>
+              <td class="px-6 py-4">
+                <p class="text-white/80 line-clamp-2 max-w-xs">{{ issue.description }}</p>
+               </td>
+              <td class="px-6 py-4">
+                <span class="px-3 py-1 rounded-full text-sm"
+                  [class.bg-yellow-500/20]="issue.statusValue === 1"
+                  [class.text-yellow-300]="issue.statusValue === 1"
+                  [class.bg-blue-500/20]="issue.statusValue === 2"
+                  [class.text-blue-300]="issue.statusValue === 2"
+                  [class.bg-green-500/20]="issue.statusValue === 3"
+                  [class.text-green-300]="issue.statusValue === 3"
+                  [class.bg-gray-500/20]="issue.statusValue === 4"
+                  [class.text-gray-300]="issue.statusValue === 4">
+                  {{ issue.status }}
+                </span>
+               </td>
+              <td class="px-6 py-4 text-white/60">{{ issue.createdAt | date:'short' }}</td>
+              <td class="px-6 py-4 text-right">
+                <button (click)="viewIssueDetail(issue.id)" 
+                        class="p-2 bg-indigo-500/20 text-indigo-300 rounded-lg hover:bg-indigo-500/30 transition-all"
+                        title="View Details">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </td>
+             </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="showIssueStats" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" (click)="showIssueStats = false">
+  <div class="bg-white rounded-3xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto" (click)="$event.stopPropagation()">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-gray-800">{{ currentLang === 'en' ? 'Statistics Dashboard' : 'لوحة الإحصائيات' }}</h2>
+      <button (click)="showIssueStats = false" class="text-gray-400 hover:text-gray-600">
+        <i class="fas fa-times text-2xl"></i>
       </button>
     </div>
     
-    <!-- Active Filters -->
-    <div *ngIf="getActiveFiltersCount() > 0" class="mt-4 flex flex-wrap gap-2">
-      <span class="text-sm text-white/70">{{ currentLang === 'en' ? 'Active filters:' : 'الفلاتر النشطة:' }}</span>
-      <span *ngIf="selectedType" class="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-sm">
-        {{ currentLang === 'en' ? productTypes.find(t => t.value === selectedType)?.labelEn : productTypes.find(t => t.value === selectedType)?.labelAr }}
-        <i class="fas fa-times ml-2 cursor-pointer" (click)="selectedType = null; applyFilters()"></i>
-      </span>
-      <span *ngIf="selectedCondition" class="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-sm">
-        {{ currentLang === 'en' ? conditions.find(c => c.value === selectedCondition)?.labelEn : conditions.find(c => c.value === selectedCondition)?.labelAr }}
-        <i class="fas fa-times ml-2 cursor-pointer" (click)="selectedCondition = null; applyFilters()"></i>
-      </span>
-      <span *ngIf="searchQuery" class="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-sm">
-        "{{ searchQuery }}"
-        <i class="fas fa-times ml-2 cursor-pointer" (click)="searchQuery = ''; applyFilters()"></i>
-      </span>
+    <div *ngIf="statistics" class="space-y-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-indigo-50 p-4 rounded-xl text-center">
+          <p class="text-2xl font-bold text-indigo-600">{{ statistics.totalIssues }}</p>
+          <p class="text-sm text-gray-600">{{ currentLang === 'en' ? 'Total Issues' : 'إجمالي المشاكل' }}</p>
+        </div>
+        <div class="bg-yellow-50 p-4 rounded-xl text-center">
+          <p class="text-2xl font-bold text-yellow-600">{{ statistics.pendingCount }}</p>
+          <p class="text-sm text-gray-600">{{ currentLang === 'en' ? 'Pending' : 'قيد الانتظار' }}</p>
+        </div>
+        <div class="bg-blue-50 p-4 rounded-xl text-center">
+          <p class="text-2xl font-bold text-blue-600">{{ statistics.inProgressCount }}</p>
+          <p class="text-sm text-gray-600">{{ currentLang === 'en' ? 'In Progress' : 'قيد المعالجة' }}</p>
+        </div>
+        <div class="bg-green-50 p-4 rounded-xl text-center">
+          <p class="text-2xl font-bold text-green-600">{{ statistics.resolvedCount }}</p>
+          <p class="text-sm text-gray-600">{{ currentLang === 'en' ? 'Resolved' : 'تم الحل' }}</p>
+        </div>
+      </div>
+      <div class="border-t pt-4">
+        <h3 class="font-semibold text-gray-800 mb-3">{{ currentLang === 'en' ? 'Issues by Type' : 'المشاكل حسب النوع' }}</h3>
+        <div class="space-y-2">
+          <div *ngFor="let item of statistics.issuesByProductType | keyvalue" class="flex justify-between items-center">
+            <span>{{ item.key }}</span>
+            <span class="font-semibold">{{ item.value }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="border-t pt-4">
+        <p class="text-gray-600">{{ currentLang === 'en' ? 'Average Resolution Time' : 'متوسط وقت الحل' }}: 
+          <span class="font-semibold">{{ statistics.averageResolutionTimeHours | number:'1.1-1' }} {{ currentLang === 'en' ? 'hours' : 'ساعة' }}</span>
+        </p>
+      </div>
     </div>
-  </div>
-
-  <!-- Loading State -->
-  <div *ngIf="loading" class="text-center py-12">
-    <i class="fas fa-spinner fa-spin text-4xl text-indigo-600"></i>
-    <p class="text-white/80 mt-4">{{ currentLang === 'en' ? 'Loading products...' : 'جاري تحميل المنتجات...' }}</p>
-  </div>
-
-  <!-- Products Table -->
-  <div *ngIf="!loading && products.length === 0" class="glass-card rounded-2xl p-12 text-center">
-    <i class="fas fa-box-open text-6xl text-white/50 mb-4"></i>
-    <p class="text-white/80 text-lg">{{ currentLang === 'en' ? 'No products found' : 'لا توجد منتجات' }}</p>
-    <button (click)="createProduct()" class="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all">
-      {{ currentLang === 'en' ? 'Add your first product' : 'أضف منتجك الأول' }}
-    </button>
-  </div>
-
-  <div *ngIf="!loading && products.length > 0" class="glass-card rounded-2xl overflow-hidden">
-    <div class="overflow-x-auto">
-      <table class="w-full">
-        <thead class="bg-white/10">
-          <tr>
-            <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Product' : 'المنتج' }}</th>
-            <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Type' : 'النوع' }}</th>
-            <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Condition' : 'الحالة' }}</th>
-            <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Price' : 'السعر' }}</th>
-            <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Status' : 'الحالة' }}</th>
-            <th class="px-6 py-4 text-right text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Actions' : 'الإجراءات' }}</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-white/10">
-<tr *ngFor="let product of products; trackBy: trackByProductId" [id]="'product-' + product.id" class="hover:bg-white/5 transition-all group">
-
-
-            <td class="px-6 py-4">
-              <div class="flex items-center gap-3">
-                <img [src]="getProductImage(product)" class="w-12 h-12 rounded-lg object-cover">
-                <div>
-                  <p class="font-semibold text-white">{{ currentLang === 'en' ? product.nameEn : product.nameAr }}</p>
-                  <p class="text-sm text-white/60 line-clamp-1">{{ currentLang === 'en' ? product.descriptionEn : product.descriptionAr }}</p>
-                </div>
-              </div>
-            </td>
-            <td class="px-6 py-4">
-              <span class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
-                {{ getProductTypeLabel(product) }}
-              </span>
-            </td>
-            <td class="px-6 py-4">
-              <span class="px-3 py-1 rounded-full text-sm" [ngClass]="getConditionClass(product)">
-                {{ getConditionLabel(product) }}
-              </span>
-            </td>
-            <td class="px-6 py-4">
-              <span class="font-semibold text-indigo-300">{{ formatPrice(product.basePrice) }}</span>
-            </td>
-            <td class="px-6 py-4">
-              <span *ngIf="product.isActive" class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-sm">
-                {{ currentLang === 'en' ? 'Active' : 'نشط' }}
-              </span>
-              <span *ngIf="!product.isActive" class="px-3 py-1 bg-red-500/20 text-red-300 rounded-full text-sm">
-                {{ currentLang === 'en' ? 'Inactive' : 'غير نشط' }}
-              </span>
-            </td>
-            <td class="px-6 py-4 text-right">
-              <div class="flex justify-end gap-2">
-                <button (click)="viewProduct(product)" 
-                        class="p-2 bg-blue-500/20 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-all"
-                        title="View">
-                  <i class="fas fa-eye"></i>
-                </button>
-                <button (click)="editProduct(product)" 
-                        class="p-2 bg-yellow-500/20 text-yellow-300 rounded-lg hover:bg-yellow-500/30 transition-all"
-                        title="Edit">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button (click)="softDeleteProduct(product)" 
-                        class="p-2 bg-orange-500/20 text-orange-300 rounded-lg hover:bg-orange-500/30 transition-all"
-                        title="Soft Delete">
-                  <i class="fas fa-trash-alt"></i>
-                </button>
-                <button (click)="deleteProduct(product)" 
-                        class="p-2 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-all"
-                        title="Hard Delete">
-                  <i class="fas fa-times-circle"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-<div *ngIf="pagedResult && pagedResult.totalPages > 1" class="px-6 py-4 border-t border-white/10 flex justify-between items-center">
-  <p class="text-sm text-white/60">
-    {{ currentLang === 'en' ? 'Showing' : 'عرض' }} {{ getDisplayRange() }} {{ currentLang === 'en' ? 'products' : 'منتج' }}
-  </p>
-  <div class="flex gap-2">
-    <button (click)="changePage(pagedResult.pageNumber - 1)" 
-            [disabled]="!pagedResult.hasPreviousPage"
-            class="px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
-      <i class="fas fa-chevron-left"></i>
-    </button>
-    <span *ngFor="let page of getPageNumbers()" 
-          (click)="changePage(page)"
-          class="px-4 py-2 rounded-lg cursor-pointer transition-all"
-          [class.bg-indigo-600]="page === pagedResult.pageNumber"
-          [class.hover:bg-white/20]="page !== pagedResult.pageNumber">
-      {{ page }}
-    </span>
-    <button (click)="changePage(pagedResult.pageNumber + 1)" 
-            [disabled]="!pagedResult.hasNextPage"
-            class="px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
-      <i class="fas fa-chevron-right"></i>
-    </button>
-  </div>
-</div>
   </div>
 </div>

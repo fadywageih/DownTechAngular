@@ -5,7 +5,6 @@ import { RouterModule, Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { AdminService } from "../../../../core/services/admin.service";
 import { LanguageService } from "../../../../core/services/language.service";
-
 @Component({
   selector: 'app-admin-register',
   standalone: true,
@@ -21,26 +20,22 @@ export class AdminRegisterComponent implements OnInit, OnDestroy {
   currentLang = 'en';
   private langSubscription!: Subscription;
   private subscriptions: Subscription = new Subscription();
-
   constructor(
     private fb: FormBuilder,
     private adminService: AdminService,
     private languageService: LanguageService,
     private router: Router
   ) {}
-
   ngOnInit(): void {
     this.initForm();
     this.langSubscription = this.languageService.currentLang$.subscribe(lang => {
       this.currentLang = lang;
     });
   }
-
   ngOnDestroy(): void {
     this.langSubscription?.unsubscribe();
     this.subscriptions.unsubscribe();
   }
-
   private initForm(): void {
     this.registerForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
@@ -50,19 +45,16 @@ export class AdminRegisterComponent implements OnInit, OnDestroy {
       confirmPassword: ['', [Validators.required]]
     }, { validators: this.passwordMatchValidator });
   }
-
   passwordMatchValidator = (group: AbstractControl): ValidationErrors | null => {
     const password = group.get('password')?.value;
     const confirmPassword = group.get('confirmPassword')?.value;
     return password === confirmPassword ? null : { mismatch: true };
   }
-
   isPasswordMatch(): boolean {
     const password = this.registerForm.get('password')?.value;
     const confirmPassword = this.registerForm.get('confirmPassword')?.value;
     return password === confirmPassword;
   }
-
   onSubmit(): void {
     if (this.registerForm.invalid) {
       this.markFormGroupTouched(this.registerForm);
@@ -91,7 +83,6 @@ export class AdminRegisterComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.add(registerSub);
   }
-
   togglePasswordVisibility(type: 'password' | 'confirm'): void {
     if (type === 'password') {
       this.showPassword = !this.showPassword;
@@ -99,7 +90,6 @@ export class AdminRegisterComponent implements OnInit, OnDestroy {
       this.showConfirmPassword = !this.showConfirmPassword;
     }
   }
-
   private markFormGroupTouched(formGroup: FormGroup): void {
     Object.values(formGroup.controls).forEach(control => {
       control.markAsTouched();
@@ -108,7 +98,6 @@ export class AdminRegisterComponent implements OnInit, OnDestroy {
       }
     });
   }
-
   get firstName() { return this.registerForm.get('firstName'); }
   get lastName() { return this.registerForm.get('lastName'); }
   get email() { return this.registerForm.get('email'); }

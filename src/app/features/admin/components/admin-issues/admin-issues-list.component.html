@@ -1,0 +1,196 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+  <div class="bg-white rounded-3xl shadow-2xl p-8 mb-8 animate-fade-in-up">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <div
+          class="inline-flex items-center gap-3 bg-gradient-to-r from-indigo-50 to-purple-50 px-6 py-3 rounded-full mb-4 shadow-md">
+          <i class="fas fa-tools text-indigo-600 text-2xl"></i>
+          <span class="text-sm font-semibold text-indigo-600 uppercase tracking-wider">
+            {{ currentLang === 'en' ? 'Admin Panel' : 'لوحة التحكم' }}
+          </span>
+        </div>
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+          {{ currentLang === 'en' ? 'Issues Management' : 'إدارة المشاكل' }}
+        </h1>
+        <p class="text-gray-500">
+          {{ currentLang === 'en' ? 'Manage all customer support tickets and maintenance requests' : 'إدارة جميع تذاكر
+          الدعم وطلبات الصيانة' }}
+        </p>
+      </div>
+      <div class="flex gap-4">
+        <button (click)="loadStatistics()"
+          class="bg-black text-white px-6 py-3 rounded-xl font-bold shadow-lg transition-all duration-300 transform hover:scale-105">
+          <i class="fas fa-chart-line mr-2"></i>{{ currentLang === 'en' ? 'Statistics' : 'إحصائيات' }}
+        </button>
+        <button (click)="refresh()"
+          class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition-all duration-300 transform hover:scale-105">
+          <i class="fas fa-sync-alt mr-2"></i>{{ currentLang === 'en' ? 'Refresh' : 'تحديث' }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="bg-white rounded-2xl shadow-lg p-6 mb-8 animate-fade-in-up" style="animation-delay: 0.1s">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <select [(ngModel)]="filters.status" (change)="applyFilters()"
+        class="px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white">
+        <option [ngValue]="null">{{ currentLang === 'en' ? 'All Status' : 'جميع الحالات' }}</option>
+        <option [ngValue]="1">{{ currentLang === 'en' ? 'Pending' : 'قيد الانتظار' }}</option>
+        <option [ngValue]="2">{{ currentLang === 'en' ? 'In Progress' : 'قيد المعالجة' }}</option>
+        <option [ngValue]="3">{{ currentLang === 'en' ? 'Resolved' : 'تم الحل' }}</option>
+        <option [ngValue]="4">{{ currentLang === 'en' ? 'Closed' : 'مغلق' }}</option>
+      </select>
+
+      <select [(ngModel)]="filters.productType" (change)="applyFilters()"
+        class="px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white">
+        <option [ngValue]="null">{{ currentLang === 'en' ? 'All Types' : 'جميع الأنواع' }}</option>
+        <option [ngValue]="1">{{ currentLang === 'en' ? 'Laptop' : 'لابتوب' }}</option>
+        <option [ngValue]="2">{{ currentLang === 'en' ? 'PC' : 'بي سي' }}</option>
+        <option [ngValue]="3">{{ currentLang === 'en' ? 'Accessory' : 'إكسسوار' }}</option>
+      </select>
+
+      <input type="text" [(ngModel)]="filters.searchTerm" (keyup.enter)="applyFilters()"
+        [placeholder]="currentLang === 'en' ? 'Search by name, model, phone...' : 'ابحث بالاسم، الموديل، رقم الهاتف...'"
+        class="px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white">
+
+      <button (click)="resetFilters()"
+        class="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all duration-300">
+        <i class="fas fa-undo-alt mr-2"></i>{{ currentLang === 'en' ? 'Reset' : 'إعادة ضبط' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Statistics Modal -->
+  <div *ngIf="showStatistics"
+    class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in"
+    (click)="showStatistics = false">
+    <div class="bg-white rounded-3xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto"
+      (click)="$event.stopPropagation()">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">{{ currentLang === 'en' ? 'Statistics Dashboard' : 'لوحة
+          الإحصائيات' }}</h2>
+        <button (click)="showStatistics = false"
+          class="text-gray-400 hover:text-gray-600 transition-all duration-300 hover:rotate-90">
+          <i class="fas fa-times text-2xl"></i>
+        </button>
+      </div>
+
+      <div *ngIf="statistics" class="space-y-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-indigo-50 p-4 rounded-xl text-center hover:scale-105 transition-all duration-300">
+            <p class="text-2xl font-bold text-indigo-600">{{ statistics.totalIssues }}</p>
+            <p class="text-sm text-gray-600">{{ currentLang === 'en' ? 'Total Issues' : 'إجمالي المشاكل' }}</p>
+          </div>
+          <div class="bg-yellow-50 p-4 rounded-xl text-center hover:scale-105 transition-all duration-300">
+            <p class="text-2xl font-bold text-yellow-600">{{ statistics.pendingCount }}</p>
+            <p class="text-sm text-gray-600">{{ currentLang === 'en' ? 'Pending' : 'قيد الانتظار' }}</p>
+          </div>
+          <div class="bg-blue-50 p-4 rounded-xl text-center hover:scale-105 transition-all duration-300">
+            <p class="text-2xl font-bold text-blue-600">{{ statistics.inProgressCount }}</p>
+            <p class="text-sm text-gray-600">{{ currentLang === 'en' ? 'In Progress' : 'قيد المعالجة' }}</p>
+          </div>
+          <div class="bg-green-50 p-4 rounded-xl text-center hover:scale-105 transition-all duration-300">
+            <p class="text-2xl font-bold text-green-600">{{ statistics.resolvedCount }}</p>
+            <p class="text-sm text-gray-600">{{ currentLang === 'en' ? 'Resolved' : 'تم الحل' }}</p>
+          </div>
+        </div>
+
+        <div class="border-t pt-4">
+          <h3 class="font-semibold text-gray-800 mb-3">{{ currentLang === 'en' ? 'Issues by Product Type' : 'المشاكل حسب
+            نوع المنتج' }}</h3>
+          <div class="space-y-2">
+            <div *ngFor="let item of statistics.issuesByProductType | keyvalue"
+              class="flex justify-between items-center p-2 hover:bg-gray-50 rounded-lg">
+              <span class="font-medium">{{ item.key }}</span>
+              <span class="font-semibold text-indigo-600">{{ item.value }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t pt-4">
+          <p class="text-gray-600">{{ currentLang === 'en' ? 'Average Resolution Time' : 'متوسط وقت الحل' }}:
+            <span class="font-semibold text-indigo-600">{{ statistics.averageResolutionTimeHours | number:'1.1-1' }} {{
+              currentLang === 'en' ? 'hours' : 'ساعة' }}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Issues Table -->
+  <div class="bg-white rounded-2xl shadow-lg overflow-hidden animate-fade-in-up" style="animation-delay: 0.2s">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="p-12 text-center">
+      <div class="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4">
+      </div>
+      <p class="text-gray-500">{{ currentLang === 'en' ? 'Loading issues...' : 'جاري تحميل المشاكل...' }}</p>
+    </div>
+
+    <!-- No Issues State -->
+    <div *ngIf="!isLoading && issues.length === 0" class="p-12 text-center">
+      <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-inbox text-4xl text-gray-400"></i>
+      </div>
+      <p class="text-gray-500 text-lg">{{ currentLang === 'en' ? 'No issues found' : 'لا توجد مشاكل' }}</p>
+    </div>
+
+    <!-- Issues Table -->
+    <div *ngIf="!isLoading && issues.length > 0" class="overflow-x-auto">
+      <table class="w-full">
+        <thead class="bg-gray-50 border-b">
+          <tr>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">{{ currentLang === 'en' ? 'ID' : 'الرقم'
+              }}</th>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">{{ currentLang === 'en' ? 'Customer' :
+              'العميل' }}</th>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">{{ currentLang === 'en' ? 'Device' :
+              'الجهاز' }}</th>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">{{ currentLang === 'en' ? 'Model' :
+              'الموديل' }}</th>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">{{ currentLang === 'en' ? 'Status' :
+              'الحالة' }}</th>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">{{ currentLang === 'en' ? 'Date' :
+              'التاريخ' }}</th>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">{{ currentLang === 'en' ? 'Actions' :
+              'الإجراءات' }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let issue of issues" class="border-b hover:bg-gray-50 transition-all duration-300 group">
+            <td class="px-6 py-4 text-sm text-gray-500 font-mono">{{ issue.id | slice:0:8 }}...</td>
+            <td class="px-6 py-4">
+              <div>
+                <p class="font-semibold text-gray-800">{{ issue.customerName }}</p>
+                <p class="text-xs text-gray-500">{{ issue.phoneNumber }}</p>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <span class="px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-700">
+                {{ issue.productTypeName }}
+              </span>
+            </td>
+            <td class="px-6 py-4 text-gray-600">{{ issue.model }}</td>
+            <td class="px-6 py-4">
+              <span class="px-3 py-1 rounded-full text-xs font-semibold" [class.bg-yellow-100]="issue.statusValue === 1"
+                [class.text-yellow-700]="issue.statusValue === 1" [class.bg-blue-100]="issue.statusValue === 2"
+                [class.text-blue-700]="issue.statusValue === 2" [class.bg-green-100]="issue.statusValue === 3"
+                [class.text-green-700]="issue.statusValue === 3" [class.bg-gray-100]="issue.statusValue === 4"
+                [class.text-gray-700]="issue.statusValue === 4">
+                <i class="fas fa-circle mr-1 text-[8px]" [class.text-yellow-500]="issue.statusValue === 1"
+                  [class.text-blue-500]="issue.statusValue === 2" [class.text-green-500]="issue.statusValue === 3"
+                  [class.text-gray-500]="issue.statusValue === 4"></i>
+                {{ issue.status }}
+              </span>
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-500">{{ issue.createdAt | date:'short' }}</td>
+            <td class="px-6 py-4">
+              <button (click)="viewDetails(issue.id)"
+                class="text-indigo-600 hover:text-indigo-800 font-semibold transition-all duration-300 hover:translate-x-1">
+                <i class="fas fa-eye mr-1"></i>{{ currentLang === 'en' ? 'View' : 'عرض' }}
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -16,10 +16,15 @@ export class AdminAuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean {
-    if (this.adminService.isAuthenticated()) {
+    const isAuth = this.adminService.isAuthenticated();
+    const currentAdmin = this.adminService.getCurrentAdmin();
+    console.log('AdminAuthGuard - isAuthenticated:', isAuth, 'currentAdmin:', currentAdmin?.email);
+    
+    if (isAuth) {
       return true;
     }
     
+    console.log('Admin not authenticated, redirecting to login from:', state.url);
     this.router.navigate(['/admin/login'], {
       queryParams: { returnUrl: state.url }
     });

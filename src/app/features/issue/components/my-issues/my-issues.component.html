@@ -1,0 +1,75 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 mt-20">
+  <div class="bg-white rounded-3xl shadow-2xl p-8 md:p-10 animate-fade-in-up ">
+    <div class="text-center mb-8">
+      <div
+        class="inline-flex items-center gap-3 bg-gradient-to-r from-indigo-50 to-purple-50 px-6 py-3 rounded-full mb-4 shadow-md animate-pulse-slow">
+        <i class="fas fa-list-alt text-indigo-600 text-2xl animate-bounce-slow"></i>
+        <span class="text-sm font-semibold text-indigo-600 uppercase tracking-wider">
+          {{ currentLang === 'en' ? 'My Reports' : 'تقاريري' }}
+        </span>
+      </div>
+
+      <p class="text-gray-500">
+        {{ currentLang === 'en' ? 'Track the status of your submitted reports' : 'تتبع حالة التقارير التي أرسلتها' }}
+      </p>
+    </div>
+    <div *ngIf="isLoading" class="text-center py-12">
+      <div class="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4">
+      </div>
+      <p class="text-gray-500">{{ currentLang === 'en' ? 'Loading...' : 'جاري التحميل...' }}</p>
+    </div>
+    <div *ngIf="!isLoading && issues.length === 0" class="text-center py-12 animate-fade-in-up">
+      <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-inbox text-4xl text-gray-400"></i>
+      </div>
+      <p class="text-gray-500 text-lg mb-4">{{ currentLang === 'en' ? 'No reports found' : 'لا توجد تقارير' }}</p>
+      <button (click)="goToReport()"
+        class="inline-flex items-center gap-2 bg-blue-900 hover:bg-blue-800 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+        <i class="fas fa-plus"></i>
+        {{ currentLang === 'en' ? 'Create New Report' : 'إنشاء تقرير جديد' }}
+      </button>
+    </div>
+    <div *ngIf="!isLoading && issues.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
+      <div *ngFor="let issue of issues; let i = index"
+        class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-in-up bg-blue-100"
+        [style.animation-delay]="i * 0.05 + 's'">
+        <div class="flex justify-between items-start mb-4">
+          <span class="inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-700">
+            <i class="fas fa-microchip mr-1 text-xs"></i>
+            {{ issue.productTypeName }}
+          </span>
+          <span class="px-3 py-1 rounded-full text-xs font-semibold" [class.bg-yellow-100]="issue.statusValue === 1"
+            [class.text-yellow-700]="issue.statusValue === 1" [class.bg-blue-100]="issue.statusValue === 2"
+            [class.text-blue-700]="issue.statusValue === 2" [class.bg-green-100]="issue.statusValue === 3"
+            [class.text-green-700]="issue.statusValue === 3" [class.bg-gray-100]="issue.statusValue === 4"
+            [class.text-gray-700]="issue.statusValue === 4">
+            <i class="fas fa-circle mr-1 text-[8px]"></i>
+            {{ issue.status }}
+          </span>
+        </div>
+        <h3 class="text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">
+          <i class="fas fa-tag text-indigo-500 text-sm"></i>
+          {{ issue.model }}
+        </h3>
+        <p class="text-gray-600 text-sm line-clamp-3 mb-4 leading-relaxed">
+          {{ issue.description }}
+        </p>
+        <div class="border-t border-gray-100 pt-4 mt-2 ">
+          <div class="flex items-center gap-2 text-xs text-gray-500 mb-2">
+            <i class="far fa-calendar-alt text-indigo-400"></i>
+            <span>{{ issue.createdAt | date:'medium' }}</span>
+          </div>
+          <div *ngIf="issue.assignedAdminName" class="flex items-center gap-2 text-xs text-gray-500">
+            <i class="fas fa-user-shield text-indigo-400"></i>
+            <span>{{ currentLang === 'en' ? 'Assigned to:' : 'مسند إلى:' }} {{ issue.assignedAdminName }}</span>
+          </div>
+          <div *ngIf="issue.resolvedAt" class="flex items-center gap-2 text-xs text-green-600 mt-2">
+            <i class="fas fa-check-circle"></i>
+            <span>{{ currentLang === 'en' ? 'Resolved on:' : 'تم الحل في:' }} {{ issue.resolvedAt | date:'medium'
+              }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

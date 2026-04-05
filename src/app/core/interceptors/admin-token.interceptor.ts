@@ -17,18 +17,21 @@ export class AdminTokenInterceptor implements HttpInterceptor {
     private router: Router
   ) {}
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-if (request.url.includes('/api/admin') || request.url.includes('/api/product')) {
-      const token = this.tokenService.getAdminToken();
+    if (request.url.includes('/api/admin') || request.url.includes('/api/product') || request.url.includes('/api/issue')) {
+      const adminToken = this.tokenService.getAdminToken();
       
-      if (token) {
+      if (adminToken) {
         request = request.clone({
-          headers: request.headers.set('Authorization', `Bearer ${token}`)
+          headers: request.headers.delete('Authorization').set('Authorization', `Bearer ${adminToken}`)
         });
+      } else {
+        console.warn('AdminTokenInterceptor: No admin token found for', request.url);
       }
     }
+    
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-if ((request.url.includes('/api/admin') || request.url.includes('/api/product')) && (error.status === 401 || error.status === 403)) {
+        if ((request.url.includes('/api/admin') || request.url.includes('/api/product') || request.url.includes('/api/issue')) && (error.status === 401 || error.status === 403)) {
           this.tokenService.removeAdminToken();
           this.router.navigate(['/admin/login']);
         }

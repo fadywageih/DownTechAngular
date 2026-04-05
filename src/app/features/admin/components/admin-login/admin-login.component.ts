@@ -55,19 +55,22 @@ export class AdminLoginComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.errorMessage = null;
     const credentials = this.loginForm.value;
+    console.log('Admin login attempt:', credentials.email);
+    
     const loginSub = this.adminService.login(credentials).subscribe({
       next: (response) => {
+        console.log('Admin login successful:', response.email, 'role:', response.role);
         this.isLoading = false;
-        // Redirect based on admin role
         const redirectPath = response.role === 'SuperAdmin' ? '/admin/admins' : '/admin/products';
+        console.log('Redirecting to:', redirectPath);
         this.router.navigate([redirectPath]);
       },
       error: (error) => {
+        console.error('Admin login error:', error);
         this.isLoading = false;
         this.errorMessage = this.currentLang === 'en' 
           ? error.error?.message || 'Invalid email or password'
           : 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
-        console.error('Admin login error:', error);
       }
     });
     this.subscriptions.add(loginSub);

@@ -248,34 +248,31 @@
             <p class="text-white/80 text-lg">{{ currentLang === 'en' ? 'No services found' : 'لا توجد خدمات' }}</p>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-7">
-            <div *ngFor="let service of filteredServices; let i = index"
-              class="glass-card rounded-2xl shadow-2xl overflow-hidden transition-all duration-500 hover:transform hover:scale-105"
-              data-aos="fade-up" [attr.data-aos-delay]="i * 100">
-              <div class="img-zoom h-48 overflow-hidden">
-                <img [src]="service.image" [alt]="service.titleEn" class="w-full h-full object-cover" loading="lazy">
-              </div>
-              <div class="p-5">
-                <div class="text-3xl text-indigo-600 mb-3"><i [class]="'fas ' + service.icon"></i></div>
-                <h3 class="text-lg font-bold text-gray-800 mb-2 line-clamp-1">{{ currentLang === 'en' ? service.titleEn
-                  : service.titleAr }}</h3>
-                <p class="text-gray-500 text-sm line-clamp-2">{{ currentLang === 'en' ? service.descEn : service.descAr
-                  }}</p>
-                <button
-                  class="mt-4 w-full bg-gray-100 hover:bg-indigo-100 text-indigo-600 py-2 rounded-xl transition-all font-semibold">
-                  {{ currentLang === 'en' ? 'Learn More' : 'اعرف أكثر' }}
-                </button>
-              </div>
-            </div>
-          </div>
-
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-7">
+  <div *ngFor="let service of filteredServices; let i = index"
+    (click)="goToService(service.id)"
+    class="glass-card rounded-2xl shadow-2xl overflow-hidden transition-all duration-500 hover:transform hover:scale-105 cursor-pointer"
+    data-aos="fade-up" [attr.data-aos-delay]="i * 100">
+    <div class="img-zoom h-48 overflow-hidden">
+      <img [src]="service.image" [alt]="service.titleEn" class="w-full h-full object-cover" loading="lazy">
+    </div>
+    <div class="p-5">
+      <div class="text-3xl text-indigo-600 mb-3"><i [class]="'fas ' + service.icon"></i></div>
+      <h3 class="text-lg font-bold text-gray-800 mb-2 line-clamp-1">{{ currentLang === 'en' ? service.titleEn : service.titleAr }}</h3>
+      <p class="text-gray-500 text-sm line-clamp-2">{{ currentLang === 'en' ? service.descEn : service.descAr }}</p>
+      <button class="mt-4 w-full bg-gray-100 hover:bg-indigo-100 text-indigo-600 py-2 rounded-xl transition-all font-semibold">
+        {{ currentLang === 'en' ? 'Learn More' : 'اعرف أكثر' }}
+      </button>
+    </div>
+  </div>
+</div>
           <div class="mt-12 bg-white/90 backdrop-blur-sm rounded-2xl p-8 text-center border border-white/30 shadow-2xl"
             data-aos="zoom-in" data-aos-delay="200">
             <i class="fas fa-headset text-4xl text-indigo-600 mb-3 block animate-bounce"></i>
-            <p class="font-bold text-gray-800 text-lg">📞 24/7 Emergency Support: +20 123 456 789 | {{ currentLang ===
+            <p class="font-bold text-gray-800 text-lg">📞 24/7 Emergency Support: +201022469810 | {{ currentLang ===
               'en' ? 'Walk-in repairs with 6-month warranty' : 'إصلاحات فورية مع ضمان 6 أشهر' }}</p>
             <button
-              class="mt-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-3 rounded-full font-semibold transition-all shadow-md hover:shadow-xl transform hover:scale-105">
+              class="mt-4 bg-blue-900 hover:bg-blue-800 text-white px-8 py-3 rounded-full font-semibold transition-all shadow-md hover:shadow-xl transform hover:scale-105">
               <i class="fas fa-calendar-alt mr-2"></i> {{ currentLang === 'en' ? 'Book Appointment' : 'احجز موعد' }}
             </button>
           </div>

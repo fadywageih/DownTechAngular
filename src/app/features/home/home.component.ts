@@ -9,7 +9,8 @@ import { LanguageService } from "../../core/services/language.service";
 import { ProductService } from "../../core/services/product.service";
 import { FooterComponent } from "../../shared/components/footer/footer.component";
 import { ApiService } from "../../core/services/api.service";
-import { AboutComponent } from "../about/about.component";
+import { AboutComponent } from "../ViewOnHome/about/about.component";
+
 
 declare const AOS: any;
 
@@ -68,12 +69,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   
   currentSlide: number = 0;
   private slideInterval: any;
-  servicesData = [
-    { icon: "fa-microchip", titleEn: "Hardware Upgrade", titleAr: "ترقية العتاد", descEn: "SSD, RAM, battery, thermal paste replacement", descAr: "SSD، رام، بطارية، معجون حراري", image: "https://images.unsplash.com/photo-1587831990711-23ca6441447b?w=400&h=300&fit=crop" },
-    { icon: "fa-shield-virus", titleEn: "Virus Removal", titleAr: "إزالة الفيروسات", descEn: "Deep scan & performance optimization", descAr: "فحص عميق وتحسين الأداء", image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=400&h=300&fit=crop" },
-    { icon: "fa-keyboard", titleEn: "Screen & Keyboard", titleAr: "شاشة ولوحة مفاتيح", descEn: "Cracked screen, key replacement, trackpad fix", descAr: "شاشة مكسورة، استبدال أزرار، لمسة", image: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400&h=300&fit=crop" },
-    { icon: "fa-chart-line", titleEn: "System Tune-up", titleAr: "تحسين النظام", descEn: "OS reinstall, driver updates, diagnostics", descAr: "إعادة تثبيت النظام، تحديثات", image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=300&fit=crop" }
-  ];
+servicesData = [
+  { id: 'hardware-upgrade', icon: "fa-microchip", titleEn: "Hardware Upgrade", titleAr: "ترقية العتاد", descEn: "SSD, RAM, battery, thermal paste replacement", descAr: "SSD، رام، بطارية، معجون حراري", image: "https://images.unsplash.com/photo-1587831990711-23ca6441447b?w=400&h=300&fit=crop" },
+  { id: 'virus-removal', icon: "fa-shield-virus", titleEn: "Virus Removal", titleAr: "إزالة الفيروسات", descEn: "Deep scan & performance optimization", descAr: "فحص عميق وتحسين الأداء", image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=400&h=300&fit=crop" },
+  { id: 'screen-keyboard', icon: "fa-keyboard", titleEn: "Screen & Laptop batteries ", titleAr: "شاشة ولوحة مفاتيح", descEn: "Cracked screen, key replacement, trackpad fix", descAr: "شاشة مكسورة، استبدال أزرار، لمسة", image: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400&h=300&fit=crop" },
+  { id: 'system-tuneup', icon: "fa-chart-line", titleEn: "System Tune-up", titleAr: "تحسين النظام", descEn: "OS reinstall, driver updates, diagnostics", descAr: "إعادة تثبيت النظام، تحديثات", image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=300&fit=crop" }
+];
+
   projectsData = [
     { id: 1, titleEn: "AI Resume Analyzer", titleAr: "محلل السير الذاتية بالذكاء الاصطناعي", tech: "Python, Flask, GPT API", descEn: "Automated CV scoring with AI feedback", descAr: "تقييم السيرة الذاتية آليًا مع تقرير ذكي", image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop" },
     { id: 2, titleEn: "Smart Inventory Dashboard", titleAr: "لوحة تحكم المخزون الذكية", tech: "React, Node, MongoDB", descEn: "Real-time stock & sales analytics", descAr: "إدارة المخزون والتحليلات لحظيًا", image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop" },
@@ -236,7 +238,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
-  
+  goToService(serviceId: string): void {
+  this.router.navigate(['/service', serviceId]);
+}
   getPageNumbers(): number[] {
     const pages: number[] = [];
     if (this.totalPages <= 5) {

@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { Subscription } from "rxjs";
-import { LanguageService } from "../../core/services/language.service";
+import { LanguageService } from "../../../core/services/language.service";
 declare const AOS: any;
 @Component({
   selector: 'app-about',

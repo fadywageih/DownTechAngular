@@ -17,7 +17,7 @@ export class AdminAdminsListComponent implements OnInit {
 
   constructor(
     private adminService: AdminService,
-    private router: Router  // ✅ أضف Router
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -38,7 +38,7 @@ export class AdminAdminsListComponent implements OnInit {
   }
 
   logout(): void {
-    this.adminService.logout(); // هذا سيقوم بتسجيل الخروج وتنظيف الـ tokens
+    this.adminService.logout();
   }
 
   trackById(index: number, admin: AdminResultDto): string {

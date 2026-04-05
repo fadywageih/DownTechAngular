@@ -1,0 +1,196 @@
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 mt-20">
+  <div *ngIf="isLoading" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center">
+    <div class="bg-white rounded-2xl p-8 flex flex-col items-center shadow-2xl animate-fade-in-up">
+      <div class="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mb-4"></div>
+      <p class="text-gray-700 font-semibold">{{ currentLang === 'en' ? 'Sending...' : 'جاري الإرسال...' }}</p>
+    </div>
+  </div>
+  <div *ngIf="!isAuthenticated" class="bg-white rounded-3xl shadow-2xl p-8 md:p-10 text-center animate-fade-in-up">
+    <div class="w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
+      <i class="fas fa-exclamation-triangle text-4xl text-yellow-600"></i>
+    </div>
+    <h2 class="text-2xl font-bold text-gray-800 mb-3">
+      {{ currentLang === 'en' ? 'Login Required' : 'تسجيل الدخول مطلوب' }}
+    </h2>
+    <p class="text-gray-600 mb-6">
+      {{ currentLang === 'en' ? 'Please login to submit a report' : 'الرجاء تسجيل الدخول لإرسال تقرير' }}
+    </p>
+    <button (click)="goBack()"
+      class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300">
+      <i class="fas fa-arrow-left mr-2"></i>
+      {{ currentLang === 'en' ? 'Go Back' : 'رجوع' }}
+    </button>
+  </div>
+  <div *ngIf="isAuthenticated" class="bg-white rounded-3xl shadow-2xl p-8 md:p-10 transform transition-all duration-500 hover:shadow-3xl animate-fade-in-up">
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center gap-3 bg-gradient-to-r from-indigo-50 to-purple-50 px-6 py-3 rounded-full mb-4 shadow-md animate-pulse-slow">
+        <i class="fas fa-tools text-indigo-600 text-2xl animate-bounce-slow"></i>
+        <span class="text-sm font-semibold text-indigo-600 uppercase tracking-wider">
+          {{ currentLang === 'en' ? 'Report Issue' : 'الإبلاغ عن مشكلة' }}
+        </span>
+      </div>
+      <h1 class="text-3xl md:text-4xl font-bold bg-blue-700 bg-clip-text text-transparent mb-2">
+        {{ currentLang === 'en' ? 'Report a Problem' : 'الإبلاغ عن مشكلة' }}
+      </h1>
+      <p class="text-gray-500">
+        {{ currentLang === 'en' ? 'Fill out the form below and our team will contact you soon' : 'املأ النموذج أدناه وسيتواصل معك فريقنا قريباً' }}
+      </p>
+    </div>
+
+    <form [formGroup]="reportForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Product Type -->
+      <div class="animate-slide-in-right" style="animation-delay: 0.1s">
+        <label class="block text-gray-700 font-semibold mb-2">
+          <i class="fas fa-laptop-code mr-2 text-indigo-500"></i>
+          {{ currentLang === 'en' ? 'Device Type' : 'نوع الجهاز' }}
+        </label>
+        <select formControlName="productType"
+          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white transition-all duration-300 hover:shadow-md">
+          <option [ngValue]="null" disabled>
+            {{ currentLang === 'en' ? 'Select device type' : 'اختر نوع الجهاز' }}
+          </option>
+          <option [ngValue]="1">
+            <i class="fas fa-laptop"></i> {{ currentLang === 'en' ? 'Laptop' : 'لابتوب' }}
+          </option>
+          <option [ngValue]="2">
+            <i class="fas fa-desktop"></i> {{ currentLang === 'en' ? 'PC' : 'بي سي' }}
+          </option>
+          <option [ngValue]="3">
+            <i class="fas fa-mouse"></i> {{ currentLang === 'en' ? 'Accessory' : 'إكسسوار' }}
+          </option>
+        </select>
+        <div *ngIf="reportForm.get('productType')?.touched && reportForm.get('productType')?.invalid" class="text-red-500 text-sm mt-1 animate-shake">
+          <i class="fas fa-exclamation-circle mr-1"></i>
+          {{ currentLang === 'en' ? 'Device type is required' : 'نوع الجهاز مطلوب' }}
+        </div>
+      </div>
+
+      <!-- Model -->
+      <div class="animate-slide-in-right" style="animation-delay: 0.15s">
+        <label class="block text-gray-700 font-semibold mb-2">
+          <i class="fas fa-tag mr-2 text-indigo-500"></i>
+          {{ currentLang === 'en' ? 'Model' : 'الموديل' }}
+        </label>
+        <input type="text" formControlName="model"
+          placeholder="{{ currentLang === 'en' ? 'e.g., Dell Latitude E5250' : 'مثال: Dell Latitude E5250' }}"
+          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white transition-all duration-300 hover:shadow-md">
+        <div *ngIf="reportForm.get('model')?.touched && reportForm.get('model')?.invalid" class="text-red-500 text-sm mt-1 animate-shake">
+          <i class="fas fa-exclamation-circle mr-1"></i>
+          {{ currentLang === 'en' ? 'Model is required' : 'الموديل مطلوب' }}
+        </div>
+      </div>
+
+      <!-- Specs Row -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="animate-slide-in-right" style="animation-delay: 0.2s">
+          <label class="block text-gray-700 font-semibold mb-2">
+            <i class="fas fa-microchip mr-2 text-indigo-500"></i> Processor (CPU)
+          </label>
+          <input type="text" formControlName="processor"
+            placeholder="{{ currentLang === 'en' ? 'e.g., Intel Core i7' : 'مثال: Intel Core i7' }}"
+            class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white transition-all duration-300 hover:shadow-md">
+        </div>
+        <div class="animate-slide-in-right" style="animation-delay: 0.25s">
+          <label class="block text-gray-700 font-semibold mb-2">
+            <i class="fas fa-memory mr-2 text-indigo-500"></i> RAM
+          </label>
+          <input type="text" formControlName="ram"
+            placeholder="{{ currentLang === 'en' ? 'e.g., 16GB' : 'مثال: 16GB' }}"
+            class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white transition-all duration-300 hover:shadow-md">
+        </div>
+        <div class="animate-slide-in-right" style="animation-delay: 0.3s">
+          <label class="block text-gray-700 font-semibold mb-2">
+            <i class="fas fa-hdd mr-2 text-indigo-500"></i> Storage
+          </label>
+          <input type="text" formControlName="storage"
+            placeholder="{{ currentLang === 'en' ? 'e.g., 512GB SSD' : 'مثال: 512GB SSD' }}"
+            class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white transition-all duration-300 hover:shadow-md">
+        </div>
+        <div class="animate-slide-in-right" style="animation-delay: 0.35s">
+          <label class="block text-gray-700 font-semibold mb-2">
+            <i class="fas fa-tv mr-2 text-indigo-500"></i> GPU (Graphics Card)
+          </label>
+          <input type="text" formControlName="gpu"
+            placeholder="{{ currentLang === 'en' ? 'e.g., RTX 3060' : 'مثال: RTX 3060' }}"
+            class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white transition-all duration-300 hover:shadow-md">
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="animate-slide-in-right" style="animation-delay: 0.4s">
+        <label class="block text-gray-700 font-semibold mb-2">
+          <i class="fas fa-file-alt mr-2 text-indigo-500"></i>
+          {{ currentLang === 'en' ? 'Problem Description' : 'وصف المشكلة' }}
+        </label>
+        <textarea formControlName="description" rows="5"
+          placeholder="{{ currentLang === 'en' ? 'Please describe the problem in detail...' : 'الرجاء وصف المشكلة بالتفصيل...' }}"
+          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white resize-none transition-all duration-300 hover:shadow-md"></textarea>
+        <div *ngIf="reportForm.get('description')?.touched && reportForm.get('description')?.invalid" class="text-red-500 text-sm mt-1 animate-shake">
+          <i class="fas fa-exclamation-circle mr-1"></i>
+          {{ currentLang === 'en' ? 'Description is required (min 10 characters)' : 'وصف المشكلة مطلوب (10 أحرف على الأقل)' }}
+        </div>
+      </div>
+
+      <!-- Customer Info -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="animate-slide-in-right" style="animation-delay: 0.45s">
+          <label class="block text-gray-700 font-semibold mb-2">
+            <i class="fas fa-user mr-2 text-indigo-500"></i>
+            {{ currentLang === 'en' ? 'Full Name' : 'الاسم الكامل' }}
+          </label>
+          <input type="text" formControlName="customerName"
+            placeholder="{{ currentLang === 'en' ? 'Your full name' : 'اسمك الكامل' }}"
+            class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white transition-all duration-300 hover:shadow-md">
+          <div *ngIf="reportForm.get('customerName')?.touched && reportForm.get('customerName')?.invalid" class="text-red-500 text-sm mt-1 animate-shake">
+            <i class="fas fa-exclamation-circle mr-1"></i>
+            {{ currentLang === 'en' ? 'Name is required' : 'الاسم مطلوب' }}
+          </div>
+        </div>
+        <div class="animate-slide-in-right" style="animation-delay: 0.5s">
+          <label class="block text-gray-700 font-semibold mb-2">
+            <i class="fas fa-phone-alt mr-2 text-indigo-500"></i>
+            {{ currentLang === 'en' ? 'Phone Number' : 'رقم الهاتف' }}
+          </label>
+          <input type="tel" formControlName="phoneNumber"
+            placeholder="{{ currentLang === 'en' ? 'e.g., 01270114646' : 'مثال: 01270114646' }}"
+            class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white transition-all duration-300 hover:shadow-md">
+          <div *ngIf="reportForm.get('phoneNumber')?.touched && reportForm.get('phoneNumber')?.invalid" class="text-red-500 text-sm mt-1 animate-shake">
+            <div *ngIf="reportForm.get('phoneNumber')?.errors?.['required']">
+              <i class="fas fa-exclamation-circle mr-1"></i>
+              {{ currentLang === 'en' ? 'Phone number is required' : 'رقم الهاتف مطلوب' }}
+            </div>
+            <div *ngIf="reportForm.get('phoneNumber')?.errors?.['pattern']">
+              <i class="fas fa-exclamation-circle mr-1"></i>
+              {{ currentLang === 'en' ? 'Enter a valid Egyptian phone number' : 'أدخل رقم هاتف مصري صحيح' }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex gap-4 pt-4 animate-fade-in-up" style="animation-delay: 0.55s">
+        <button type="submit" [disabled]="isLoading || reportForm.invalid"
+          style="background: linear-gradient(135deg, #0f2027, #2c5364);"
+          class="flex-1 hover:opacity-90 text-white py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+          <i class="fas fa-paper-plane mr-2"></i>
+          {{ isLoading ? (currentLang === 'en' ? 'Sending...' : 'جاري الإرسال...') : (currentLang === 'en' ? 'Submit Report' : 'إرسال التقرير') }}
+        </button>
+        <button type="button" (click)="goBack()"
+          class="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-all duration-300 transform hover:scale-105">
+          <i class="fas fa-arrow-left mr-2"></i>
+          {{ currentLang === 'en' ? 'Back' : 'رجوع' }}
+        </button>
+      </div>
+    </form>
+
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="mt-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-xl animate-fade-in-up">
+      <i class="fas fa-check-circle mr-2"></i> {{ successMessage }}
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="mt-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-xl animate-shake">
+      <i class="fas fa-exclamation-triangle mr-2"></i> {{ errorMessage }}
+    </div>
+  </div>
+</div>

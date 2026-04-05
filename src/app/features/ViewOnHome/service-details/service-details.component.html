@@ -1,0 +1,167 @@
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8 px-4">
+  <div class="max-w-7xl mx-auto">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="flex justify-center items-center h-96">
+      <div class="text-center">
+        <i class="fas fa-spinner fa-spin text-5xl text-indigo-600 mb-4"></i>
+        <p class="text-gray-600">{{ currentLang === 'en' ? 'Loading...' : 'جاري التحميل...' }}</p>
+      </div>
+    </div>
+    <div *ngIf="!loading && service">
+      <!-- Back Button -->
+      <button (click)="goBack()" 
+        class="mb-6 flex items-center gap-2 text-indigo-600 hover:text-indigo-800 transition-all bg-white px-4 py-2 rounded-full shadow-md hover:shadow-lg">
+        <i class="fas fa-arrow-right"></i>
+        <span>{{ currentLang === 'en' ? 'Back to Home' : 'رجوع للرئيسية' }}</span>
+      </button>
+      <div class="bg-white rounded-3xl shadow-2xl overflow-hidden mb-8">
+        <div class="grid md:grid-cols-2 gap-0">
+          <div class="h-64 md:h-full overflow-hidden">
+            <img [src]="service.image" [alt]="service.titleEn" 
+              class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+          </div>
+          <div class="p-8 bg-gradient-to-br from-indigo-50 to-purple-50">
+            <div class="inline-flex items-center gap-3 bg-indigo-100 px-5 py-2 rounded-full mb-4">
+              <i [class]="'fas ' + service.icon + ' text-indigo-600 text-2xl'"></i>
+              <h1 class="text-2xl md:text-3xl font-bold text-gray-800">
+                {{ currentLang === 'en' ? service.titleEn : service.titleAr }}
+              </h1>
+            </div>
+            <p class="text-indigo-600 text-lg font-semibold mb-2">
+              {{ currentLang === 'en' ? service.shortDescEn : service.shortDescAr }}
+            </p>
+            <p class="text-gray-600 leading-relaxed">
+              {{ currentLang === 'en' ? service.fullDescEn : service.fullDescAr }}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white rounded-xl p-4 text-center shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+          <i class="fas fa-tag text-indigo-600 text-2xl mb-2 block"></i>
+          <p class="text-xs text-gray-500">{{ currentLang === 'en' ? 'Starting Price' : 'السعر يبدأ من' }}</p>
+          <p class="font-bold text-gray-800 text-sm md:text-base">{{ currentLang === 'en' ? service.priceEn : service.priceAr }}</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 text-center shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+          <i class="fas fa-clock text-indigo-600 text-2xl mb-2 block"></i>
+          <p class="text-xs text-gray-500">{{ currentLang === 'en' ? 'Duration' : 'المدة' }}</p>
+          <p class="font-bold text-gray-800 text-sm md:text-base">{{ currentLang === 'en' ? service.durationEn : service.durationAr }}</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 text-center shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+          <i class="fas fa-shield-alt text-indigo-600 text-2xl mb-2 block"></i>
+          <p class="text-xs text-gray-500">{{ currentLang === 'en' ? 'Warranty' : 'الضمان' }}</p>
+          <p class="font-bold text-gray-800 text-sm md:text-base">{{ currentLang === 'en' ? service.warrantyEn : service.warrantyAr }}</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 text-center shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+          <i class="fas fa-star text-indigo-600 text-2xl mb-2 block"></i>
+          <p class="text-xs text-gray-500">{{ currentLang === 'en' ? 'Satisfaction' : 'رضا العملاء' }}</p>
+          <p class="font-bold text-gray-800 text-sm md:text-base">98% {{ currentLang === 'en' ? 'Positive' : 'إيجابي' }}</p>
+        </div>
+      </div>
+
+      <!-- Features & Process -->
+      <div class="grid md:grid-cols-2 gap-8 mb-8">
+        <!-- Features -->
+        <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all">
+          <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <i class="fas fa-check-circle text-green-500 text-2xl"></i>
+            {{ currentLang === 'en' ? 'Key Features' : 'المميزات الرئيسية' }}
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div *ngFor="let feature of service.features" class="flex items-center gap-2 p-2 bg-green-50 rounded-lg hover:bg-green-100 transition-all">
+              <i class="fas fa-check text-green-600 text-sm"></i>
+              <span class="text-gray-700 text-sm">{{ currentLang === 'en' ? feature.en : feature.ar }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Process Steps -->
+        <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all">
+          <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <i class="fas fa-list-ol text-blue-500 text-2xl"></i>
+            {{ currentLang === 'en' ? 'How It Works' : 'كيف يعمل' }}
+          </h3>
+          <div class="space-y-3">
+            <div *ngFor="let step of service.process; let idx = index" class="flex items-center gap-3 p-2 bg-blue-50 rounded-lg hover:bg-blue-100 transition-all">
+              <span class="w-7 h-7 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">{{ idx + 1 }}</span>
+              <span class="text-gray-700 text-sm">{{ currentLang === 'en' ? step.en : step.ar }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl p-6 shadow-lg mb-8">
+        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+          <i class="fas fa-question-circle text-yellow-500 text-2xl"></i>
+          {{ currentLang === 'en' ? 'Frequently Asked Questions' : 'الأسئلة الشائعة' }}
+        </h3>
+        <div class="space-y-4">
+          <div *ngFor="let item of service.faq; let idx = index" class="border-b border-gray-200 pb-3 last:border-0">
+            <details class="group">
+              <summary class="flex items-start gap-3 cursor-pointer list-none">
+                <i class="fas fa-plus text-indigo-600 mt-1 text-sm group-open:rotate-45 transition-transform"></i>
+                <p class="font-semibold text-gray-800">{{ currentLang === 'en' ? item.questionEn : item.questionAr }}</p>
+              </summary>
+              <div class="pl-6 mt-2">
+                <p class="text-gray-600 text-sm">{{ currentLang === 'en' ? item.answerEn : item.answerAr }}</p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+      <div class="mb-8">
+        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+          <i class="fas fa-link text-purple-500 text-2xl"></i>
+          {{ currentLang === 'en' ? 'Related Services' : 'خدمات ذات صلة' }}
+        </h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div *ngFor="let related of service.relatedServices" 
+            (click)="goToRelatedService(related.id)"
+            class="bg-white rounded-xl p-4 text-center shadow-lg hover:shadow-xl transition-all cursor-pointer hover:-translate-y-2">
+            <i [class]="'fas ' + related.icon + ' text-indigo-600 text-2xl mb-2 block'"></i>
+            <p class="text-gray-700 text-sm font-semibold">{{ currentLang === 'en' ? related.titleEn : related.titleAr }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 text-center relative overflow-hidden mt-8 mb-4">
+        <!-- Animated background elements -->
+        <div class="absolute inset-0 overflow-hidden">
+          <div class="absolute -top-40 -right-40 w-80 h-80 bg-white/10 rounded-full blur-3xl animate-ping opacity-50"></div>
+          <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+          <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-r from-white/10 to-transparent animate-shine"></div>
+        </div>
+        <div class="relative z-10">
+          <div class="animate-bounce-slow mb-4">
+            <i class="fas fa-headset text-5xl text-white/90"></i>
+          </div>
+          <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">
+            {{ currentLang === 'en' ? 'Ready to get started?' : 'مستعد للبدء؟' }}
+          </h3>
+          <p class="text-white/90 mb-8 text-lg">
+            {{ currentLang === 'en' ? 'Contact us today to book your service' : 'اتصل بنا اليوم لحجز خدمتك' }}
+          </p>
+          <div class="flex flex-wrap justify-center gap-4">
+            <a [href]="'https://wa.me/201022469810?text=' + getWhatsAppMessage()" target="_blank"
+              class="group relative inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg overflow-hidden">
+              <span class="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
+              <i class="fab fa-whatsapp text-xl"></i>
+              {{ currentLang === 'en' ? 'Book via WhatsApp' : 'احجز عبر واتساب' }}
+            </a>
+            <a routerLink="/issue/report-issue"
+              class="group relative inline-flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg overflow-hidden">
+              <span class="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
+              <i class="fas fa-exclamation-triangle text-xl"></i>
+              {{ currentLang === 'en' ? 'Report an Issue' : 'الإبلاغ عن مشكلة' }}
+            </a>
+            <button (click)="goBack()"
+              class="group relative inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 overflow-hidden">
+              <span class="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
+              <i class="fas fa-arrow-left text-xl"></i>
+              {{ currentLang === 'en' ? 'Browse More Services' : 'تصفح المزيد من الخدمات' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

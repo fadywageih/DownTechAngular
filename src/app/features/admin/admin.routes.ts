@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { AdminAuthGuard } from '../../core/guards/admin-auth.guard';
 import { RoleGuard } from '../../core/guards/role.guard';
-
 export const ADMIN_ROUTES: Routes = [
   {
     path: 'login',
@@ -49,6 +48,16 @@ export const ADMIN_ROUTES: Routes = [
         path: 'products/:id',
         loadComponent: () => import('./components/admin-products/admin-product-detail/admin-product-detail.component')
           .then(m => m.AdminProductDetailComponent)
+      },
+      {
+        path: 'issues',
+        loadComponent: () => import('./components/admin-issues/admin-issues-list.component')
+          .then(m => m.AdminIssuesListComponent)
+      },
+      {
+        path: 'issues/:id',
+        loadComponent: () => import('./components/admin-issue-detail/admin-issue-detail.component')
+          .then(m => m.AdminIssueDetailComponent)
       },
       {
         path: '',

@@ -19,10 +19,18 @@ export const routes: Routes = [
     loadChildren: () => import('./features/products/product.routes').then(m => m.PRODUCT_ROUTES)
   },
   {
+    path: 'issue',
+    loadChildren: () => import('./features/issue/issue.routes').then(m => m.ISSUE_ROUTES)
+  },
+  {
     path: 'home',
     loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent)
   },
-  
+  {
+    path: 'service/:id',
+    loadComponent: () => import('./features/ViewOnHome/service-details/service-details.component')
+      .then(m => m.ServiceDetailsComponent)
+  },
   {
     path: '**',
     redirectTo: '/home'

@@ -19,8 +19,17 @@
     }
     private loadStoredAdmin(): void {
       const admin = this.tokenService.getAdminUser();
-      if (admin && this.tokenService.isAdminTokenValid()) {
+      const token = this.tokenService.getAdminToken();
+      const isValid = this.tokenService.isAdminTokenValid();
+      console.log('AdminService.loadStoredAdmin - admin:', admin?.email, 'token exists:', !!token, 'valid:', isValid);
+      
+      if (admin && isValid) {
         this.currentAdminSubject.next(admin);
+        console.log('Admin loaded from storage:', admin.email);
+      } else {
+        if (token && !isValid) {
+          console.warn('Admin token is invalid or expired');
+        }
       }
     }
     login(credentials: AdminLoginDto): Observable<AdminAuthResultDto> {
@@ -50,9 +59,11 @@
       return this.adminApi.getAdminById(id);
     }
     private handleAuthResponse(response: AdminAuthResultDto): void {
+      console.log('AdminService.handleAuthResponse - Setting token for:', response.email, 'role:', response.role);
       this.tokenService.setAdminToken(response.token);
       this.tokenService.setAdminUser(response);
       this.currentAdminSubject.next(response);
+      console.log('Admin auth response handled, currentAdmin now:', this.currentAdminSubject.value?.email);
     }
     isAuthenticated(): boolean {
       return this.tokenService.isAdminTokenValid();

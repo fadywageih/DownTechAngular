@@ -1,0 +1,99 @@
+<div class="space-y-8">
+  <div class="glass-card p-8 rounded-3xl">
+    <div class="flex justify-between items-start mb-6">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">Issue Details</h1>
+        <p class="text-gray-600">ID: {{ issue?.id | slice:0:8 }}...</p>
+      </div>
+      <button (click)="goBack()" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all">
+        <i class="fas fa-arrow-left mr-2"></i>Back
+      </button>
+    </div>
+    <div *ngIf="successMessage" class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl">
+      <i class="fas fa-check-circle mr-2"></i>{{ successMessage }}
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
+      <i class="fas fa-exclamation-circle mr-2"></i>{{ errorMessage }}
+    </div>
+
+    <div *ngIf="isLoading" class="text-center py-12">
+      <i class="fas fa-spinner fa-spin text-4xl text-indigo-600"></i>
+    </div>
+
+    <div *ngIf="issue && !isLoading" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white rounded-2xl p-6 shadow">
+          <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <i class="fas fa-info-circle text-indigo-600"></i> Problem Description
+          </h3>
+          <p class="text-gray-700 leading-relaxed">{{ issue.description }}</p>
+        </div>
+        <div class="bg-white rounded-2xl p-6 shadow">
+          <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <i class="fas fa-microchip text-indigo-600"></i> Device Specifications
+          </h3>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <p class="text-sm text-gray-500">Processor</p>
+              <p class="font-semibold">{{ issue.processor || 'N/A' }}</p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500">RAM</p>
+              <p class="font-semibold">{{ issue.ram || 'N/A' }}</p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500">Storage</p>
+              <p class="font-semibold">{{ issue.storage || 'N/A' }}</p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500">GPU</p>
+              <p class="font-semibold">{{ issue.gpu || 'N/A' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="space-y-6">
+        <div class="bg-white rounded-2xl p-6 shadow">
+          <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <i class="fas fa-tag text-indigo-600"></i> Status
+          </h3>
+          <select [(ngModel)]="selectedStatus" (change)="updateStatus()" [disabled]="isSaving"
+            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4 disabled:opacity-50">
+            <option [ngValue]="1">Pending</option>
+            <option [ngValue]="2">In Progress</option>
+            <option [ngValue]="3">Resolved</option>
+            <option [ngValue]="4">Closed</option>
+          </select>
+          <textarea [(ngModel)]="adminNotes" placeholder="Add admin notes..." rows="4" [disabled]="isSaving"
+            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none disabled:opacity-50"></textarea>
+          <button (click)="updateStatus()" [disabled]="isSaving" class="w-full mt-4 bg-indigo-600 text-white py-2 rounded-xl hover:bg-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+            <i class="fas fa-save mr-2" *ngIf="!isSaving"></i>
+            <i class="fas fa-spinner fa-spin mr-2" *ngIf="isSaving"></i>
+            {{ isSaving ? 'Updating...' : 'Update Status' }}
+          </button>
+        </div>
+        <div class="bg-white rounded-2xl p-6 shadow">
+          <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <i class="fas fa-user text-indigo-600"></i> Customer Info
+          </h3>
+          <p class="text-gray-700"><span class="font-semibold">Name:</span> {{ issue.customerName }}</p>
+          <p class="text-gray-700 mt-2"><span class="font-semibold">Phone:</span> {{ issue.phoneNumber }}</p>
+          <p *ngIf="issue.userEmail" class="text-gray-700 mt-2"><span class="font-semibold">Email:</span> {{ issue.userEmail }}</p>
+        </div>
+        <div class="bg-white rounded-2xl p-6 shadow">
+          <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <i class="fas fa-clock text-indigo-600"></i> Timeline
+          </h3>
+          <p class="text-gray-700"><span class="font-semibold">Created:</span> {{ issue.createdAt | date:'medium' }}</p>
+          <p *ngIf="issue.resolvedAt" class="text-gray-700 mt-2"><span class="font-semibold">Resolved:</span> {{ issue.resolvedAt | date:'medium' }}</p>
+          <p *ngIf="issue.assignedAdminName" class="text-gray-700 mt-2"><span class="font-semibold">Assigned to:</span> {{ issue.assignedAdminName }}</p>
+        </div>
+        <button (click)="assignToMe()" [disabled]="isSaving" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-semibold hover:bg-emerald-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+          <i class="fas fa-user-check mr-2"></i>{{ isSaving ? 'Assigning...' : 'Assign to Me' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
