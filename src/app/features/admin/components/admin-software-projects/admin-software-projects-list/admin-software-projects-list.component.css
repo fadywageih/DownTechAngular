@@ -1,0 +1,140 @@
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.admin-products-container {
+  padding: 1.5rem;
+  min-height: 100vh;
+}
+
+/* Line clamp utility for text truncation */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* For multiple lines if needed */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* RTL Support */
+:host-context([dir="rtl"]) .flex {
+  flex-direction: row-reverse;
+}
+
+:host-context([dir="rtl"]) .text-right {
+  text-align: left;
+}
+
+:host-context([dir="rtl"]) .text-left {
+  text-align: right;
+}
+
+:host-context([dir="rtl"]) .mr-2 {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+:host-context([dir="rtl"]) .gap-2 {
+  gap: 0.5rem;
+}
+
+:host-context([dir="rtl"]) .gap-3 {
+  gap: 0.75rem;
+}
+
+:host-context([dir="rtl"]) .gap-4 {
+  gap: 1rem;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Animation for table rows */
+tbody tr {
+  transition: all 0.2s ease-in-out;
+}
+
+tbody tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: scale(1.01);
+}
+
+/* Button hover effects */
+button {
+  transition: all 0.2s ease-in-out;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+/* Table styles */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+th {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+td {
+  vertical-align: middle;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .admin-products-container {
+    padding: 1rem;
+  }
+  
+  th, td {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .line-clamp-1 {
+    max-width: 150px !important;
+  }
+}

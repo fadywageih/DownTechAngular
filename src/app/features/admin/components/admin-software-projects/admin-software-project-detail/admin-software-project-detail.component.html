@@ -1,0 +1,163 @@
+<div class="admin-products-container">
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-white mb-2">
+        {{ currentLang === 'en' ? 'Project Details' : 'تفاصيل المشروع' }}
+      </h1>
+      <p class="text-white/70">
+        {{ currentLang === 'en' ? 'View software project information' : 'عرض معلومات المشروع البرمجي' }}
+      </p>
+    </div>
+    <div class="flex gap-3">
+      <button (click)="editProject()" 
+              class="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-xl transition-all flex items-center gap-2 shadow-lg">
+        <i class="fas fa-edit"></i>
+        {{ currentLang === 'en' ? 'Edit' : 'تعديل' }}
+      </button>
+      <button (click)="goBack()" 
+              class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-xl transition-all flex items-center gap-2 shadow-lg">
+        <i class="fas fa-arrow-left"></i>
+        {{ currentLang === 'en' ? 'Back' : 'رجوع' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="glass-card rounded-2xl p-12 text-center">
+    <i class="fas fa-spinner fa-spin text-4xl text-purple-600"></i>
+    <p class="text-white/80 mt-4">{{ currentLang === 'en' ? 'Loading project details...' : 'جاري تحميل تفاصيل المشروع...' }}</p>
+  </div>
+
+  <!-- Project Details -->
+  <div *ngIf="project && !isLoading" class="glass-card rounded-2xl overflow-hidden">
+    
+    <!-- Image Section -->
+    <div class="relative h-64 md:h-80 overflow-hidden">
+      <img [src]="project.imageUrl" 
+           [alt]="currentLang === 'en' ? project.nameEn : project.nameAr"
+           class="w-full h-full object-cover"
+           (error)="$event.target.src='https://placehold.co/1200x400/4f46e5/white?text=No+Image'">
+      <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
+    </div>
+
+    <!-- Content Section -->
+    <div class="p-6 md:p-8">
+      
+      <!-- Title and Badges -->
+      <div class="mb-6">
+        <h2 class="text-3xl font-bold text-white mb-3">
+          {{ currentLang === 'en' ? project.nameEn : project.nameAr }}
+        </h2>
+        <div class="flex flex-wrap gap-2">
+          <!-- Frontend Badge -->
+          <span class="px-3 py-1.5 bg-purple-500/20 text-purple-300 rounded-full text-sm font-semibold border border-purple-500/30">
+            <i class="fas fa-code mr-1"></i>
+            {{ project.frontendType }}
+          </span>
+          <!-- Backend Badge -->
+          <span class="px-3 py-1.5 bg-blue-500/20 text-blue-300 rounded-full text-sm font-semibold border border-blue-500/30">
+            <i class="fas fa-server mr-1"></i>
+            {{ project.backendType }}
+          </span>
+          <!-- Database Badge -->
+          <span *ngIf="project.database" class="px-3 py-1.5 bg-green-500/20 text-green-300 rounded-full text-sm font-semibold border border-green-500/30">
+            <i class="fas fa-database mr-1"></i>
+            {{ project.database }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="mb-8">
+        <h3 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+          <i class="fas fa-align-left text-purple-400"></i>
+          {{ currentLang === 'en' ? 'Description' : 'الوصف' }}
+        </h3>
+        <p class="text-gray-300 leading-relaxed">
+          {{ currentLang === 'en' ? project.descriptionEn : project.descriptionAr }}
+        </p>
+      </div>
+
+      <!-- Tech Stack Section -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        
+        <!-- Frontend Details -->
+        <div class="bg-white/5 rounded-xl p-5 border border-white/10">
+          <h4 class="text-white font-semibold mb-3 flex items-center gap-2">
+            <i class="fas fa-code text-purple-400"></i>
+            {{ currentLang === 'en' ? 'Frontend' : 'واجهة أمامية' }}
+          </h4>
+          <div class="space-y-2">
+            <div class="flex justify-between">
+              <span class="text-gray-400">{{ currentLang === 'en' ? 'Framework:' : 'إطار العمل:' }}</span>
+              <span class="text-white">{{ project.frontendType }}</span>
+            </div>
+            <div *ngIf="project.frontendLibraries && project.frontendLibraries.length > 0">
+              <span class="text-gray-400 block mb-2">{{ currentLang === 'en' ? 'Libraries:' : 'المكتبات:' }}</span>
+              <div class="flex flex-wrap gap-2">
+                <span *ngFor="let lib of project.frontendLibraries" 
+                      class="px-2 py-1 bg-purple-500/15 text-purple-300 rounded-lg text-xs">
+                  {{ lib }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Backend Details -->
+        <div class="bg-white/5 rounded-xl p-5 border border-white/10">
+          <h4 class="text-white font-semibold mb-3 flex items-center gap-2">
+            <i class="fas fa-server text-blue-400"></i>
+            {{ currentLang === 'en' ? 'Backend' : 'باك اند' }}
+          </h4>
+          <div class="space-y-2">
+            <div class="flex justify-between">
+              <span class="text-gray-400">{{ currentLang === 'en' ? 'Technology:' : 'التقنية:' }}</span>
+              <span class="text-white">{{ project.backendType }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-400">{{ currentLang === 'en' ? 'Framework:' : 'إطار العمل:' }}</span>
+              <span class="text-white">{{ project.backendFramework || 'None' }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-400">{{ currentLang === 'en' ? 'Database:' : 'قاعدة البيانات:' }}</span>
+              <span class="text-white">{{ project.database || 'None' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Links Section -->
+      <div *ngIf="project.githubUrl || project.liveDemoUrl" class="flex flex-wrap gap-4 mb-6">
+        <a *ngIf="project.githubUrl" 
+           [href]="project.githubUrl" 
+           target="_blank" 
+           class="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-700 hover:bg-gray-600 text-white rounded-xl transition-all">
+          <i class="fab fa-github"></i>
+          GitHub
+          <i class="fas fa-external-link-alt text-xs ml-1 opacity-70"></i>
+        </a>
+        <a *ngIf="project.liveDemoUrl" 
+           [href]="project.liveDemoUrl" 
+           target="_blank" 
+           class="inline-flex items-center gap-2 px-5 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl transition-all">
+          <i class="fas fa-globe"></i>
+          {{ currentLang === 'en' ? 'Live Demo' : 'عرض مباشر' }}
+          <i class="fas fa-external-link-alt text-xs ml-1 opacity-70"></i>
+        </a>
+      </div>
+
+      <!-- Dates -->
+      <div class="flex flex-wrap gap-x-6 gap-y-2 pt-4 border-t border-white/10 text-sm text-gray-400">
+        <span class="flex items-center gap-1">
+          <i class="far fa-calendar-alt"></i>
+          {{ currentLang === 'en' ? 'Created:' : 'تاريخ الإنشاء:' }} {{ project.createdAt | date:'medium' }}
+        </span>
+        <span *ngIf="project.updatedAt" class="flex items-center gap-1">
+          <i class="far fa-clock"></i>
+          {{ currentLang === 'en' ? 'Updated:' : 'آخر تحديث:' }} {{ project.updatedAt | date:'medium' }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

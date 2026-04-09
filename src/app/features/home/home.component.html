@@ -56,23 +56,23 @@
           <span class="text-2xl font-extrabold gradient-text">{{ getBrandText() }}</span>
         </div>
 
-        <div class="flex flex-wrap gap-2 bg-white/50 backdrop-blur-sm p-1.5 rounded-full">
-          <button (click)="switchSection('shop')"
-            class="nav-btn px-5 py-2.5 rounded-full font-semibold text-gray-700 hover:bg-indigo-100 transition-all flex items-center gap-2"
-            [class.active-nav]="currentSection === 'shop'">
-            <i class="fas fa-laptop text-lg"></i> {{ currentLang === 'en' ? 'Devices' : 'اجهزه' }}
-          </button>
-          <button (click)="switchSection('maintenance')"
-            class="nav-btn px-5 py-2.5 rounded-full font-semibold text-gray-700 hover:bg-indigo-100 transition-all flex items-center gap-2"
-            [class.active-nav]="currentSection === 'maintenance'">
-            <i class="fas fa-tools text-lg"></i> {{ currentLang === 'en' ? 'Maintenance' : 'الصيانة' }}
-          </button>
-          <button (click)="switchSection('projects')"
-            class="nav-btn px-5 py-2.5 rounded-full font-semibold text-gray-700 hover:bg-indigo-100 transition-all flex items-center gap-2"
-            [class.active-nav]="currentSection === 'projects'">
-            <i class="fas fa-code text-lg"></i> {{ currentLang === 'en' ? 'Software' : 'برمجيات' }}
-          </button>
-        </div>
+    <div class="flex flex-wrap gap-2 bg-white/50 backdrop-blur-sm p-1.5 rounded-full">
+  <button (click)="switchSection('shop')"
+    class="nav-btn px-5 py-2.5 rounded-full font-semibold text-gray-700 hover:bg-indigo-100 transition-all flex items-center gap-2"
+    [class.active-nav]="currentSection === 'shop'">
+    <i class="fas fa-laptop text-lg"></i> {{ currentLang === 'en' ? 'Devices' : 'اجهزه' }}
+  </button>
+  <button (click)="switchSection('maintenance')"
+    class="nav-btn px-5 py-2.5 rounded-full font-semibold text-gray-700 hover:bg-indigo-100 transition-all flex items-center gap-2"
+    [class.active-nav]="currentSection === 'maintenance'">
+    <i class="fas fa-tools text-lg"></i> {{ currentLang === 'en' ? 'Maintenance' : 'الصيانة' }}
+  </button>
+  <!-- ✅ تغيير switchSection('projects') إلى goToSoftwareProjects() -->
+  <button (click)="goToSoftwareProjects()"
+    class="nav-btn px-5 py-2.5 rounded-full font-semibold text-gray-700 hover:bg-indigo-100 transition-all flex items-center gap-2">
+    <i class="fas fa-code text-lg"></i> {{ currentLang === 'en' ? 'Software' : 'برمجيات' }}
+  </button>
+</div>
       </div>
     </header>
     <div class="mb-8" data-aos="fade-up" data-aos-duration="600">

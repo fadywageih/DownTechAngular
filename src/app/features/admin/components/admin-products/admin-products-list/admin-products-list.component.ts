@@ -1,13 +1,15 @@
 import { CommonModule } from "@angular/common";
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from "@angular/core";
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, ChangeDetectorRef } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { RouterModule, Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { IssueResponseDto, IssueStatisticsDto } from "../../../../../core/models/issue.model";
 import { Product, ProductType, DeviceCondition, PagedResultDto, ProductFilterDto } from "../../../../../core/models/product.model";
+import { SoftwareProjectListDto, FrontendType, BackendType, DatabaseType } from "../../../../../core/models/software-project.model";
 import { IssueService } from "../../../../../core/services/issue.service";
 import { LanguageService } from "../../../../../core/services/language.service";
 import { AdminProductApiService } from "../../../services/admin-product-api.service";
+import { AdminSoftwareProjectApiService } from "../../../services/admin-software-project-api.service";
 
 @Component({
   selector: 'app-admin-products-list',
@@ -27,7 +29,7 @@ export class AdminProductsListComponent implements OnInit, OnDestroy {
   pagedResult: PagedResultDto<Product> | null = null;
   
   // Issues
-  activeTab: 'products' | 'maintenance' = 'products';
+  activeTab: 'products' | 'maintenance' | 'software' = 'products';
   issuesList: IssueResponseDto[] = [];
   issuesLoading = false;
   issueSearchQuery = '';
@@ -36,20 +38,57 @@ export class AdminProductsListComponent implements OnInit, OnDestroy {
   showIssueStats = false;
   statistics: IssueStatisticsDto | null = null;
   
+  // Software Projects
+  softwareProjects: SoftwareProjectListDto[] = [];
+  filteredSoftwareProjects: SoftwareProjectListDto[] = [];
+  softwareLoading = false;
+  softwareSearchQuery = '';
+  softwareFrontendFilter: FrontendType | null = null;
+  softwareBackendFilter: BackendType | null = null;
+  softwareDatabaseFilter: DatabaseType | null = null;
+  
   currentLang = 'en';
   private subscriptions: Subscription = new Subscription();
+  
   productTypes = [
     { value: ProductType.Laptop, labelEn: 'Laptops', labelAr: 'لابتوبات' },
     { value: ProductType.PC, labelEn: 'PCs', labelAr: 'أجهزة كمبيوتر' },
     { value: ProductType.Accessory, labelEn: 'Accessories', labelAr: 'إكسسوارات' }
   ];
+  
   conditions = [
     { value: DeviceCondition.New, labelEn: 'New', labelAr: 'جديد' },
     { value: DeviceCondition.Used, labelEn: 'Used', labelAr: 'مستعمل' }
   ];
+  
+  softwareFrontendTypes = [
+    { value: FrontendType.Angular, labelEn: 'Angular', labelAr: 'Angular' },
+    { value: FrontendType.React, labelEn: 'React', labelAr: 'React' },
+    { value: FrontendType.Vue, labelEn: 'Vue.js', labelAr: 'Vue.js' },
+    { value: FrontendType.VanillaJS, labelEn: 'Vanilla JS', labelAr: 'Vanilla JS' },
+    { value: FrontendType.Other, labelEn: 'Other', labelAr: 'أخرى' }
+  ];
+
+  softwareBackendTypes = [
+    { value: BackendType.DotNet, labelEn: '.NET', labelAr: '.NET' },
+    { value: BackendType.NodeJS, labelEn: 'Node.js', labelAr: 'Node.js' },
+    { value: BackendType.Python, labelEn: 'Python', labelAr: 'Python' },
+    { value: BackendType.PHP, labelEn: 'PHP', labelAr: 'PHP' },
+    { value: BackendType.Other, labelEn: 'Other', labelAr: 'أخرى' }
+  ];
+
+  softwareDatabaseTypes = [
+    { value: DatabaseType.SqlServer, labelEn: 'SQL Server', labelAr: 'SQL Server' },
+    { value: DatabaseType.MySql, labelEn: 'MySQL', labelAr: 'MySQL' },
+    { value: DatabaseType.PostgreSQL, labelEn: 'PostgreSQL', labelAr: 'PostgreSQL' },
+    { value: DatabaseType.MongoDB, labelEn: 'MongoDB', labelAr: 'MongoDB' },
+    { value: DatabaseType.None, labelEn: 'None', labelAr: 'بدون' },
+    { value: DatabaseType.Other, labelEn: 'Other', labelAr: 'أخرى' }
+  ];
 
   constructor(
     private adminProductApi: AdminProductApiService,
+    private adminSoftwareApi: AdminSoftwareProjectApiService,
     private issueService: IssueService,
     private languageService: LanguageService,
     private router: Router,
@@ -64,6 +103,7 @@ export class AdminProductsListComponent implements OnInit, OnDestroy {
     this.subscriptions.add(langSub);
     this.loadProducts();
     this.loadIssues();
+    this.loadSoftwareProjects();
   }
 
   ngOnDestroy(): void {
@@ -234,11 +274,8 @@ export class AdminProductsListComponent implements OnInit, OnDestroy {
     if (this.issueStatusFilter) filter.status = this.issueStatusFilter;
     if (this.issueProductTypeFilter) filter.productType = this.issueProductTypeFilter;
     
-    console.log('Loading admin issues with filters:', filter);
-    
     const sub = this.issueService.getAllIssues(filter).subscribe({
       next: (issues) => {
-        console.log('Admin issues loaded in products list:', issues.length);
         this.issuesList = issues;
         this.issuesLoading = false;
         this.cdr.markForCheck();
@@ -284,5 +321,147 @@ export class AdminProductsListComponent implements OnInit, OnDestroy {
 
   viewIssueDetail(id: string): void {
     this.router.navigate(['/admin/issues', id]);
+  }
+
+  // ==================== Software Projects Methods ====================
+  loadSoftwareProjects(): void {
+    this.softwareLoading = true;
+    const sub = this.adminSoftwareApi.getAllProjects().subscribe({
+      next: (projects) => {
+        this.softwareProjects = projects;
+        this.filterSoftwareProjects();
+        this.softwareLoading = false;
+        this.cdr.markForCheck();
+      },
+      error: (error) => {
+        console.error('Error loading software projects:', error);
+        this.softwareLoading = false;
+        this.cdr.markForCheck();
+      }
+    });
+    this.subscriptions.add(sub);
+  }
+
+  filterSoftwareProjects(): void {
+    let filtered = [...this.softwareProjects];
+    
+    // فلترة البحث
+    if (this.softwareSearchQuery) {
+      const query = this.softwareSearchQuery.toLowerCase();
+      filtered = filtered.filter(project => 
+        project.nameEn.toLowerCase().includes(query) || 
+        project.nameAr.includes(query) ||
+        project.descriptionEn.toLowerCase().includes(query) ||
+        project.descriptionAr.includes(query)
+      );
+    }
+    
+    // فلترة Frontend
+    if (this.softwareFrontendFilter !== null) {
+      filtered = filtered.filter(project => 
+        project.frontendTypeValue === this.softwareFrontendFilter
+      );
+    }
+    
+    // فلترة Backend
+    if (this.softwareBackendFilter !== null) {
+      filtered = filtered.filter(project => 
+        project.backendTypeValue === this.softwareBackendFilter
+      );
+    }
+    
+    // فلترة Database
+    if (this.softwareDatabaseFilter !== null) {
+      filtered = filtered.filter(project => 
+        project.databaseValue === this.softwareDatabaseFilter
+      );
+    }
+    
+    this.filteredSoftwareProjects = filtered;
+    this.cdr.markForCheck();
+  }
+
+  resetSoftwareFilters(): void {
+    this.softwareSearchQuery = '';
+    this.softwareFrontendFilter = null;
+    this.softwareBackendFilter = null;
+    this.softwareDatabaseFilter = null;
+    this.filterSoftwareProjects();
+  }
+
+  getSoftwareActiveFiltersCount(): number {
+    let count = 0;
+    if (this.softwareSearchQuery) count++;
+    if (this.softwareFrontendFilter !== null) count++;
+    if (this.softwareBackendFilter !== null) count++;
+    if (this.softwareDatabaseFilter !== null) count++;
+    return count;
+  }
+
+  // دوال مساعدة لعرض أسماء الفلاتر النشطة
+  getSoftwareFrontendFilterLabel(): string {
+    if (this.softwareFrontendFilter === null) return '';
+    const option = this.softwareFrontendTypes.find(t => t.value === this.softwareFrontendFilter);
+    return option ? (this.currentLang === 'en' ? option.labelEn : option.labelAr) : '';
+  }
+
+  getSoftwareBackendFilterLabel(): string {
+    if (this.softwareBackendFilter === null) return '';
+    const option = this.softwareBackendTypes.find(t => t.value === this.softwareBackendFilter);
+    return option ? (this.currentLang === 'en' ? option.labelEn : option.labelAr) : '';
+  }
+
+  getSoftwareDatabaseFilterLabel(): string {
+    if (this.softwareDatabaseFilter === null) return '';
+    const option = this.softwareDatabaseTypes.find(t => t.value === this.softwareDatabaseFilter);
+    return option ? (this.currentLang === 'en' ? option.labelEn : option.labelAr) : '';
+  }
+
+  refreshSoftwareProjects(): void {
+    this.loadSoftwareProjects();
+  }
+
+  createSoftwareProject(): void {
+    this.router.navigate(['/admin/software-projects/create']);
+  }
+
+  viewSoftwareProject(id: string): void {
+    this.router.navigate(['/admin/software-projects', id]);
+  }
+
+  editSoftwareProject(id: string): void {
+    this.router.navigate(['/admin/software-projects/edit', id]);
+  }
+
+  softDeleteSoftwareProject(id: string): void {
+    if (confirm(this.currentLang === 'en' ? 'Move to trash?' : 'نقل إلى سلة المحذوفات؟')) {
+      const sub = this.adminSoftwareApi.softDeleteProject(id).subscribe({
+        next: () => this.loadSoftwareProjects(),
+        error: (err) => console.error('Error soft deleting project:', err)
+      });
+      this.subscriptions.add(sub);
+    }
+  }
+
+  deleteSoftwareProject(id: string): void {
+    if (confirm(this.currentLang === 'en' ? 'Permanently delete?' : 'حذف نهائي؟')) {
+      const sub = this.adminSoftwareApi.deleteProject(id).subscribe({
+        next: () => this.loadSoftwareProjects(),
+        error: (err) => console.error('Error deleting project:', err)
+      });
+      this.subscriptions.add(sub);
+    }
+  }
+
+  getSoftwareFrontendLabel(type: string): string {
+    return type || '';
+  }
+
+  getSoftwareBackendLabel(type: string): string {
+    return type || '';
+  }
+
+  getSoftwareDatabaseLabel(db: string | undefined): string {
+    return db || 'None';
   }
 }

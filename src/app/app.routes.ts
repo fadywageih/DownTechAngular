@@ -23,6 +23,11 @@ export const routes: Routes = [
     loadChildren: () => import('./features/issue/issue.routes').then(m => m.ISSUE_ROUTES)
   },
   {
+    path: 'software-projects',
+    loadChildren: () => import('./features/software-projects/software-project.routes')
+      .then(m => m.SOFTWARE_PROJECT_ROUTES)
+  },
+  {
     path: 'home',
     loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent)
   },

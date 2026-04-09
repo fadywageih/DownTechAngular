@@ -1,186 +1,324 @@
 <div class="min-h-screen">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
     
-    <!-- Header -->
-    <header class="glass-header rounded-2xl shadow-2xl px-6 py-4 mb-8 mt-20 transition-all" data-aos="fade-down">
-      <div class="flex flex-wrap items-center justify-between gap-4">
-        <div class="flex items-center gap-3 cursor-pointer group" routerLink="/home">
-          <i class="fas fa-laptop-code text-4xl text-indigo-600 group-hover:animate-bounce transition-all"></i>
-          <span class="text-2xl font-extrabold gradient-text">{{ currentLang === 'en' ? 'DownTech' : 'داون تك' }}</span>
-        </div>
-        
-        <div class="hidden md:flex flex-wrap gap-2 bg-white/50 backdrop-blur-sm p-1.5 rounded-full">
-          <button (click)="resetFilters()" 
-                  class="nav-btn px-5 py-2.5 rounded-full font-semibold text-gray-700 hover:bg-indigo-100 transition-all flex items-center gap-2"
-                  [class.active-nav]="!selectedType">
-            <i class="fas fa-store text-lg"></i> {{ currentLang === 'en' ? 'All' : 'الكل' }}
-          </button>
-          <button *ngFor="let type of productTypes" 
-                  (click)="selectedType = type.value; applyFilters()"
-                  class="nav-btn px-5 py-2.5 rounded-full font-semibold text-gray-700 hover:bg-indigo-100 transition-all flex items-center gap-2"
-                  [class.active-nav]="selectedType === type.value">
-            <i class="fas fa-laptop text-lg"></i> {{ currentLang === 'en' ? type.labelEn : type.labelAr }}
-          </button>
-        </div>
-      </div>
-    </header>
-
-    <!-- Search + Filters Inline -->
-    <div class="flex flex-col lg:flex-row gap-6 mb-8 lg:mb-6 items-stretch lg:items-center" data-aos="fade-up">
-      <!-- Search Bar -->
-      <div class="flex-1 max-w-2xl">
-        <div class="relative">
-          <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-          <input
-            type="text"
-            [(ngModel)]="searchQuery"
-            (keyup.enter)="applyFilters()"
-            [placeholder]="currentLang === 'en' ? 'Search products...' : 'ابحث عن منتجات...'"
-            class="w-full pl-12 pr-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-800 placeholder-gray-500"
-          >
-          <button *ngIf="searchQuery" (click)="searchQuery = ''; applyFilters()" 
-                  class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-      </div>
-      
-      <!-- Filter Toggle Button - Inline -->
-      <button (click)="toggleFilters()" 
-              class="flex items-center gap-2 px-6 py-3 bg-white/80 backdrop-blur-sm rounded-xl shadow-md hover:shadow-lg transition-all whitespace-nowrap flex-shrink-0">
-        <i class="fas fa-filter"></i>
-        <span>{{ currentLang === 'en' ? 'Filters' : 'فلترة' }}</span>
-        <span *ngIf="getActiveFiltersCount() > 0" 
-              class="bg-indigo-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center ml-1">
-          {{ getActiveFiltersCount() }}
-        </span>
+    <!-- Tabs -->
+    <div class="flex gap-2 mb-6 border-b border-white/20">
+      <button (click)="activeTab = 'products'" 
+        class="px-6 py-3 rounded-t-xl font-semibold transition-all"
+        [class]="activeTab === 'products' ? 'bg-white/20 text-white border-b-2 border-indigo-500' : 'text-white/60 hover:text-white hover:bg-white/10'">
+        <i class="fas fa-box-open mr-2"></i>
+        {{ currentLang === 'en' ? 'Products' : 'المنتجات' }}
+      </button>
+      <button (click)="activeTab = 'software'" 
+        class="px-6 py-3 rounded-t-xl font-semibold transition-all"
+        [class]="activeTab === 'software' ? 'bg-white/20 text-white border-b-2 border-purple-500' : 'text-white/60 hover:text-white hover:bg-white/10'">
+        <i class="fas fa-code mr-2"></i>
+        {{ currentLang === 'en' ? 'Software Projects' : 'مشاريع برمجية' }}
       </button>
     </div>
 
-    <!-- Filters Panel -->
-    <div *ngIf="showFilters" class="mb-8 p-6 glass-card rounded-2xl" data-aos="fade-up">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Condition Filter -->
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">
-            {{ currentLang === 'en' ? 'Condition' : 'الحالة' }}
-          </label>
-          <div class="flex gap-3">
-            <button *ngFor="let condition of conditions"
-                    (click)="selectedCondition = condition.value; applyFilters()"
-                    class="px-4 py-2 rounded-xl transition-all"
-                    [class.bg-indigo-600]="selectedCondition === condition.value"
-                    [class.text-white]="selectedCondition === condition.value"
-                    [class.bg-gray-100]="selectedCondition !== condition.value"
-                    [class.text-gray-700]="selectedCondition !== condition.value">
-              {{ currentLang === 'en' ? condition.labelEn : condition.labelAr }}
+    <!-- Products Tab Content -->
+    <div *ngIf="activeTab === 'products'">
+      <!-- Header -->
+      <header class="glass-header rounded-2xl shadow-2xl px-6 py-4 mb-8 mt-20 transition-all" data-aos="fade-down">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-3 cursor-pointer group" routerLink="/home">
+            <i class="fas fa-laptop-code text-4xl text-indigo-600 group-hover:animate-bounce transition-all"></i>
+            <span class="text-2xl font-extrabold gradient-text">{{ currentLang === 'en' ? 'DownTech' : 'داون تك' }}</span>
+          </div>
+          
+          <div class="hidden md:flex flex-wrap gap-2 bg-white/50 backdrop-blur-sm p-1.5 rounded-full">
+            <button (click)="resetFilters()" 
+                    class="nav-btn px-5 py-2.5 rounded-full font-semibold text-gray-700 hover:bg-indigo-100 transition-all flex items-center gap-2"
+                    [class.active-nav]="!selectedType">
+              <i class="fas fa-store text-lg"></i> {{ currentLang === 'en' ? 'All' : 'الكل' }}
             </button>
-            <button *ngIf="selectedCondition" (click)="selectedCondition = null; applyFilters()"
-                    class="px-3 py-2 bg-red-100 text-red-600 rounded-xl hover:bg-red-200 transition-all">
+            <button *ngFor="let type of productTypes" 
+                    (click)="selectedType = type.value; applyFilters()"
+                    class="nav-btn px-5 py-2.5 rounded-full font-semibold text-gray-700 hover:bg-indigo-100 transition-all flex items-center gap-2"
+                    [class.active-nav]="selectedType === type.value">
+              <i class="fas fa-laptop text-lg"></i> {{ currentLang === 'en' ? type.labelEn : type.labelAr }}
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Search + Filters Inline -->
+      <div class="flex flex-col lg:flex-row gap-6 mb-8 lg:mb-6 items-stretch lg:items-center" data-aos="fade-up">
+        <div class="flex-1 max-w-2xl">
+          <div class="relative">
+            <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <input
+              type="text"
+              [(ngModel)]="searchQuery"
+              (keyup.enter)="applyFilters()"
+              [placeholder]="currentLang === 'en' ? 'Search products...' : 'ابحث عن منتجات...'"
+              class="w-full pl-12 pr-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-800 placeholder-gray-500"
+            >
+            <button *ngIf="searchQuery" (click)="searchQuery = ''; applyFilters()" 
+                    class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
               <i class="fas fa-times"></i>
             </button>
           </div>
         </div>
         
-        <!-- Price Range Filter -->
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">
-            {{ currentLang === 'en' ? 'Price Range' : 'نطاق السعر' }}
-          </label>
-          <div class="flex gap-3">
-            <input type="number" [(ngModel)]="minPrice" placeholder="Min" 
-                   class="w-full px-3 py-2 bg-white/80 rounded-xl border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            <span class="self-center">-</span>
-            <input type="number" [(ngModel)]="maxPrice" placeholder="Max" 
-                   class="w-full px-3 py-2 bg-white/80 rounded-xl border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <button (click)="toggleFilters()" 
+                class="flex items-center gap-2 px-6 py-3 bg-white/80 backdrop-blur-sm rounded-xl shadow-md hover:shadow-lg transition-all whitespace-nowrap flex-shrink-0">
+          <i class="fas fa-filter"></i>
+          <span>{{ currentLang === 'en' ? 'Filters' : 'فلترة' }}</span>
+          <span *ngIf="getActiveFiltersCount() > 0" 
+                class="bg-indigo-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center ml-1">
+            {{ getActiveFiltersCount() }}
+          </span>
+        </button>
+      </div>
+
+      <!-- Filters Panel -->
+      <div *ngIf="showFilters" class="mb-8 p-6 glass-card rounded-2xl" data-aos="fade-up">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              {{ currentLang === 'en' ? 'Condition' : 'الحالة' }}
+            </label>
+            <div class="flex gap-3">
+              <button *ngFor="let condition of conditions"
+                      (click)="selectedCondition = condition.value; applyFilters()"
+                      class="px-4 py-2 rounded-xl transition-all"
+                      [class.bg-indigo-600]="selectedCondition === condition.value"
+                      [class.text-white]="selectedCondition === condition.value"
+                      [class.bg-gray-100]="selectedCondition !== condition.value"
+                      [class.text-gray-700]="selectedCondition !== condition.value">
+                {{ currentLang === 'en' ? condition.labelEn : condition.labelAr }}
+              </button>
+              <button *ngIf="selectedCondition" (click)="selectedCondition = null; applyFilters()"
+                      class="px-3 py-2 bg-red-100 text-red-600 rounded-xl hover:bg-red-200 transition-all">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              {{ currentLang === 'en' ? 'Price Range' : 'نطاق السعر' }}
+            </label>
+            <div class="flex gap-3">
+              <input type="number" [(ngModel)]="minPrice" placeholder="Min" 
+                     class="w-full px-3 py-2 bg-white/80 rounded-xl border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <span class="self-center">-</span>
+              <input type="number" [(ngModel)]="maxPrice" placeholder="Max" 
+                     class="w-full px-3 py-2 bg-white/80 rounded-xl border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+          </div>
+          
+          <div class="flex items-end gap-3">
+            <button (click)="applyFilters()" 
+                    class="px-6 py-2 bg-black text-white rounded-xl hover:shadow-lg transition-all">
+              {{ currentLang === 'en' ? 'Apply' : 'تطبيق' }}
+            </button>
+            <button (click)="resetFilters()" 
+                    class="px-6 py-2 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all">
+              {{ currentLang === 'en' ? 'Reset' : 'إعادة ضبط' }}
+            </button>
           </div>
         </div>
+      </div>
+
+      <!-- Header Section -->
+      <div class="mb-12 text-center" data-aos="fade-up">
+        <div class="inline-flex items-center gap-3 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full mb-4 shadow-lg">
+          <i class="fas fa-store text-indigo-600 text-2xl animate-pulse"></i>
+          <span class="text-sm font-semibold text-indigo-600 uppercase tracking-wide">
+            {{ currentLang === 'en' ? 'Our Collection' : 'مجموعتنا' }}
+          </span>
+        </div>
+        <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-3 drop-shadow-lg">
+          {{ getHeaderTitle() }}
+        </h2>
+        <p class="text-white/90 text-lg max-w-2xl mx-auto">
+          {{ getHeaderDescription() }}
+        </p>
+        <p *ngIf="pagedResult" class="text-white/70 text-sm mt-2">
+          {{ currentLang === 'en' ? 'Showing' : 'عرض' }} {{ pagedResult.items.length }} 
+          {{ currentLang === 'en' ? 'of' : 'من' }} {{ pagedResult.totalCount }} 
+          {{ currentLang === 'en' ? 'products' : 'منتج' }}
+        </p>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="loading" class="text-center py-12">
+        <i class="fas fa-spinner fa-spin text-5xl text-indigo-600"></i>
+        <p class="text-white/80 mt-4">{{ currentLang === 'en' ? 'Loading products...' : 'جاري تحميل المنتجات...' }}</p>
+      </div>
+
+      <!-- Products Grid -->
+      <div *ngIf="!loading && products.length === 0" class="text-center py-12">
+        <i class="fas fa-search text-6xl text-white/50 mb-4"></i>
+        <p class="text-white/80 text-lg">{{ currentLang === 'en' ? 'No products found' : 'لا توجد منتجات' }}</p>
+        <button (click)="resetFilters()" class="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all">
+          {{ currentLang === 'en' ? 'Clear Filters' : 'مسح الفلاتر' }}
+        </button>
+      </div>
+
+      <div *ngIf="!loading && products.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <app-product-card 
+          *ngFor="let product of products; let i = index"
+          [product]="product"
+          (viewDetails)="handleProductClick($event)"
+          data-aos="fade-up" 
+          [attr.data-aos-delay]="i * 100">
+        </app-product-card>
+      </div>
+
+      <!-- Pagination -->
+      <div *ngIf="pagedResult && pagedResult.totalPages > 1" class="mt-12 flex justify-center gap-2">
+        <button (click)="changePage(pagedResult.pageNumber - 1)" 
+                [disabled]="!pagedResult.hasPreviousPage"
+                class="px-4 py-2 bg-white/80 backdrop-blur-sm rounded-xl hover:bg-indigo-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+          <i class="fas fa-chevron-left"></i>
+        </button>
         
-        <!-- Filter Actions -->
-        <div class="flex items-end gap-3">
-          <button (click)="applyFilters()" 
-                  class="px-6 py-2 bg-black text-white rounded-xl hover:shadow-lg transition-all">
-            {{ currentLang === 'en' ? 'Apply' : 'تطبيق' }}
-          </button>
-          <button (click)="resetFilters()" 
-                  class="px-6 py-2 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all">
-            {{ currentLang === 'en' ? 'Reset' : 'إعادة ضبط' }}
-          </button>
+        <span *ngFor="let page of getPageNumbers()" 
+              (click)="changePage(page)"
+              class="px-4 py-2 rounded-xl cursor-pointer transition-all"
+              [class.bg-indigo-600]="page === pagedResult.pageNumber"
+              [class.text-white]="page === pagedResult.pageNumber"
+              [class.bg-white/80]="page !== pagedResult.pageNumber"
+              [class.hover:bg-indigo-100]="page !== pagedResult.pageNumber">
+          {{ page }}
+        </span>
+        
+        <button (click)="changePage(pagedResult.pageNumber + 1)" 
+                [disabled]="!pagedResult.hasNextPage"
+                class="px-4 py-2 bg-white/80 backdrop-blur-sm rounded-xl hover:bg-indigo-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+    <div *ngIf="activeTab === 'software'">
+      <!-- Header -->
+      <header class="glass-header rounded-2xl shadow-2xl px-6 py-4 mb-8 mt-20 transition-all" data-aos="fade-down">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-3 cursor-pointer group" routerLink="/home">
+            <i class="fas fa-code text-4xl text-purple-600 group-hover:animate-bounce transition-all"></i>
+            <span class="text-2xl font-extrabold gradient-text">{{ currentLang === 'en' ? 'DownTech Software' : 'داون تك برمجيات' }}</span>
+          </div>
+          
+          <div class="hidden md:flex flex-wrap gap-2 bg-white/50 backdrop-blur-sm p-1.5 rounded-full">
+            <button (click)="resetSoftwareFilters()" 
+                    class="nav-btn px-5 py-2.5 rounded-full font-semibold text-gray-700 hover:bg-purple-100 transition-all flex items-center gap-2"
+                    [class.active-nav]="!selectedSoftwareFrontendType">
+              <i class="fas fa-store text-lg"></i> {{ currentLang === 'en' ? 'All' : 'الكل' }}
+            </button>
+            <button *ngFor="let type of softwareFrontendTypes" 
+                    (click)="selectedSoftwareFrontendType = type.value; filterSoftwareProjects()"
+                    class="nav-btn px-5 py-2.5 rounded-full font-semibold text-gray-700 hover:bg-purple-100 transition-all flex items-center gap-2"
+                    [class.active-nav]="selectedSoftwareFrontendType === type.value">
+              <i class="fas fa-code text-lg"></i> {{ currentLang === 'en' ? type.labelEn : type.labelAr }}
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Software Search -->
+      <div class="flex flex-col lg:flex-row gap-6 mb-8 lg:mb-6 items-stretch lg:items-center" data-aos="fade-up">
+        <div class="flex-1 max-w-2xl">
+          <div class="relative">
+            <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <input
+              type="text"
+              [(ngModel)]="softwareSearchQuery"
+              (keyup.enter)="filterSoftwareProjects()"
+              [placeholder]="currentLang === 'en' ? 'Search software projects...' : 'ابحث عن مشاريع برمجية...'"
+              class="w-full pl-12 pr-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-800 placeholder-gray-500"
+            >
+            <button *ngIf="softwareSearchQuery" (click)="softwareSearchQuery = ''; filterSoftwareProjects()" 
+                    class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Header Section -->
+      <div class="mb-12 text-center" data-aos="fade-up">
+        <div class="inline-flex items-center gap-3 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full mb-4 shadow-lg">
+          <i class="fas fa-code text-purple-600 text-2xl animate-pulse"></i>
+          <span class="text-sm font-semibold text-purple-600 uppercase tracking-wide">
+            {{ currentLang === 'en' ? 'Software Projects' : 'مشاريع برمجية' }}
+          </span>
+        </div>
+        <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-3 drop-shadow-lg">
+          {{ currentLang === 'en' ? 'Innovative Software Solutions' : 'حلول برمجية مبتكرة' }}
+        </h2>
+        <p class="text-white/90 text-lg max-w-2xl mx-auto">
+          {{ currentLang === 'en' ? 'Explore our cutting-edge software projects and web applications' : 'استكشف مشاريعنا البرمجية المتطورة وتطبيقات الويب' }}
+        </p>
+        <p *ngIf="filteredSoftwareProjects.length > 0" class="text-white/70 text-sm mt-2">
+          {{ currentLang === 'en' ? 'Showing' : 'عرض' }} {{ filteredSoftwareProjects.length }} 
+          {{ currentLang === 'en' ? 'projects' : 'مشروع' }}
+        </p>
+      </div>
+
+      <!-- Software Loading State -->
+      <div *ngIf="softwareLoading" class="text-center py-12">
+        <i class="fas fa-spinner fa-spin text-5xl text-purple-600"></i>
+        <p class="text-white/80 mt-4">{{ currentLang === 'en' ? 'Loading projects...' : 'جاري تحميل المشاريع...' }}</p>
+      </div>
+
+      <!-- Software Empty State -->
+      <div *ngIf="!softwareLoading && filteredSoftwareProjects.length === 0" class="text-center py-12">
+        <i class="fas fa-code text-6xl text-white/50 mb-4"></i>
+        <p class="text-white/80 text-lg">{{ currentLang === 'en' ? 'No software projects found' : 'لا توجد مشاريع برمجية' }}</p>
+        <button (click)="resetSoftwareFilters()" class="mt-4 px-6 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-all">
+          {{ currentLang === 'en' ? 'Clear Filters' : 'مسح الفلاتر' }}
+        </button>
+      </div>
+
+      <!-- Software Projects Grid -->
+      <div *ngIf="!softwareLoading && filteredSoftwareProjects.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div *ngFor="let project of filteredSoftwareProjects; let i = index"
+             (click)="viewSoftwareProject(project.id)"
+             class="glass-card rounded-2xl shadow-2xl overflow-hidden transition-all duration-500 hover:transform hover:scale-105 cursor-pointer"
+             data-aos="fade-up" [attr.data-aos-delay]="i * 100">
+          
+          <!-- Image -->
+          <div class="img-zoom h-56 overflow-hidden">
+            <img [src]="project.imageUrl" 
+                 [alt]="currentLang === 'en' ? project.nameEn : project.nameAr"
+                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                 (error)="$event.target.src='https://placehold.co/400x300/4f46e5/white?text=No+Image'">
+          </div>
+          
+          <!-- Content -->
+          <div class="p-6">
+            <!-- Frontend Type Badge -->
+            <div class="mb-3">
+              <span class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-xs font-semibold">
+                <i class="fas fa-code mr-1"></i>
+                {{ getSoftwareFrontendLabel(project.frontendType) }}
+              </span>
+            </div>
+            
+            <!-- Title -->
+            <h3 class="text-xl font-bold text-gray-800 line-clamp-1 mb-2">
+              {{ currentLang === 'en' ? project.nameEn : project.nameAr }}
+            </h3>
+            
+            <!-- Description -->
+            <p class="text-gray-500 text-sm line-clamp-2 mb-4">
+              {{ currentLang === 'en' ? project.descriptionEn : project.descriptionAr }}
+            </p>
+            
+            <!-- Date -->
+            <div class="text-xs text-gray-400">
+              <i class="far fa-calendar-alt mr-1"></i>
+              {{ project.createdAt | date:'mediumDate' }}
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Header Section -->
-    <div class="mb-12 text-center" data-aos="fade-up">
-      <div class="inline-flex items-center gap-3 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full mb-4 shadow-lg">
-        <i class="fas fa-store text-indigo-600 text-2xl animate-pulse"></i>
-        <span class="text-sm font-semibold text-indigo-600 uppercase tracking-wide">
-          {{ currentLang === 'en' ? 'Our Collection' : 'مجموعتنا' }}
-        </span>
-      </div>
-      <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-3 drop-shadow-lg">
-        {{ getHeaderTitle() }}
-      </h2>
-      <p class="text-white/90 text-lg max-w-2xl mx-auto">
-        {{ getHeaderDescription() }}
-      </p>
-      <p *ngIf="pagedResult" class="text-white/70 text-sm mt-2">
-        {{ currentLang === 'en' ? 'Showing' : 'عرض' }} {{ pagedResult.items.length }} 
-        {{ currentLang === 'en' ? 'of' : 'من' }} {{ pagedResult.totalCount }} 
-        {{ currentLang === 'en' ? 'products' : 'منتج' }}
-      </p>
-    </div>
-
-    <!-- Loading State -->
-    <div *ngIf="loading" class="text-center py-12">
-      <i class="fas fa-spinner fa-spin text-5xl text-indigo-600"></i>
-      <p class="text-white/80 mt-4">{{ currentLang === 'en' ? 'Loading products...' : 'جاري تحميل المنتجات...' }}</p>
-    </div>
-
-    <!-- Products Grid -->
-    <div *ngIf="!loading && products.length === 0" class="text-center py-12">
-      <i class="fas fa-search text-6xl text-white/50 mb-4"></i>
-      <p class="text-white/80 text-lg">{{ currentLang === 'en' ? 'No products found' : 'لا توجد منتجات' }}</p>
-      <button (click)="resetFilters()" class="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all">
-        {{ currentLang === 'en' ? 'Clear Filters' : 'مسح الفلاتر' }}
-      </button>
-    </div>
-
-    <div *ngIf="!loading && products.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-      <app-product-card 
-        *ngFor="let product of products; let i = index"
-        [product]="product"
-        (viewDetails)="handleProductClick($event)"
-        data-aos="fade-up" 
-        [attr.data-aos-delay]="i * 100">
-      </app-product-card>
-    </div>
-
-    <!-- Pagination -->
-    <div *ngIf="pagedResult && pagedResult.totalPages > 1" class="mt-12 flex justify-center gap-2">
-      <button (click)="changePage(pagedResult.pageNumber - 1)" 
-              [disabled]="!pagedResult.hasPreviousPage"
-              class="px-4 py-2 bg-white/80 backdrop-blur-sm rounded-xl hover:bg-indigo-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
-        <i class="fas fa-chevron-left"></i>
-      </button>
-      
-      <span *ngFor="let page of getPageNumbers()" 
-            (click)="changePage(page)"
-            class="px-4 py-2 rounded-xl cursor-pointer transition-all"
-            [class.bg-indigo-600]="page === pagedResult.pageNumber"
-            [class.text-white]="page === pagedResult.pageNumber"
-            [class.bg-white/80]="page !== pagedResult.pageNumber"
-            [class.hover:bg-indigo-100]="page !== pagedResult.pageNumber">
-        {{ page }}
-      </span>
-      
-      <button (click)="changePage(pagedResult.pageNumber + 1)" 
-              [disabled]="!pagedResult.hasNextPage"
-              class="px-4 py-2 bg-white/80 backdrop-blur-sm rounded-xl hover:bg-indigo-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
-        <i class="fas fa-chevron-right"></i>
-      </button>
-    </div>
-  <app-footer></app-footer>
-
+    <app-footer></app-footer>
   </div>
 </div>

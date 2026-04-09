@@ -57,14 +57,14 @@ export class HomeComponent implements OnInit, OnDestroy {
       descAr: 'خدمات إصلاح احترافية مع ضمان 6 أشهر',
       link: '/maintenance'
     },
-    {
-      image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1200&h=600&fit=crop',
-      titleEn: 'Custom Software Solutions',
-      titleAr: 'حلول برمجية مخصصة',
-      descEn: 'Innovative web apps and AI solutions for your business',
-      descAr: 'تطبيقات ويب مبتكرة وحلول ذكاء اصطناعي لعملك',
-      link: '/projects'
-    }
+  {
+    image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1200&h=600&fit=crop',
+    titleEn: 'Custom Software Solutions',
+    titleAr: 'حلول برمجية مخصصة',
+    descEn: 'Innovative web apps and AI solutions for your business',
+    descAr: 'تطبيقات ويب مبتكرة وحلول ذكاء اصطناعي لعملك',
+    link: '/software-projects'
+  }
   ];
   
   currentSlide: number = 0;
@@ -154,7 +154,9 @@ servicesData = [
     this.currentSlide = (this.currentSlide - 1 + this.slides.length) % this.slides.length;
     this.cdr.markForCheck();
   }
-  
+  goToSoftwareProjects(): void {
+  this.router.navigate(['/software-projects']);
+}
   goToSlide(index: number): void {
     this.currentSlide = index;
     this.cdr.markForCheck();

@@ -17,7 +17,16 @@ export class AdminTokenInterceptor implements HttpInterceptor {
     private router: Router
   ) {}
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    if (request.url.includes('/api/admin') || request.url.includes('/api/product') || request.url.includes('/api/issue')) {
+if (request.url.includes('/api/admin') || 
+      (request.url.includes('/api/product') && (
+        request.method !== 'GET' || 
+        request.url.includes('/create') || 
+        request.url.includes('update') || 
+        request.url.includes('delete') ||
+        request.url.includes('/edit/')
+      )) ||
+      (request.url.includes('/api/issue') && !request.url.includes('user')) ||
+      request.url.includes('/api/softwareproject')) {
       const adminToken = this.tokenService.getAdminToken();
       
       if (adminToken) {
@@ -31,7 +40,7 @@ export class AdminTokenInterceptor implements HttpInterceptor {
     
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        if ((request.url.includes('/api/admin') || request.url.includes('/api/product') || request.url.includes('/api/issue')) && (error.status === 401 || error.status === 403)) {
+if (request.url.includes('/api/admin') && (error.status === 401 || error.status === 403)) {
           this.tokenService.removeAdminToken();
           this.router.navigate(['/admin/login']);
         }

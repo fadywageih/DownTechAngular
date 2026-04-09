@@ -13,10 +13,17 @@
       <i class="fas fa-tools mr-2"></i>
       {{ currentLang === 'en' ? 'Maintenance Issues' : 'مشاكل الصيانة' }}
     </button>
+    <button (click)="activeTab = 'software'" 
+      class="px-6 py-3 rounded-t-xl font-semibold transition-all"
+      [class]="activeTab === 'software' ? 'bg-white/20 text-white border-b-2 border-purple-500' : 'text-white/60 hover:text-white hover:bg-white/10'">
+      <i class="fas fa-code mr-2"></i>
+      {{ currentLang === 'en' ? 'Software Projects' : 'مشاريع برمجية' }}
+    </button>
   </div>
 
-  <!-- Products Tab Content -->
+  <!-- ==================== Products Tab Content ==================== -->
   <div *ngIf="activeTab === 'products'">
+    <!-- Products content (unchanged) -->
     <div class="flex justify-between items-center mb-6">
       <div>
         <h1 class="text-2xl font-bold text-white mb-2">
@@ -104,7 +111,6 @@
     </div>
 
     <div *ngIf="!loading && products.length > 0" class="glass-card rounded-2xl overflow-hidden">
-      <!-- Products Table Content (نفس اللي عندك) -->
       <div class="overflow-x-auto">
         <table class="w-full">
           <thead class="bg-white/10">
@@ -186,8 +192,9 @@
     </div>
   </div>
 
-  <!-- Maintenance Issues Tab Content -->
+  <!-- ==================== Maintenance Issues Tab Content ==================== -->
   <div *ngIf="activeTab === 'maintenance'">
+    <!-- Maintenance content (unchanged) -->
     <div class="flex justify-between items-center mb-6">
       <div>
         <h1 class="text-2xl font-bold text-white mb-2">
@@ -312,7 +319,214 @@
       </div>
     </div>
   </div>
+
+  <!-- ==================== Software Projects Tab Content ==================== -->
+  <div *ngIf="activeTab === 'software'">
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-white mb-2">
+          {{ currentLang === 'en' ? 'Software Projects Management' : 'إدارة المشاريع البرمجية' }}
+        </h1>
+        <p class="text-white/70">
+          {{ currentLang === 'en' ? 'Manage your software projects, add new ones, edit or delete existing projects.' : 'إدارة مشاريعك البرمجية، إضافة مشاريع جديدة، تعديل أو حذف المشاريع الموجودة.' }}
+        </p>
+      </div>
+      <div class="flex gap-3">
+        <button (click)="refreshSoftwareProjects()" 
+                class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-xl transition-all flex items-center gap-2 shadow-lg">
+          <i class="fas fa-sync-alt"></i>
+          {{ currentLang === 'en' ? 'Refresh' : 'تحديث' }}
+        </button>
+        <button (click)="createSoftwareProject()" 
+                class="bg-black text-white px-6 py-3 rounded-xl transition-all flex items-center gap-2 shadow-lg">
+          <i class="fas fa-plus"></i>
+          {{ currentLang === 'en' ? 'Add Project' : 'إضافة مشروع' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Software Filters -->
+    <div class="glass-card rounded-2xl p-6 mb-6">
+      <div class="flex flex-wrap gap-4 items-end">
+        <!-- Search -->
+        <div class="flex-1 min-w-[250px]">
+          <label class="block text-white/70 text-sm mb-1">{{ currentLang === 'en' ? 'Search' : 'بحث' }}</label>
+          <div class="relative">
+            <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <input
+              type="text"
+              [(ngModel)]="softwareSearchQuery"
+              (keyup.enter)="filterSoftwareProjects()"
+              [placeholder]="currentLang === 'en' ? 'Search projects...' : 'ابحث عن مشاريع...'"
+              class="w-full pl-12 pr-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            >
+            <button *ngIf="softwareSearchQuery" (click)="softwareSearchQuery = ''; filterSoftwareProjects()" 
+                    class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Frontend Filter -->
+        <div class="min-w-[180px]">
+          <label class="block text-white/70 text-sm mb-1">{{ currentLang === 'en' ? 'Frontend' : 'واجهة أمامية' }}</label>
+          <select [(ngModel)]="softwareFrontendFilter" (change)="filterSoftwareProjects()" 
+                  class="w-full px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-500">
+            <option [ngValue]="null">{{ currentLang === 'en' ? 'All Frontend' : 'كل الواجهات' }}</option>
+            <option *ngFor="let type of softwareFrontendTypes" [ngValue]="type.value">
+              {{ currentLang === 'en' ? type.labelEn : type.labelAr }}
+            </option>
+          </select>
+        </div>
+        
+        <!-- Backend Filter -->
+        <div class="min-w-[180px]">
+          <label class="block text-white/70 text-sm mb-1">{{ currentLang === 'en' ? 'Backend' : 'باك اند' }}</label>
+          <select [(ngModel)]="softwareBackendFilter" (change)="filterSoftwareProjects()" 
+                  class="w-full px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-500">
+            <option [ngValue]="null">{{ currentLang === 'en' ? 'All Backend' : 'كل أنواع الباك اند' }}</option>
+            <option *ngFor="let type of softwareBackendTypes" [ngValue]="type.value">
+              {{ currentLang === 'en' ? type.labelEn : type.labelAr }}
+            </option>
+          </select>
+        </div>
+        
+        <!-- Database Filter -->
+        <div class="min-w-[180px]">
+          <label class="block text-white/70 text-sm mb-1">{{ currentLang === 'en' ? 'Database' : 'قاعدة بيانات' }}</label>
+          <select [(ngModel)]="softwareDatabaseFilter" (change)="filterSoftwareProjects()" 
+                  class="w-full px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-500">
+            <option [ngValue]="null">{{ currentLang === 'en' ? 'All Databases' : 'كل قواعد البيانات' }}</option>
+            <option *ngFor="let type of softwareDatabaseTypes" [ngValue]="type.value">
+              {{ currentLang === 'en' ? type.labelEn : type.labelAr }}
+            </option>
+          </select>
+        </div>
+        
+        <!-- Reset Button -->
+        <button (click)="resetSoftwareFilters()" 
+                class="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all flex items-center gap-2">
+          <i class="fas fa-undo-alt"></i>
+          {{ currentLang === 'en' ? 'Reset' : 'إعادة ضبط' }}
+        </button>
+      </div>
+      
+      <!-- Active Filters -->
+      <div *ngIf="getSoftwareActiveFiltersCount() > 0" class="mt-4 flex flex-wrap gap-2">
+        <span class="text-sm text-white/70">{{ currentLang === 'en' ? 'Active filters:' : 'الفلاتر النشطة:' }}</span>
+        
+        <span *ngIf="softwareSearchQuery" class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
+          "{{ softwareSearchQuery }}"
+          <i class="fas fa-times ml-2 cursor-pointer" (click)="softwareSearchQuery = ''; filterSoftwareProjects()"></i>
+        </span>
+        
+        <span *ngIf="softwareFrontendFilter !== null" class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
+          {{ getSoftwareFrontendFilterLabel() }}
+          <i class="fas fa-times ml-2 cursor-pointer" (click)="softwareFrontendFilter = null; filterSoftwareProjects()"></i>
+        </span>
+        
+        <span *ngIf="softwareBackendFilter !== null" class="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-sm">
+          {{ getSoftwareBackendFilterLabel() }}
+          <i class="fas fa-times ml-2 cursor-pointer" (click)="softwareBackendFilter = null; filterSoftwareProjects()"></i>
+        </span>
+        
+        <span *ngIf="softwareDatabaseFilter !== null" class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-sm">
+          {{ getSoftwareDatabaseFilterLabel() }}
+          <i class="fas fa-times ml-2 cursor-pointer" (click)="softwareDatabaseFilter = null; filterSoftwareProjects()"></i>
+        </span>
+      </div>
+    </div>
+
+    <!-- Software Loading State -->
+    <div *ngIf="softwareLoading" class="text-center py-12">
+      <i class="fas fa-spinner fa-spin text-4xl text-purple-600"></i>
+      <p class="text-white/80 mt-4">{{ currentLang === 'en' ? 'Loading projects...' : 'جاري تحميل المشاريع...' }}</p>
+    </div>
+
+    <!-- Software Empty State -->
+    <div *ngIf="!softwareLoading && filteredSoftwareProjects.length === 0" class="glass-card rounded-2xl p-12 text-center">
+      <i class="fas fa-code text-6xl text-white/50 mb-4"></i>
+      <p class="text-white/80 text-lg">{{ currentLang === 'en' ? 'No projects found' : 'لا توجد مشاريع' }}</p>
+      <button (click)="createSoftwareProject()" class="mt-4 px-6 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-all">
+        {{ currentLang === 'en' ? 'Add your first project' : 'أضف مشروعك الأول' }}
+      </button>
+    </div>
+
+    <!-- Software Projects Table -->
+    <div *ngIf="!softwareLoading && filteredSoftwareProjects.length > 0" class="glass-card rounded-2xl overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-white/10">
+            <tr>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Project' : 'المشروع' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Frontend' : 'واجهة أمامية' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Backend' : 'باك اند' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Database' : 'قاعدة بيانات' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Date' : 'التاريخ' }}</th>
+              <th class="px-6 py-4 text-right text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Actions' : 'الإجراءات' }}</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-white/10">
+            <tr *ngFor="let project of filteredSoftwareProjects" class="hover:bg-white/5 transition-all">
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <img [src]="project.imageUrl" class="w-12 h-12 rounded-lg object-cover" (error)="$event.target.src='https://placehold.co/400x300/4f46e5/white?text=No+Image'">
+                  <div>
+                    <p class="font-semibold text-white">{{ currentLang === 'en' ? project.nameEn : project.nameAr }}</p>
+                    <p class="text-sm text-white/60 line-clamp-1 max-w-[200px]">{{ currentLang === 'en' ? project.descriptionEn : project.descriptionAr }}</p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <span class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
+                  {{ getSoftwareFrontendLabel(project.frontendType) }}
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                <span class="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-sm">
+                  {{ getSoftwareBackendLabel(project.backendType) }}
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-sm">
+                  {{ getSoftwareDatabaseLabel(project.database) }}
+                </span>
+              </td>
+              <td class="px-6 py-4 text-white/60">{{ project.createdAt | date:'shortDate' }}</td>
+              <td class="px-6 py-4 text-right">
+                <div class="flex justify-end gap-2">
+                  <button (click)="viewSoftwareProject(project.id)" class="p-2 bg-blue-500/20 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-all" title="View">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button (click)="editSoftwareProject(project.id)" class="p-2 bg-yellow-500/20 text-yellow-300 rounded-lg hover:bg-yellow-500/30 transition-all" title="Edit">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button (click)="softDeleteSoftwareProject(project.id)" class="p-2 bg-orange-500/20 text-orange-300 rounded-lg hover:bg-orange-500/30 transition-all" title="Soft Delete">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                  <button (click)="deleteSoftwareProject(project.id)" class="p-2 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-all" title="Hard Delete">
+                    <i class="fas fa-times-circle"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Results count -->
+      <div class="px-6 py-4 border-t border-white/10">
+        <p class="text-sm text-white/60">
+          {{ currentLang === 'en' ? 'Showing' : 'عرض' }} {{ filteredSoftwareProjects.length }} 
+          {{ currentLang === 'en' ? 'of' : 'من' }} {{ softwareProjects.length }} 
+          {{ currentLang === 'en' ? 'projects' : 'مشروع' }}
+        </p>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- Statistics Modal -->
 <div *ngIf="showIssueStats" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" (click)="showIssueStats = false">
   <div class="bg-white rounded-3xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto" (click)="$event.stopPropagation()">
     <div class="flex justify-between items-center mb-6">

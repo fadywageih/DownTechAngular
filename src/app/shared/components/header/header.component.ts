@@ -119,6 +119,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.isMobileMenuOpen = false;
     }
   }
+  
   goToReportIssue(): void {
     if (this.isUserAuthenticated()) {
       this.router.navigate(['/issue/report-issue']);
@@ -161,5 +162,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.router.navigate(['/admin/admins']);
     }
     this.isMobileMenuOpen = false;
+  }
+
+  goToSoftwareProjects(): void {
+    this.router.navigate(['/software-projects']);
+    this.isMobileMenuOpen = false;
+    this.isUserMenuOpen = false;
   }
 }

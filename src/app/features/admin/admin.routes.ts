@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AdminAuthGuard } from '../../core/guards/admin-auth.guard';
 import { RoleGuard } from '../../core/guards/role.guard';
+
 export const ADMIN_ROUTES: Routes = [
   {
     path: 'login',
@@ -58,6 +59,27 @@ export const ADMIN_ROUTES: Routes = [
         path: 'issues/:id',
         loadComponent: () => import('./components/admin-issue-detail/admin-issue-detail.component')
           .then(m => m.AdminIssueDetailComponent)
+      },
+      // ✅ Software Projects Routes
+      {
+        path: 'software-projects',
+        loadComponent: () => import('./components/admin-software-projects/admin-software-projects-list/admin-software-projects-list.component')
+          .then(m => m.AdminSoftwareProjectsListComponent)
+      },
+      {
+        path: 'software-projects/create',
+        loadComponent: () => import('./components/admin-software-projects/admin-software-project-form/admin-software-project-form.component')
+          .then(m => m.AdminSoftwareProjectFormComponent)
+      },
+      {
+        path: 'software-projects/edit/:id',
+        loadComponent: () => import('./components/admin-software-projects/admin-software-project-form/admin-software-project-form.component')
+          .then(m => m.AdminSoftwareProjectFormComponent)
+      },
+      {
+        path: 'software-projects/:id',
+        loadComponent: () => import('./components/admin-software-projects/admin-software-project-detail/admin-software-project-detail.component')
+          .then(m => m.AdminSoftwareProjectDetailComponent)
       },
       {
         path: '',

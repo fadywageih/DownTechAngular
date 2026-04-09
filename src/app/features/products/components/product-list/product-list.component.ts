@@ -3,11 +3,14 @@ import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, ChangeDetectorRe
 import { FormsModule } from "@angular/forms";
 import { RouterModule, ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { Product, PagedResultDto, ProductType, DeviceCondition, ProductFilterDto } from "../../../../core/models/product.model";
+import { ProductType } from "../../../../core/models/issue.model";
+import { Product, PagedResultDto, DeviceCondition, ProductFilterDto } from "../../../../core/models/product.model";
+import { SoftwareProjectListDto, FrontendType } from "../../../../core/models/software-project.model";
 import { LanguageService } from "../../../../core/services/language.service";
 import { ProductService } from "../../../../core/services/product.service";
-import { ProductCardComponent } from "../product-card/product-card.component";
+import { SoftwareProjectService } from "../../../../core/services/software-project.service";
 import { FooterComponent } from "../../../../shared/components/footer/footer.component";
+import { ProductCardComponent } from "../product-card/product-card.component";
 
 declare const AOS: any;
 
@@ -20,13 +23,12 @@ declare const AOS: any;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductListComponent implements OnInit, OnDestroy {
+  // Products
   products: Product[] = [];
   pagedResult: PagedResultDto<Product> | null = null;
   currentLang: string = 'en';
   loading: boolean = true;
   searchQuery: string = '';
-  
-  // Filter properties
   selectedType: ProductType | null = null;
   selectedCondition: DeviceCondition | null = null;
   minPrice: number | null = null;
@@ -35,8 +37,13 @@ export class ProductListComponent implements OnInit, OnDestroy {
   sortDescending: boolean = true;
   pageNumber: number = 1;
   pageSize: number = 9;
-  
   showFilters: boolean = false;
+  activeTab: 'products' | 'software' = 'products';
+  softwareProjects: SoftwareProjectListDto[] = [];
+  filteredSoftwareProjects: SoftwareProjectListDto[] = [];
+  softwareLoading = false;
+  softwareSearchQuery = '';
+  selectedSoftwareFrontendType: FrontendType | null = null;
   
   productTypes = [
     { value: ProductType.Laptop, labelEn: 'Laptops', labelAr: 'لابتوبات' },
@@ -47,6 +54,14 @@ export class ProductListComponent implements OnInit, OnDestroy {
   conditions = [
     { value: DeviceCondition.New, labelEn: 'New', labelAr: 'جديد' },
     { value: DeviceCondition.Used, labelEn: 'Used', labelAr: 'مستعمل' }
+  ];
+  
+  softwareFrontendTypes = [
+    { value: FrontendType.Angular, labelEn: 'Angular', labelAr: 'Angular' },
+    { value: FrontendType.React, labelEn: 'React', labelAr: 'React' },
+    { value: FrontendType.Vue, labelEn: 'Vue.js', labelAr: 'Vue.js' },
+    { value: FrontendType.VanillaJS, labelEn: 'Vanilla JS', labelAr: 'Vanilla JS' },
+    { value: FrontendType.Other, labelEn: 'Other', labelAr: 'أخرى' }
   ];
   
   sortOptions = [
@@ -60,6 +75,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   constructor(
     private productService: ProductService,
+    private softwareProjectService: SoftwareProjectService,
     private languageService: LanguageService,
     private route: ActivatedRoute,
     private router: Router,
@@ -90,12 +106,14 @@ export class ProductListComponent implements OnInit, OnDestroy {
         }
       })
     );
+    
+    // Load software projects
+    this.loadSoftwareProjects();
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
-
   setCategoryFilter(): void {
     switch(this.category) {
       case 'laptops':
@@ -203,9 +221,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.showFilters = !this.showFilters;
   }
 
-handleProductClick(product: Product): void {
-  this.router.navigate(['/products', product.id]);
-}
+  handleProductClick(product: Product): void {
+    this.router.navigate(['/products', product.id]);
+  }
 
   getActiveFiltersCount(): number {
     let count = 0;
@@ -244,5 +262,68 @@ handleProductClick(product: Product): void {
     return this.currentLang === 'en'
       ? 'Discover our premium collection of laptops, PCs, and accessories'
       : 'اكتشف مجموعتنا المتميزة من اللابتوبات وأجهزة الكمبيوتر والإكسسوارات';
+  }
+
+  // ==================== Software Projects Methods ====================
+  loadSoftwareProjects(): void {
+    this.softwareLoading = true;
+    this.softwareProjectService.getAllProjects().subscribe({
+      next: (projects) => {
+        this.softwareProjects = projects;
+        this.filterSoftwareProjects();
+        this.softwareLoading = false;
+        this.cdr.markForCheck();
+        
+        setTimeout(() => {
+          if (typeof AOS !== 'undefined') {
+            AOS.refresh();
+          }
+        }, 100);
+      },
+      error: (error) => {
+        console.error('Error loading software projects:', error);
+        this.softwareLoading = false;
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  filterSoftwareProjects(): void {
+    let filtered = [...this.softwareProjects];
+    
+    if (this.softwareSearchQuery) {
+      const query = this.softwareSearchQuery.toLowerCase();
+      filtered = filtered.filter(project => 
+        project.nameEn.toLowerCase().includes(query) || 
+        project.nameAr.includes(query) ||
+        project.descriptionEn.toLowerCase().includes(query) ||
+        project.descriptionAr.includes(query)
+      );
+    }
+    
+    // ✅ نقارن بـ frontendTypeValue (الرقم) وليس frontendType (النص)
+    if (this.selectedSoftwareFrontendType !== null) {
+      filtered = filtered.filter(project => 
+        project.frontendTypeValue === this.selectedSoftwareFrontendType
+      );
+    }
+    
+    this.filteredSoftwareProjects = filtered;
+    this.cdr.markForCheck();
+  }
+
+  resetSoftwareFilters(): void {
+    this.softwareSearchQuery = '';
+    this.selectedSoftwareFrontendType = null;
+    this.filterSoftwareProjects();
+  }
+
+  // ✅ النوع string مباشرة من الباك اند
+  getSoftwareFrontendLabel(type: string): string {
+    return type || '';
+  }
+
+  viewSoftwareProject(id: string): void {
+    this.router.navigate(['/software-projects', id]);
   }
 }

@@ -1,0 +1,212 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 mt-20">
+  <div class="bg-white rounded-3xl shadow-2xl p-6 md:p-8 animate-fade-in-up">
+    
+    <!-- Back Button -->
+<button (click)="goBack()" 
+  class="mb-6 inline-flex items-center gap-2 text-gray-500 hover:text-purple-600 transition-all duration-300 group px-4 py-2 border-2 border-blue-800 rounded-xl hover:border-blue-900">
+  <i class="fas fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
+  <span class="relative">
+    {{ currentLang === 'en' ? 'Back to Projects' : 'العودة إلى المشاريع' }}
+    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-indigo-500 group-hover:w-full transition-all duration-300"></span>
+  </span>
+</button>
+    <div *ngIf="isLoading" class="text-center py-12">
+      <div class="relative w-20 h-20 mx-auto mb-4">
+        <div class="absolute inset-0 border-4 border-purple-200 rounded-full"></div>
+        <div class="absolute inset-0 border-4 border-t-purple-600 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+        <div class="absolute inset-2 border-4 border-t-indigo-500 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin-reverse"></div>
+      </div>
+      <p class="text-gray-500 animate-pulse">{{ currentLang === 'en' ? 'Loading project...' : 'جاري تحميل المشروع...' }}</p>
+    </div>
+
+    <!-- Project Details -->
+    <div *ngIf="project && !isLoading" class="animate-fade-in-up">
+      
+      <!-- Hero Image -->
+      <div class="relative h-64 md:h-96 overflow-hidden rounded-2xl mb-8 group ">
+        <img [src]="project.imageUrl" 
+             [alt]="currentLang === 'en' ? project.nameEn : project.nameAr"
+             (error)="$event.target.src='https://placehold.co/1200x400/4f46e5/white?text=No+Image'">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+        
+        <!-- Animated Overlay Lines -->
+        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+          <div class="absolute top-0 left-0 w-20 h-20 border-t-4 border-l-4 border-white/30 rounded-tl-2xl animate-slide-down"></div>
+          <div class="absolute top-0 right-0 w-20 h-20 border-t-4 border-r-4 border-white/30 rounded-tr-2xl animate-slide-down" style="animation-delay: 0.1s"></div>
+          <div class="absolute bottom-0 left-0 w-20 h-20 border-b-4 border-l-4 border-white/30 rounded-bl-2xl animate-slide-up"></div>
+          <div class="absolute bottom-0 right-0 w-20 h-20 border-b-4 border-r-4 border-white/30 rounded-br-2xl animate-slide-up" style="animation-delay: 0.1s"></div>
+        </div>
+        
+        <!-- Title Overlay -->
+        <div class="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+<h1 class="text-2xl md:text-4xl font-bold text-white mb-3 drop-shadow-lg animate-slide-up">
+  <span class="relative inline-block group">
+    <span class="absolute inset-0 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/20 shadow-2xl group-hover:bg-black/90 transition-all duration-300"></span>
+    <span class="absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-2xl opacity-0 group-hover:opacity-30 blur transition-opacity duration-300"></span>
+    <span class="relative bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent bg-size-200 animate-gradient px-6 py-3 block">
+      {{ currentLang === 'en' ? project.nameEn : project.nameAr }}
+    </span>
+  </span>
+</h1>
+          <div class="flex flex-wrap gap-2 animate-slide-up" style="animation-delay: 0.1s">
+            <span class="badge-animated bg-purple-500/80 backdrop-blur-md text-white border border-purple-400/50">
+              <i class="fas fa-code mr-1 animate-spin-slow"></i>
+              {{ project.frontendType }}
+            </span>
+            <span class="badge-animated bg-blue-500/80 backdrop-blur-md text-white border border-blue-400/50">
+              <i class="fas fa-server mr-1 animate-pulse-slow"></i>
+              {{ project.backendType }}
+            </span>
+            <span *ngIf="project.database" class="badge-animated bg-green-800/80 backdrop-blur-md text-white border border-green-400/50">
+              <i class="fas fa-database mr-1 animate-bounce-slow"></i>
+              {{ project.database }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="mb-8 animate-slide-up" style="animation-delay: 0.2s">
+        <div class="flex items-center gap-2 mb-3">
+
+          <h3 class="text-lg font-semibold bg-black bg-clip-text text-transparent">
+            - {{ currentLang === 'en' ? 'Description' : 'الوصف' }}.
+          </h3>
+        </div>
+<div class="bg-blue-900 rounded-xl p-6 border border-blue-700 shadow-lg">
+  <p class="text-white leading-relaxed">
+    {{ currentLang === 'en' ? project.descriptionEn : project.descriptionAr }}
+  </p>
+</div>
+      </div>
+
+      <!-- Tech Stack Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        
+        <!-- Frontend Card -->
+        <div class="card-animated bg-gradient-to-br from-purple-50 via-white to-purple-50 rounded-2xl p-6 border border-purple-200 shadow-lg hover:shadow-xl transition-all duration-500 group animate-slide-up" style="animation-delay: 0.3s">
+          <div class="absolute -top-3 -right-3 w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full opacity-20 blur-xl group-hover:opacity-40 transition-opacity"></div>
+          
+          <div class="flex items-center gap-3 mb-4">
+            <div class="relative">
+              <div class="absolute inset-0 bg-purple-500 rounded-xl blur-md opacity-50 animate-pulse-slow"></div>
+              <div class="relative w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                <i class="fas fa-code text-white text-xl animate-float"></i>
+              </div>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-800">{{ currentLang === 'en' ? 'Frontend' : 'واجهة أمامية' }}</h3>
+            <div class="ml-auto flex gap-1">
+              <span class="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
+              <span class="w-2 h-2 bg-purple-400 rounded-full animate-pulse" style="animation-delay: 0.2s"></span>
+              <span class="w-2 h-2 bg-purple-400 rounded-full animate-pulse" style="animation-delay: 0.4s"></span>
+            </div>
+          </div>
+          
+          <div class="space-y-3">
+            <div class="flex items-center justify-between py-2 border-b border-purple-100 hover:bg-purple-50/50 px-2 rounded-lg transition-colors">
+              <span class="text-gray-600 flex items-center gap-2">
+                <i class="fas fa-microchip text-purple-400 text-xs"></i>
+                {{ currentLang === 'en' ? 'Framework' : 'إطار العمل' }}:
+              </span>
+              <span class="text-gray-800 font-semibold">{{ getFrontendTypeName() }}</span>
+            </div>
+            <div *ngIf="project.frontendLibraries && project.frontendLibraries.length > 0">
+              <span class="text-gray-600 block mb-2 flex items-center gap-2">
+                <i class="fas fa-cubes text-purple-400 text-xs"></i>
+                {{ currentLang === 'en' ? 'Libraries' : 'مكتبات' }}:
+              </span>
+              <div class="flex flex-wrap gap-2">
+                <span *ngFor="let lib of project.frontendLibraries; let i = index" 
+                      class="library-badge px-3 py-1.5 bg-gradient-to-r from-purple-100 to-purple-200 text-purple-700 rounded-full text-sm font-medium border border-purple-300 hover:scale-105 transition-transform cursor-default"
+                      [style.animation-delay]="i * 0.1 + 's'">
+                  <i class="fas fa-puzzle-piece mr-1 text-xs"></i>
+                  {{ lib }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Backend Card -->
+        <div class="card-animated bg-gradient-to-br from-blue-50 via-white to-blue-50 rounded-2xl p-6 border border-blue-200 shadow-lg hover:shadow-xl transition-all duration-500 group animate-slide-up" style="animation-delay: 0.4s">
+          <div class="absolute -top-3 -left-3 w-16 h-16 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-full opacity-20 blur-xl group-hover:opacity-40 transition-opacity"></div>
+          
+          <div class="flex items-center gap-3 mb-4">
+            <div class="relative">
+              <div class="absolute inset-0 bg-blue-500 rounded-xl blur-md opacity-50 animate-pulse-slow"></div>
+              <div class="relative w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg">
+                <i class="fas fa-server text-white text-xl animate-float" style="animation-delay: 0.5s"></i>
+              </div>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-800">{{ currentLang === 'en' ? 'Backend' : 'باك اند' }}</h3>
+            <div class="ml-auto flex gap-1">
+              <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
+              <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse" style="animation-delay: 0.2s"></span>
+              <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse" style="animation-delay: 0.4s"></span>
+            </div>
+          </div>
+          
+          <div class="space-y-3">
+            <div class="flex items-center justify-between py-2 border-b border-blue-100 hover:bg-blue-50/50 px-2 rounded-lg transition-colors">
+              <span class="text-gray-600 flex items-center gap-2">
+                <i class="fas fa-microchip text-blue-400 text-xs"></i>
+                {{ currentLang === 'en' ? 'Technology' : 'التقنية' }}:
+              </span>
+              <span class="text-gray-800 font-semibold">{{ getBackendTypeName() }}</span>
+            </div>
+            <div class="flex items-center justify-between py-2 border-b border-blue-100 hover:bg-blue-50/50 px-2 rounded-lg transition-colors">
+              <span class="text-gray-600 flex items-center gap-2">
+                <i class="fas fa-code-branch text-blue-400 text-xs"></i>
+                {{ currentLang === 'en' ? 'Framework' : 'إطار العمل' }}:
+              </span>
+              <span class="text-gray-800 font-semibold">{{ getBackendFrameworkName() }}</span>
+            </div>
+            <div class="flex items-center justify-between py-2 border-b border-blue-100 hover:bg-blue-50/50 px-2 rounded-lg transition-colors">
+              <span class="text-gray-600 flex items-center gap-2">
+                <i class="fas fa-database text-blue-400 text-xs"></i>
+                {{ currentLang === 'en' ? 'Database' : 'قاعدة البيانات' }}:
+              </span>
+              <span class="text-gray-800 font-semibold">{{ getDatabaseName() }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Links Section -->
+      <div *ngIf="project.githubUrl || project.liveDemoUrl" class="flex flex-wrap gap-4 mb-8 animate-slide-up" style="animation-delay: 0.5s">
+        <a *ngIf="project.githubUrl" 
+           [href]="project.githubUrl" 
+           target="_blank" 
+           class="link-btn group bg-gray-800 hover:bg-gray-900 text-white">
+          <i class="fab fa-github text-lg group-hover:rotate-12 transition-transform"></i>
+          <span>GitHub</span>
+          <i class="fas fa-external-link-alt text-xs opacity-70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+        </a>
+        <a *ngIf="project.liveDemoUrl" 
+           [href]="project.liveDemoUrl" 
+           target="_blank" 
+           class="link-btn group bg-blue-200 hover:from-purple-700 hover:to-indigo-700 text-blue-800">
+<i class="fas fa-globe text-lg group-hover:rotate-12 transition-transform text-blue-800"></i>
+<span>{{ currentLang === 'en' ? 'Live Demo' : 'عرض مباشر' }}</span>
+<i class="fas fa-external-link-alt text-xs opacity-70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform text-blue-600"></i>
+        </a>
+      </div>
+
+      <!-- Date Footer -->
+      <div class="flex flex-wrap gap-4 pt-6 border-t border-gray-200 text-sm text-gray-500 animate-slide-up" style="animation-delay: 0.6s">
+        <span class="flex items-center gap-2 hover:text-purple-600 transition-colors">
+          <div class="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center">
+            <i class="far fa-calendar-alt text-purple-500 text-xs"></i>
+          </div>
+          {{ currentLang === 'en' ? 'Created:' : 'تاريخ الإنشاء:' }} {{ project.createdAt | date:'medium' }}
+        </span>
+        <span *ngIf="project.updatedAt" class="flex items-center gap-2 hover:text-blue-600 transition-colors">
+          <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+            <i class="far fa-clock text-blue-500 text-xs"></i>
+          </div>
+          {{ currentLang === 'en' ? 'Updated:' : 'آخر تحديث:' }} {{ project.updatedAt | date:'medium' }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
