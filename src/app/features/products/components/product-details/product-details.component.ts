@@ -7,6 +7,8 @@ import { Product, ProductUpgrade, UpgradeType, MediaType, CalculatePriceDto, Pri
 import { AuthService } from "../../../../core/services/auth.service";
 import { LanguageService } from "../../../../core/services/language.service";
 import { ProductService } from "../../../../core/services/product.service";
+import { CreateProductRequestDto } from "../../../../core/models/product-request.model";
+import { ProductApiService } from "../../services/product-api.service";
 
 declare const AOS: any;
 
@@ -41,7 +43,8 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   private productId: string | null = null;
 
   constructor(
-    private productService: ProductService,
+    public productService: ProductService,
+    public productApiService: ProductApiService,
     private languageService: LanguageService,
     private authService: AuthService,
     private route: ActivatedRoute,
@@ -255,10 +258,57 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       : 'تم إضافة المنتج إلى السلة بنجاح!');
   }
 
-  buyNow(): void {
-    this.addToCart();
-    this.router.navigate(['/checkout']);
+buyNow(): void {
+  if (!this.authService.isAuthenticated()) {
+    const message = this.currentLang === 'en' 
+      ? 'Please login to request this product' 
+      : 'يرجى تسجيل الدخول لطلب هذا المنتج';
+    if (confirm(message)) {
+      this.router.navigate(['/auth/login']);
+    }
+    return;
   }
+
+  const phone = prompt(
+    this.currentLang === 'en' 
+      ? 'Enter your phone number to connect with you :' 
+      : 'أدخل رقم الهاتف للتواصل معك:'
+  );
+
+  if (!phone) {
+    alert(this.currentLang === 'en' ? 'Phone number is required.' : 'رقم الهاتف مطلوب.');
+    return;
+  }
+
+  // تجهيز الترقيات
+  const upgrades = [];
+  if (this.selectedRamUpgrade) upgrades.push(`RAM: ${this.selectedRamUpgrade.toValue}`);
+  if (this.selectedStorageUpgrade) upgrades.push(`Storage: ${this.selectedStorageUpgrade.toValue}`);
+  if (this.selectedGpuUpgrade) upgrades.push(`GPU: ${this.selectedGpuUpgrade.toValue}`);
+
+  // تفاصيل الطلب
+  const details = `${this.getDisplayName()}
+${upgrades.length ? 'Upgrades: ' + upgrades.join(', ') : 'No upgrades'}
+Final Price: ${this.formatPrice(this.finalPrice)}`;
+
+  // إرسال الطلب
+  const dto = {
+    userId: undefined,
+    productId: this.product!.id,
+    phone: phone,
+    details: details
+  };
+
+  this.productApiService.createProductRequest(dto).subscribe({
+    next: () => {
+      alert('تم إرسال الطلب بنجاح!');
+    this.router.navigate(['/products'], { queryParams: { success: 'request-sent' } });
+    },
+    error: () => {
+      alert('حدث خطأ. حاول مرة أخرى.');
+    }
+  });
+}
 
   formatPrice(price: number): string {
     return new Intl.NumberFormat(this.currentLang === 'en' ? 'en-US' : 'ar-EG', {

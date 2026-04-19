@@ -1,0 +1,51 @@
+
+.table-container {
+  overflow-x: auto;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: rgb(238 242 255);
+  border-radius: 1.5rem;
+}
+
+/* Medium screens and up */
+@media (min-width: 768px) {
+  .stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(99, 102, 241, 0.6); }
+}
+
+.table-row:hover {
+  background: linear-gradient(to right, rgb(238 242 255), rgb(250 245 255));
+}
+
+.action-btn {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: all 200ms;
+}
+
+.action-btn:hover {
+  transform: scale(1.1);
+}
+
+.action-btn:hover i {
+  font-size: 1.125rem;
+}

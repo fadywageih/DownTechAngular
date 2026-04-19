@@ -13,6 +13,7 @@ export interface RegisterDto {
 export interface UserResultDto {
   displayName: string;
   email: string;
+  phone?: string;
   token: string;
   refreshToken?: string | null;
 }

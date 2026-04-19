@@ -1,35 +1,28 @@
 <div class="space-y-8">
-  <!-- Header -->
   <div class="glass-card p-8 rounded-3xl flex items-center justify-between">
     <div>
       <h1 class="text-3xl font-bold text-gray-800 mb-1">Admins Management</h1>
       <p class="text-gray-600">SuperAdmin only - Manage all admin accounts</p>
     </div>
     <div class="flex gap-4">
-      <!-- Logout Button -->
       <button 
         (click)="logout()"
-        class="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-6 py-3 rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all transform hover:scale-105 flex items-center gap-2">
+        class="bg-black text-white px-6 py-3 rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all transform hover:scale-105 flex items-center gap-2">
         <i class="fas fa-sign-out-alt"></i>
         Logout
       </button>
-      <!-- New Admin Button -->
       <button 
         routerLink="/admin/register" 
         [queryParams]="{returnUrl: '/admin/admins'}"
-        class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-3 rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all transform hover:scale-105">
+        class="bg-black text-white px-8 py-3 rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all transform hover:scale-105">
         <i class="fas fa-plus mr-2"></i>+ New Admin
       </button>
     </div>
   </div>
-
-  <!-- Loading -->
   <div *ngIf="loading" class="glass-card p-12 text-center">
     <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
     <p class="text-gray-600 font-semibold">Loading admins...</p>
   </div>
-
-  <!-- Empty State -->
   <div *ngIf="admins.length === 0 && !loading" class="glass-card p-16 text-center">
     <i class="fas fa-users text-6xl text-gray-300 mb-6"></i>
     <h3 class="text-2xl font-bold text-gray-600 mb-2">No Admins Found</h3>
@@ -43,14 +36,12 @@
       </button>
     </div>
   </div>
-
-  <!-- Admins Grid -->
   <div *ngIf="admins.length > 0 && !loading" class="glass-card p-8 rounded-3xl overflow-hidden">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div *ngFor="let admin of admins; trackBy: trackById" 
            class="group p-6 bg-white/70 rounded-2xl hover:bg-white hover:shadow-2xl transition-all border border-gray-200 hover:border-indigo-300 hover:-translate-y-2">
         <div class="flex items-start gap-4 mb-4">
-          <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
+          <div class="w-16 h-16 bg-black/80 rounded-2xl flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
 {{ admin.firstName.charAt(0) }}{{ admin.lastName.charAt(0) }}
           </div>
           <div class="flex-1 min-w-0">
@@ -76,10 +67,10 @@
         </div>
 
         <div class="flex gap-3 pt-4 border-t border-gray-200">
-          <button routerLink="/admin/admins/{{ admin.id }}" class="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-2 px-4 rounded-xl font-semibold hover:shadow-lg transition-all">
-            <i class="fas fa-eye mr-2"></i>View Details
+          <button routerLink="/admin/admins/{{ admin.id }}" class="flex-1 bg-black/80 text-white py-2 px-4 rounded-xl font-semibold hover:shadow-lg transition-all">
+            <i class="fas fa-eye mr-2"></i>View Detail
           </button>
-          <button class="flex-1 bg-gradient-to-r from-orange-500 to-red-600 text-white py-2 px-4 rounded-xl font-semibold hover:shadow-lg transition-all">
+          <button class="flex-1 bg-black/80 text-white py-2 px-4 rounded-xl font-semibold hover:shadow-lg transition-all">
             <i class="fas fa-edit mr-2"></i>Edit
           </button>
         </div>

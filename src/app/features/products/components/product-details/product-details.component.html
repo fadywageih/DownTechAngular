@@ -1,244 +1,244 @@
-<div *ngIf="loading" class="min-h-screen flex items-center justify-center mt-20">
-  <div class="text-center">
-    <div class="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div>
-    <p class="text-gray-600">{{ currentLang === 'en' ? 'Loading product details...' : 'جاري تحميل تفاصيل المنتج...' }}</p>
+  <div *ngIf="loading" class="min-h-screen flex items-center justify-center mt-20">
+    <div class="text-center">
+      <div class="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div>
+      <p class="text-gray-600">{{ currentLang === 'en' ? 'Loading product details...' : 'جاري تحميل تفاصيل المنتج...' }}</p>
+    </div>
   </div>
-</div>
 
-<div *ngIf="!loading && product" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-20 animate-fade-in-up ">
-  
-  <!-- Back Button -->
-  <button (click)="goBack()" 
-    class="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-xl mb-6 transition-all duration-300 hover:translate-x-[-5px]">
-    <i class="fas fa-arrow-left text-gray-600"></i>
-    <span class="text-gray-600">{{ currentLang === 'en' ? 'Back to products' : 'العودة إلى المنتجات' }}</span>
-  </button>
-
-  <!-- Product Grid -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 ">
+  <div *ngIf="!loading && product" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-20 animate-fade-in-up ">
     
-    <!-- Images Column -->
-    <div class="space-y-4 animate-slide-in-right" style="animation-delay: 0.1s">
-      <!-- Main Image -->
-      <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
-        <img [src]="selectedImageIndex === 0 ? getMainImage() : getImages()[selectedImageIndex - 1]" 
-             [alt]="getDisplayName()"
-             class="w-full h-96 object-cover transition-transform duration-500 hover:scale-105">
-      </div>
+    <!-- Back Button -->
+    <button (click)="goBack()" 
+      class="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-xl mb-6 transition-all duration-300 hover:translate-x-[-5px]">
+      <i class="fas fa-arrow-left text-gray-600"></i>
+      <span class="text-gray-600">{{ currentLang === 'en' ? 'Back to products' : 'العودة إلى المنتجات' }}</span>
+    </button>
+
+    <!-- Product Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 ">
       
-      <!-- Thumbnails -->
-      <div class="flex gap-3 overflow-x-auto pb-2">
-        <div *ngFor="let image of getImages(); let i = index"
-             (click)="selectedImageIndex = i + 1"
-             class="w-20 h-20 rounded-xl overflow-hidden cursor-pointer border-2 transition-all duration-300 hover:scale-105 flex-shrink-0"
-             [class.border-indigo-500]="selectedImageIndex === i + 1"
-             [class.border-transparent]="selectedImageIndex !== i + 1">
-          <img [src]="image" class="w-full h-full object-cover">
+      <!-- Images Column -->
+      <div class="space-y-4 animate-slide-in-right" style="animation-delay: 0.1s">
+        <!-- Main Image -->
+        <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+          <img [src]="selectedImageIndex === 0 ? getMainImage() : getImages()[selectedImageIndex - 1]" 
+              [alt]="getDisplayName()"
+              class="w-full h-96 object-cover transition-transform duration-500 hover:scale-105">
         </div>
-        <div *ngIf="getVideo()"
-             (click)="showVideo = true"
-             class="w-20 h-20 rounded-xl overflow-hidden cursor-pointer bg-gradient-to-r from-indigo-100 to-purple-100 flex items-center justify-center border-2 border-transparent hover:border-indigo-500 transition-all duration-300 hover:scale-105 flex-shrink-0">
-          <i class="fas fa-play-circle text-3xl text-indigo-600"></i>
-        </div>
-      </div>
-    </div>
-
-    <!-- Info Column -->
-    <div class="space-y-6 animate-slide-in-left" style="animation-delay: 0.2s">
-      <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
         
-        <!-- Badges -->
-        <div class="flex flex-wrap gap-2 mb-4">
-          <span *ngIf="product.condition === 1" class="px-3 py-1 bg-green-500 text-white text-xs font-semibold rounded-full">
-            {{ currentLang === 'en' ? 'New' : 'جديد' }}
-          </span>
-          <span *ngIf="product.condition === 2" class="px-3 py-1 bg-orange-500 text-white text-xs font-semibold rounded-full">
-            {{ currentLang === 'en' ? 'Used' : 'مستعمل' }}
-          </span>
-          <span *ngIf="product.productType === 1" class="px-3 py-1 bg-purple-500 text-white text-xs font-semibold rounded-full">
-            <i class="fas fa-laptop mr-1"></i> Laptop
-          </span>
-          <span *ngIf="product.productType === 2" class="px-3 py-1 bg-purple-500 text-white text-xs font-semibold rounded-full">
-            <i class="fas fa-desktop mr-1"></i> PC
-          </span>
-          <span *ngIf="product.productType === 3" class="px-3 py-1 bg-amber-500 text-white text-xs font-semibold rounded-full">
-            <i class="fas fa-microchip mr-1"></i> Accessory
-          </span>
-        </div>
-
-        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">{{ getDisplayName() }}</h1>
-        <p class="text-gray-600 leading-relaxed mb-6">{{ getDisplayDescription() }}</p>
-
-        <!-- Price Card -->
-        <div class="bg-indigo-50 rounded-xl p-4 mb-6">
-          <div class="flex justify-between mb-2">
-            <span class="text-gray-600">{{ currentLang === 'en' ? 'Base Price:' : 'السعر الأساسي:' }}</span>
-            <span class="font-semibold">{{ formatPrice(basePrice) }}</span>
+        <!-- Thumbnails -->
+        <div class="flex gap-3 overflow-x-auto pb-2">
+          <div *ngFor="let image of getImages(); let i = index"
+              (click)="selectedImageIndex = i + 1"
+              class="w-20 h-20 rounded-xl overflow-hidden cursor-pointer border-2 transition-all duration-300 hover:scale-105 flex-shrink-0"
+              [class.border-indigo-500]="selectedImageIndex === i + 1"
+              [class.border-transparent]="selectedImageIndex !== i + 1">
+            <img [src]="image" class="w-full h-full object-cover">
           </div>
-          <div *ngIf="upgradesTotal > 0" class="flex justify-between mb-2">
-            <span class="text-gray-600">{{ currentLang === 'en' ? 'Upgrades Total:' : 'إجمالي الترقيات:' }}</span>
-            <span class="font-semibold text-green-600">+{{ formatPrice(upgradesTotal) }}</span>
-          </div>
-          <div class="flex justify-between pt-2 border-t border-indigo-200">
-            <span class="font-bold text-gray-800">{{ currentLang === 'en' ? 'Final Price:' : 'السعر النهائي:' }}</span>
-            <span class="font-bold text-xl text-indigo-600">{{ formatPrice(finalPrice) }}</span>
+          <div *ngIf="getVideo()"
+              (click)="showVideo = true"
+              class="w-20 h-20 rounded-xl overflow-hidden cursor-pointer bg-gradient-to-r from-indigo-100 to-purple-100 flex items-center justify-center border-2 border-transparent hover:border-indigo-500 transition-all duration-300 hover:scale-105 flex-shrink-0">
+            <i class="fas fa-play-circle text-3xl text-indigo-600"></i>
           </div>
         </div>
+      </div>
 
-        <!-- Upgrades Section -->
-        <div *ngIf="hasUpgrades()" class="space-y-4 mb-6">
-          <h3 class="font-bold text-gray-800 flex items-center gap-2">
-            <i class="fas fa-microchip text-indigo-600"></i>
-            {{ currentLang === 'en' ? 'Customize Your Device' : 'خصص جهازك' }}
-          </h3>
+      <!-- Info Column -->
+      <div class="space-y-6 animate-slide-in-left" style="animation-delay: 0.2s">
+        <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
           
-          <!-- RAM Upgrade -->
-          <div *ngIf="getUpgradesByType(1).length > 0 && product.allowRamUpgrade">
-            <label class="block text-sm font-semibold text-gray-700 mb-2">
-              <i class="fas fa-memory text-indigo-500 mr-1"></i>
-              {{ currentLang === 'en' ? 'RAM Upgrade' : 'ترقية الرامات' }}
-            </label>
-            <div class="flex flex-wrap gap-3">
-              <div *ngFor="let upgrade of getUpgradesByType(1)" 
-                   (click)="selectUpgrade('ram', upgrade)"
-                   class="flex items-center justify-between gap-4 px-4 py-2 bg-white border-2 rounded-xl cursor-pointer transition-all duration-300 hover:border-indigo-500 hover:shadow-md"
-                   [class.border-indigo-500]="selectedRamUpgrade?.upgradeOptionId === upgrade.upgradeOptionId"
-                   [class.border-gray-200]="selectedRamUpgrade?.upgradeOptionId !== upgrade.upgradeOptionId">
-                <div class="flex items-center gap-2">
-                  <span class="text-gray-500">{{ upgrade.fromValue }}</span>
-                  <i class="fas fa-arrow-right text-gray-400 text-sm"></i>
-                  <span class="font-semibold">{{ upgrade.toValue }}</span>
-                </div>
-                <div class="text-green-600 font-semibold text-sm">+{{ formatPrice(upgrade.additionalPrice) }}</div>
-              </div>
-              <div *ngIf="selectedRamUpgrade" 
-                   (click)="removeUpgrade('ram')"
-                   class="flex items-center gap-2 px-4 py-2 bg-red-50 border-2 border-red-200 rounded-xl cursor-pointer transition-all duration-300 hover:bg-red-100">
-                <i class="fas fa-times-circle text-red-500"></i>
-                <span class="text-red-600 text-sm">{{ currentLang === 'en' ? 'Remove' : 'إزالة' }}</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Storage Upgrade -->
-          <div *ngIf="getUpgradesByType(2).length > 0 && product.allowStorageUpgrade">
-            <label class="block text-sm font-semibold text-gray-700 mb-2">
-              <i class="fas fa-hdd text-indigo-500 mr-1"></i>
-              {{ currentLang === 'en' ? 'Storage Upgrade' : 'ترقية التخزين' }}
-            </label>
-            <div class="flex flex-wrap gap-3">
-              <div *ngFor="let upgrade of getUpgradesByType(2)" 
-                   (click)="selectUpgrade('storage', upgrade)"
-                   class="flex items-center justify-between gap-4 px-4 py-2 bg-white border-2 rounded-xl cursor-pointer transition-all duration-300 hover:border-indigo-500 hover:shadow-md"
-                   [class.border-indigo-500]="selectedStorageUpgrade?.upgradeOptionId === upgrade.upgradeOptionId"
-                   [class.border-gray-200]="selectedStorageUpgrade?.upgradeOptionId !== upgrade.upgradeOptionId">
-                <div class="flex items-center gap-2">
-                  <span class="text-gray-500">{{ upgrade.fromValue }}</span>
-                  <i class="fas fa-arrow-right text-gray-400 text-sm"></i>
-                  <span class="font-semibold">{{ upgrade.toValue }}</span>
-                </div>
-                <div class="text-green-600 font-semibold text-sm">+{{ formatPrice(upgrade.additionalPrice) }}</div>
-              </div>
-              <div *ngIf="selectedStorageUpgrade" 
-                   (click)="removeUpgrade('storage')"
-                   class="flex items-center gap-2 px-4 py-2 bg-red-50 border-2 border-red-200 rounded-xl cursor-pointer transition-all duration-300 hover:bg-red-100">
-                <i class="fas fa-times-circle text-red-500"></i>
-                <span class="text-red-600 text-sm">{{ currentLang === 'en' ? 'Remove' : 'إزالة' }}</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- GPU Upgrade -->
-          <div *ngIf="getUpgradesByType(3).length > 0 && product.allowGpuUpgrade">
-            <label class="block text-sm font-semibold text-gray-700 mb-2">
-              <i class="fas fa-tv text-indigo-500 mr-1"></i>
-              {{ currentLang === 'en' ? 'GPU Upgrade' : 'ترقية كارت الشاشة' }}
-            </label>
-            <div class="flex flex-wrap gap-3">
-              <div *ngFor="let upgrade of getUpgradesByType(3)" 
-                   (click)="selectUpgrade('gpu', upgrade)"
-                   class="flex items-center justify-between gap-4 px-4 py-2 bg-white border-2 rounded-xl cursor-pointer transition-all duration-300 hover:border-indigo-500 hover:shadow-md"
-                   [class.border-indigo-500]="selectedGpuUpgrade?.upgradeOptionId === upgrade.upgradeOptionId"
-                   [class.border-gray-200]="selectedGpuUpgrade?.upgradeOptionId !== upgrade.upgradeOptionId">
-                <div class="flex items-center gap-2">
-                  <span class="text-gray-500">{{ upgrade.fromValue }}</span>
-                  <i class="fas fa-arrow-right text-gray-400 text-sm"></i>
-                  <span class="font-semibold">{{ upgrade.toValue }}</span>
-                </div>
-                <div class="text-green-600 font-semibold text-sm">+{{ formatPrice(upgrade.additionalPrice) }}</div>
-              </div>
-              <div *ngIf="selectedGpuUpgrade" 
-                   (click)="removeUpgrade('gpu')"
-                   class="flex items-center gap-2 px-4 py-2 bg-red-50 border-2 border-red-200 rounded-xl cursor-pointer transition-all duration-300 hover:bg-red-100">
-                <i class="fas fa-times-circle text-red-500"></i>
-                <span class="text-red-600 text-sm">{{ currentLang === 'en' ? 'Remove' : 'إزالة' }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Buy Button -->
-        <button (click)="buyNow()"
-          class="w-full bg-blue-800 text-white py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-          <i class="fas fa-bolt mr-2"></i>
-          {{ currentLang === 'en' ? 'Get it now' : 'احصل عليه الان' }}
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Tabs Section -->
-  <div class="mt-12 animate-fade-in-up" style="animation-delay: 0.3s">
-    <div class="flex gap-4 border-b border-gray-200 mb-6">
-      <button (click)="activeTab = 'specs'"
-        class="px-6 py-3 font-semibold transition-all duration-300 relative"
-        [class.text-indigo-600]="activeTab === 'specs'"
-        [class.text-gray-500]="activeTab !== 'specs'">
-        <i class="fas fa-list-ul mr-2"></i>
-        {{ currentLang === 'en' ? 'Specifications' : 'المواصفات' }}
-        <span *ngIf="activeTab === 'specs'" class="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 animate-slide-in"></span>
-      </button>
-      <button (click)="activeTab = 'details'"
-        class="px-6 py-3 font-semibold transition-all duration-300 relative"
-        [class.text-indigo-600]="activeTab === 'details'"
-        [class.text-gray-500]="activeTab !== 'details'">
-        <i class="fas fa-info-circle mr-2"></i>
-        {{ currentLang === 'en' ? 'Details' : 'التفاصيل' }}
-        <span *ngIf="activeTab === 'details'" class="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 animate-slide-in"></span>
-      </button>
-    </div>
-
-    <div class="bg-gray-50 rounded-2xl p-6">
-      <div *ngIf="activeTab === 'details'">
-        <p class="text-gray-600 leading-relaxed">{{ getDisplayDescription() }}</p>
-      </div>
-
-      <div *ngIf="activeTab === 'specs'">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div *ngFor="let spec of product.specifications" class="flex justify-between py-3 border-b border-gray-200">
-            <span class="font-semibold text-gray-700">{{ currentLang === 'en' ? spec.keyEn : spec.keyAr }}:</span>
-            <span class="text-gray-600">
-              {{ currentLang === 'en' ? spec.valueEn : spec.valueAr }}
-              <span *ngIf="spec.isUpgradable" class="text-green-600 text-xs ml-1">
-                ({{ currentLang === 'en' ? 'Upgradable' : 'قابل للترقية' }})
-              </span>
+          <!-- Badges -->
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span *ngIf="product.condition === 1" class="px-3 py-1 bg-green-500 text-white text-xs font-semibold rounded-full">
+              {{ currentLang === 'en' ? 'New' : 'جديد' }}
+            </span>
+            <span *ngIf="product.condition === 2" class="px-3 py-1 bg-orange-500 text-white text-xs font-semibold rounded-full">
+              {{ currentLang === 'en' ? 'Used' : 'مستعمل' }}
+            </span>
+            <span *ngIf="product.productType === 1" class="px-3 py-1 bg-purple-500 text-white text-xs font-semibold rounded-full">
+              <i class="fas fa-laptop mr-1"></i> Laptop
+            </span>
+            <span *ngIf="product.productType === 2" class="px-3 py-1 bg-purple-500 text-white text-xs font-semibold rounded-full">
+              <i class="fas fa-desktop mr-1"></i> PC
+            </span>
+            <span *ngIf="product.productType === 3" class="px-3 py-1 bg-amber-500 text-white text-xs font-semibold rounded-full">
+              <i class="fas fa-microchip mr-1"></i> Accessory
             </span>
           </div>
+
+          <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">{{ getDisplayName() }}</h1>
+          <p class="text-gray-600 leading-relaxed mb-6">{{ getDisplayDescription() }}</p>
+
+          <!-- Price Card -->
+          <div class="bg-indigo-50 rounded-xl p-4 mb-6">
+            <div class="flex justify-between mb-2">
+              <span class="text-gray-600">{{ currentLang === 'en' ? 'Base Price:' : 'السعر الأساسي:' }}</span>
+              <span class="font-semibold">{{ formatPrice(basePrice) }}</span>
+            </div>
+            <div *ngIf="upgradesTotal > 0" class="flex justify-between mb-2">
+              <span class="text-gray-600">{{ currentLang === 'en' ? 'Upgrades Total:' : 'إجمالي الترقيات:' }}</span>
+              <span class="font-semibold text-green-600">+{{ formatPrice(upgradesTotal) }}</span>
+            </div>
+            <div class="flex justify-between pt-2 border-t border-indigo-200">
+              <span class="font-bold text-gray-800">{{ currentLang === 'en' ? 'Final Price:' : 'السعر النهائي:' }}</span>
+              <span class="font-bold text-xl text-indigo-600">{{ formatPrice(finalPrice) }}</span>
+            </div>
+          </div>
+
+          <!-- Upgrades Section -->
+          <div *ngIf="hasUpgrades()" class="space-y-4 mb-6">
+            <h3 class="font-bold text-gray-800 flex items-center gap-2">
+              <i class="fas fa-microchip text-indigo-600"></i>
+              {{ currentLang === 'en' ? 'Customize Your Device' : 'خصص جهازك' }}
+            </h3>
+            
+            <!-- RAM Upgrade -->
+            <div *ngIf="getUpgradesByType(1).length > 0 && product.allowRamUpgrade">
+              <label class="block text-sm font-semibold text-gray-700 mb-2">
+                <i class="fas fa-memory text-indigo-500 mr-1"></i>
+                {{ currentLang === 'en' ? 'RAM Upgrade' : 'ترقية الرامات' }}
+              </label>
+              <div class="flex flex-wrap gap-3">
+                <div *ngFor="let upgrade of getUpgradesByType(1)" 
+                    (click)="selectUpgrade('ram', upgrade)"
+                    class="flex items-center justify-between gap-4 px-4 py-2 bg-white border-2 rounded-xl cursor-pointer transition-all duration-300 hover:border-indigo-500 hover:shadow-md"
+                    [class.border-indigo-500]="selectedRamUpgrade?.upgradeOptionId === upgrade.upgradeOptionId"
+                    [class.border-gray-200]="selectedRamUpgrade?.upgradeOptionId !== upgrade.upgradeOptionId">
+                  <div class="flex items-center gap-2">
+                    <span class="text-gray-500">{{ upgrade.fromValue }}</span>
+                    <i class="fas fa-arrow-right text-gray-400 text-sm"></i>
+                    <span class="font-semibold">{{ upgrade.toValue }}</span>
+                  </div>
+                  <div class="text-green-600 font-semibold text-sm">+{{ formatPrice(upgrade.additionalPrice) }}</div>
+                </div>
+                <div *ngIf="selectedRamUpgrade" 
+                    (click)="removeUpgrade('ram')"
+                    class="flex items-center gap-2 px-4 py-2 bg-red-50 border-2 border-red-200 rounded-xl cursor-pointer transition-all duration-300 hover:bg-red-100">
+                  <i class="fas fa-times-circle text-red-500"></i>
+                  <span class="text-red-600 text-sm">{{ currentLang === 'en' ? 'Remove' : 'إزالة' }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Storage Upgrade -->
+            <div *ngIf="getUpgradesByType(2).length > 0 && product.allowStorageUpgrade">
+              <label class="block text-sm font-semibold text-gray-700 mb-2">
+                <i class="fas fa-hdd text-indigo-500 mr-1"></i>
+                {{ currentLang === 'en' ? 'Storage Upgrade' : 'ترقية التخزين' }}
+              </label>
+              <div class="flex flex-wrap gap-3">
+                <div *ngFor="let upgrade of getUpgradesByType(2)" 
+                    (click)="selectUpgrade('storage', upgrade)"
+                    class="flex items-center justify-between gap-4 px-4 py-2 bg-white border-2 rounded-xl cursor-pointer transition-all duration-300 hover:border-indigo-500 hover:shadow-md"
+                    [class.border-indigo-500]="selectedStorageUpgrade?.upgradeOptionId === upgrade.upgradeOptionId"
+                    [class.border-gray-200]="selectedStorageUpgrade?.upgradeOptionId !== upgrade.upgradeOptionId">
+                  <div class="flex items-center gap-2">
+                    <span class="text-gray-500">{{ upgrade.fromValue }}</span>
+                    <i class="fas fa-arrow-right text-gray-400 text-sm"></i>
+                    <span class="font-semibold">{{ upgrade.toValue }}</span>
+                  </div>
+                  <div class="text-green-600 font-semibold text-sm">+{{ formatPrice(upgrade.additionalPrice) }}</div>
+                </div>
+                <div *ngIf="selectedStorageUpgrade" 
+                    (click)="removeUpgrade('storage')"
+                    class="flex items-center gap-2 px-4 py-2 bg-red-50 border-2 border-red-200 rounded-xl cursor-pointer transition-all duration-300 hover:bg-red-100">
+                  <i class="fas fa-times-circle text-red-500"></i>
+                  <span class="text-red-600 text-sm">{{ currentLang === 'en' ? 'Remove' : 'إزالة' }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- GPU Upgrade -->
+            <div *ngIf="getUpgradesByType(3).length > 0 && product.allowGpuUpgrade">
+              <label class="block text-sm font-semibold text-gray-700 mb-2">
+                <i class="fas fa-tv text-indigo-500 mr-1"></i>
+                {{ currentLang === 'en' ? 'GPU Upgrade' : 'ترقية كارت الشاشة' }}
+              </label>
+              <div class="flex flex-wrap gap-3">
+                <div *ngFor="let upgrade of getUpgradesByType(3)" 
+                    (click)="selectUpgrade('gpu', upgrade)"
+                    class="flex items-center justify-between gap-4 px-4 py-2 bg-white border-2 rounded-xl cursor-pointer transition-all duration-300 hover:border-indigo-500 hover:shadow-md"
+                    [class.border-indigo-500]="selectedGpuUpgrade?.upgradeOptionId === upgrade.upgradeOptionId"
+                    [class.border-gray-200]="selectedGpuUpgrade?.upgradeOptionId !== upgrade.upgradeOptionId">
+                  <div class="flex items-center gap-2">
+                    <span class="text-gray-500">{{ upgrade.fromValue }}</span>
+                    <i class="fas fa-arrow-right text-gray-400 text-sm"></i>
+                    <span class="font-semibold">{{ upgrade.toValue }}</span>
+                  </div>
+                  <div class="text-green-600 font-semibold text-sm">+{{ formatPrice(upgrade.additionalPrice) }}</div>
+                </div>
+                <div *ngIf="selectedGpuUpgrade" 
+                    (click)="removeUpgrade('gpu')"
+                    class="flex items-center gap-2 px-4 py-2 bg-red-50 border-2 border-red-200 rounded-xl cursor-pointer transition-all duration-300 hover:bg-red-100">
+                  <i class="fas fa-times-circle text-red-500"></i>
+                  <span class="text-red-600 text-sm">{{ currentLang === 'en' ? 'Remove' : 'إزالة' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Buy Button -->
+          <button (click)="buyNow()"
+            class="w-full bg-blue-800 text-white py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+            <i class="fas fa-bolt mr-2"></i>
+            {{ currentLang === 'en' ? 'Get it now' : 'احصل عليه الان' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs Section -->
+    <div class="mt-12 animate-fade-in-up" style="animation-delay: 0.3s">
+      <div class="flex gap-4 border-b border-gray-200 mb-6">
+        <button (click)="activeTab = 'specs'"
+          class="px-6 py-3 font-semibold transition-all duration-300 relative"
+          [class.text-indigo-600]="activeTab === 'specs'"
+          [class.text-gray-500]="activeTab !== 'specs'">
+          <i class="fas fa-list-ul mr-2"></i>
+          {{ currentLang === 'en' ? 'Specifications' : 'المواصفات' }}
+          <span *ngIf="activeTab === 'specs'" class="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 animate-slide-in"></span>
+        </button>
+        <button (click)="activeTab = 'details'"
+          class="px-6 py-3 font-semibold transition-all duration-300 relative"
+          [class.text-indigo-600]="activeTab === 'details'"
+          [class.text-gray-500]="activeTab !== 'details'">
+          <i class="fas fa-info-circle mr-2"></i>
+          {{ currentLang === 'en' ? 'Details' : 'التفاصيل' }}
+          <span *ngIf="activeTab === 'details'" class="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 animate-slide-in"></span>
+        </button>
+      </div>
+
+      <div class="bg-gray-50 rounded-2xl p-6">
+        <div *ngIf="activeTab === 'details'">
+          <p class="text-gray-600 leading-relaxed">{{ getDisplayDescription() }}</p>
+        </div>
+
+        <div *ngIf="activeTab === 'specs'">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div *ngFor="let spec of product.specifications" class="flex justify-between py-3 border-b border-gray-200">
+              <span class="font-semibold text-gray-700">{{ currentLang === 'en' ? spec.keyEn : spec.keyAr }}:</span>
+              <span class="text-gray-600">
+                {{ currentLang === 'en' ? spec.valueEn : spec.valueAr }}
+                <span *ngIf="spec.isUpgradable" class="text-green-600 text-xs ml-1">
+                  ({{ currentLang === 'en' ? 'Upgradable' : 'قابل للترقية' }})
+                </span>
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Video Modal -->
-<div *ngIf="showVideo && getVideo()" class="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 animate-fade-in" (click)="showVideo = false">
-  <div class="relative max-w-3xl w-full" (click)="$event.stopPropagation()">
-    <button (click)="showVideo = false" class="absolute -top-12 right-0 text-white text-3xl hover:scale-110 transition-transform">
-      ✕
-    </button>
-    <video controls autoplay class="w-full rounded-2xl shadow-2xl">
-      <source [src]="getVideo()!" type="video/mp4">
-      {{ currentLang === 'en' ? 'Your browser does not support the video tag.' : 'متصفحك لا يدعم تشغيل الفيديو.' }}
-    </video>
+  <!-- Video Modal -->
+  <div *ngIf="showVideo && getVideo()" class="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 animate-fade-in" (click)="showVideo = false">
+    <div class="relative max-w-3xl w-full" (click)="$event.stopPropagation()">
+      <button (click)="showVideo = false" class="absolute -top-12 right-0 text-white text-3xl hover:scale-110 transition-transform">
+        ✕
+      </button>
+      <video controls autoplay class="w-full rounded-2xl shadow-2xl">
+        <source [src]="getVideo()!" type="video/mp4">
+        {{ currentLang === 'en' ? 'Your browser does not support the video tag.' : 'متصفحك لا يدعم تشغيل الفيديو.' }}
+      </video>
+    </div>
   </div>
-</div>

@@ -82,6 +82,10 @@ export const ADMIN_ROUTES: Routes = [
           .then(m => m.AdminSoftwareProjectDetailComponent)
       },
       {
+        path: 'orders',
+        loadComponent: () => import('./components/admin-orders-list/admin-orders-list.component').then(m => m.AdminOrdersListComponent)
+      },
+      {
         path: '',
         redirectTo: 'products',
         pathMatch: 'full'

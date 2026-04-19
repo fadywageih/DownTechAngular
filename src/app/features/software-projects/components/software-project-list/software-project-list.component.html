@@ -23,7 +23,7 @@
       <div class="circular-menu-container">
         <div class="circular-menu-wrapper">
           <div class="circular-menu-glow frontend-glow" [class.active]="frontendMenuOpen"></div>
-          <div class="circular-menu frontend-menu" [class.active]="frontendMenuOpen">
+          <div class="bg-black/50 circular-menu frontend-menu" [class.active]="frontendMenuOpen">
             <button class="menu-center frontend-center" (click)="toggleFrontendMenu()" [class.spinning]="frontendMenuOpen">
               <div class="menu-center-inner">
                 <i class="fab fa-angular menu-icon"></i>
@@ -58,7 +58,7 @@
       <div class="circular-menu-container">
         <div class="circular-menu-wrapper">
           <div class="circular-menu-glow backend-glow" [class.active]="backendMenuOpen"></div>
-          <div class="circular-menu backend-menu" [class.active]="backendMenuOpen">
+          <div class="bg-black/50 circular-menu backend-menu" [class.active]="backendMenuOpen">
             <button class="menu-center backend-center" (click)="toggleBackendMenu()" [class.spinning]="backendMenuOpen">
               <div class="menu-center-inner">
                 <i class="fab fa-microsoft menu-icon"></i>
@@ -71,15 +71,15 @@
             </button>
             
             <div class="menu-items" [class.visible]="backendMenuOpen">
-              <button *ngFor="let type of backendTypeOptions; let i = index" 
+              <button  *ngFor="let type of backendTypeOptions; let i = index" 
                       class="menu-item backend-item"
                       [class.active]="selectedBackendType === type.value"
                       [style.--i]="i"
                       [style.--total]="backendTypeOptions.length"
                       (click)="selectBackendType(type.value)">
-                <i [class]="getBackendIcon(type.value)"></i>
-                <span class="item-tooltip">{{ currentLang === 'en' ? type.labelEn : type.labelAr }}</span>
-                <span class="item-glow"></span>
+                <i class="bg-black/80 z-999" [class]="getBackendIcon(type.value)"></i>
+                <span class=" item-tooltip">{{ currentLang === 'en' ? type.labelEn : type.labelAr }}</span>
+                <span class=" item-glow"></span>
               </button>
             </div>
           </div>
@@ -92,8 +92,8 @@
 
       <div class="circular-menu-container">
         <div class="circular-menu-wrapper">
-          <div class="circular-menu-glow database-glow" [class.active]="databaseMenuOpen"></div>
-          <div class="circular-menu database-menu" [class.active]="databaseMenuOpen">
+          <div class=" circular-menu-glow database-glow" [class.active]="databaseMenuOpen"></div>
+          <div class="bg-black/50 circular-menu database-menu" [class.active]="databaseMenuOpen">
             <button class="menu-center database-center" (click)="toggleDatabaseMenu()" [class.spinning]="databaseMenuOpen">
               <div class="menu-center-inner">
                 <i class="fas fa-database menu-icon"></i>
@@ -202,7 +202,7 @@
       </div>
       <p class="text-gray-500 text-base mb-3">{{ currentLang === 'en' ? 'No projects found' : 'لا توجد مشاريع' }}</p>
       <button (click)="resetFilters()" 
-        class="inline-flex items-center gap-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+        class="inline-flex items-center gap-1.5 bg-black hover:from-purple-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105">
         <i class="fas fa-redo-alt text-xs"></i>
         {{ currentLang === 'en' ? 'Clear Filters' : 'مسح الفلاتر' }}
       </button>

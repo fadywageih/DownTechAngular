@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { Product, ProductFilterDto, PagedResultDto, CalculatePriceDto, PriceCalculationResultDto } from "../../../core/models/product.model";
 import { ApiService } from "../../../core/services/api.service";
+import { CreateProductRequestDto } from "../../../core/models/product-request.model";
 
 @Injectable({
     providedIn: 'root'
@@ -46,4 +47,9 @@ export class ProductApiService {
     isProductNameExists(nameAr: string, nameEn: string): Observable<boolean> {
         return this.apiService.get<boolean>(`${this.endpoint}/check-name`, { nameAr, nameEn });
     }
+
+    createProductRequest(dto: CreateProductRequestDto): Observable<any> {
+        return this.apiService.post(`${this.endpoint}/request`, dto);
+    }
 }
+

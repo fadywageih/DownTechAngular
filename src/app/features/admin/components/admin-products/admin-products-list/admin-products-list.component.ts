@@ -10,11 +10,12 @@ import { IssueService } from "../../../../../core/services/issue.service";
 import { LanguageService } from "../../../../../core/services/language.service";
 import { AdminProductApiService } from "../../../services/admin-product-api.service";
 import { AdminSoftwareProjectApiService } from "../../../services/admin-software-project-api.service";
+import { AdminOrdersListComponent } from "../../admin-orders-list/admin-orders-list.component";
 
 @Component({
   selector: 'app-admin-products-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule,AdminOrdersListComponent],
   templateUrl: './admin-products-list.component.html',
   styleUrls: ['./admin-products-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -29,7 +30,6 @@ export class AdminProductsListComponent implements OnInit, OnDestroy {
   pagedResult: PagedResultDto<Product> | null = null;
   
   // Issues
-  activeTab: 'products' | 'maintenance' | 'software' = 'products';
   issuesList: IssueResponseDto[] = [];
   issuesLoading = false;
   issueSearchQuery = '';
@@ -46,7 +46,8 @@ export class AdminProductsListComponent implements OnInit, OnDestroy {
   softwareFrontendFilter: FrontendType | null = null;
   softwareBackendFilter: BackendType | null = null;
   softwareDatabaseFilter: DatabaseType | null = null;
-  
+  activeTab: 'products' | 'maintenance' | 'software' | 'orders' = 'products';
+
   currentLang = 'en';
   private subscriptions: Subscription = new Subscription();
   
