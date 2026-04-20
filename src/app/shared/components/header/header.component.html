@@ -1,24 +1,30 @@
 <header class="main-header fixed top-0 left-0 right-0 z-50 transition-all duration-300">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16 md:h-20">
+      
+      <!-- Logo -->
       <div class="flex items-center cursor-pointer group" routerLink="/home">
         <img src="assets/images/logo.png" alt="Logo" class="h-10 md:h-12 w-auto cursor-pointer" (error)="onImageError($event)">
       </div>
+      
+      <!-- Desktop Navigation -->
       <div class="hidden md:flex items-center gap-8">
         <a routerLink="/products" class="nav-link cursor-pointer">{{ currentLang === 'en' ? 'Devices' : 'اجهزه' }}</a>
         <a (click)="goToReportIssue()" class="nav-link cursor-pointer">{{ currentLang === 'en' ? 'Maintenance' : 'صيانة' }}</a>
-        <!-- ✅ Software Projects Link -->
         <a routerLink="/software-projects" class="nav-link cursor-pointer">{{ currentLang === 'en' ? 'Software' : 'برمجيات' }}</a>
         <a (click)="scrollToSection('about-section')" class="nav-link cursor-pointer">{{ currentLang === 'en' ? 'About Us' : 'من نحن' }}</a>
       </div>
+      
+      <!-- Right Side Actions -->
       <div class="flex items-center gap-3">
+        
         <!-- Language Switcher -->
         <div class="flex items-center gap-1 bg-white/20 backdrop-blur-sm p-1 rounded-xl">
           <button (click)="toggleLanguage()" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all" [class.active-lang]="currentLang === 'en'">EN</button>
           <button (click)="toggleLanguage()" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all" [class.active-lang]="currentLang === 'ar'">AR</button>
         </div>
         
-        <!-- Not Logged In -->
+        <!-- Not Logged In - Desktop -->
         <div *ngIf="!isUserAuthenticated() && !isAdminAuthenticated()" class="hidden sm:flex items-center gap-2">
           <button (click)="navigateToLogin()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition-all text-sm">
             <i class="fas fa-sign-in-alt mr-1"></i> {{ currentLang === 'en' ? 'Sign In' : 'تسجيل دخول' }}
@@ -27,14 +33,19 @@
             <i class="fas fa-user-plus mr-1"></i> {{ currentLang === 'en' ? 'Sign Up' : 'إنشاء حساب' }}
           </button>
         </div>
+        
+        <!-- User Menu (Logged In) -->
         <div *ngIf="isUserAuthenticated() || isAdminAuthenticated()" class="relative">
           <button (click)="toggleUserMenu()" class="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-2 rounded-xl hover:bg-white/30 transition-all">
             <i class="fas fa-user-circle text-xl text-indigo-600"></i>
             <span class="text-sm font-medium text-gray-700">{{ getCurrentUserName() }}</span>
             <i class="fas fa-chevron-down text-xs text-gray-500"></i>
           </button>
-          
-          <div *ngIf="isUserMenuOpen" class="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl py-2 z-50">
+          <div *ngIf="isUserMenuOpen" 
+               class="user-dropdown absolute mt-2 w-64 bg-white rounded-lg shadow-xl py-2 z-50"
+               [class.right-0]="currentLang === 'en'"
+               [class.left-0]="currentLang === 'ar'">
+            
             <div class="px-4 py-2 border-b border-gray-100">
               <p class="text-sm font-semibold text-gray-700">{{ getCurrentUserName() }}</p>
               <p class="text-xs text-gray-500">{{ getCurrentUserEmail() }}</p>
@@ -42,26 +53,43 @@
             
             <!-- User Links -->
             <div *ngIf="isUserAuthenticated()">
-              <button (click)="goToMyIssues()" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                <i class="fas fa-list-alt mr-2 text-indigo-500"></i> {{ currentLang === 'en' ? 'My Reports' : 'تقاريري' }}
+              <button (click)="goToMyIssues()" 
+                      class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      [class.text-right]="currentLang === 'ar'">
+                <i class="fas fa-list-alt text-indigo-500" [class.ml-2]="currentLang === 'ar'" [class.mr-2]="currentLang === 'en'"></i> 
+                {{ currentLang === 'en' ? 'My Reports' : 'تقاريري' }}
               </button>
-              <button (click)="goToReportIssue()" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                <i class="fas fa-plus-circle mr-2 text-emerald-500"></i> {{ currentLang === 'en' ? 'New Report' : 'تقرير جديد' }}
+              <button (click)="goToReportIssue()" 
+                      class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      [class.text-right]="currentLang === 'ar'">
+                <i class="fas fa-plus-circle text-emerald-500" [class.ml-2]="currentLang === 'ar'" [class.mr-2]="currentLang === 'en'"></i> 
+                {{ currentLang === 'en' ? 'New Report' : 'تقرير جديد' }}
               </button>
             </div>
+            
+            <!-- Admin Links -->
             <div *ngIf="isAdminAuthenticated()">
               <div class="border-t border-gray-100 my-1"></div>
-              <button (click)="goToAdminProducts()" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                <i class="fas fa-box-open mr-2 text-blue-500"></i> {{ currentLang === 'en' ? 'Admin Panel' : 'لوحة التحكم' }}
+              <button (click)="goToAdminProducts()" 
+                      class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      [class.text-right]="currentLang === 'ar'">
+                <i class="fas fa-box-open text-blue-500" [class.ml-2]="currentLang === 'ar'" [class.mr-2]="currentLang === 'en'"></i> 
+                {{ currentLang === 'en' ? 'Admin Panel' : 'لوحة التحكم' }}
               </button>
-              <button (click)="goToAdminIssues()" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                <i class="fas fa-tools mr-2 text-orange-500"></i> {{ currentLang === 'en' ? 'Maintenance Issues' : 'مشاكل الصيانة' }}
+              <button (click)="goToAdminIssues()" 
+                      class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      [class.text-right]="currentLang === 'ar'">
+                <i class="fas fa-tools text-orange-500" [class.ml-2]="currentLang === 'ar'" [class.mr-2]="currentLang === 'en'"></i> 
+                {{ currentLang === 'en' ? 'Maintenance Issues' : 'مشاكل الصيانة' }}
               </button>
             </div>
             
             <div class="border-t border-gray-100 my-1"></div>
-            <button (click)="logout()" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
-              <i class="fas fa-sign-out-alt mr-2"></i> {{ currentLang === 'en' ? 'Logout' : 'تسجيل خروج' }}
+            <button (click)="logout()" 
+                    class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                    [class.text-right]="currentLang === 'ar'">
+              <i class="fas fa-sign-out-alt" [class.ml-2]="currentLang === 'ar'" [class.mr-2]="currentLang === 'en'"></i> 
+              {{ currentLang === 'en' ? 'Logout' : 'تسجيل خروج' }}
             </button>
           </div>
         </div>
@@ -70,47 +98,52 @@
         </button>
       </div>
     </div>
-    <div *ngIf="isMobileMenuOpen" class="md:hidden py-4 border-t border-white/20 animate-slideDown">
+    
+    <!-- ✅ Mobile Menu - RTL Support -->
+    <div *ngIf="isMobileMenuOpen" 
+         class="md:hidden py-4 border-t border-white/20 animate-slideDown"
+         [dir]="currentLang === 'ar' ? 'rtl' : 'ltr'">
+      
       <div class="flex flex-col gap-3">
         <a routerLink="/products" class="mobile-nav-link" (click)="isMobileMenuOpen = false">{{ currentLang === 'en' ? 'Devices' : 'اجهزه' }}</a>
-        <a (click)="goToReportIssue()" class="mobile-nav-link">{{ currentLang === 'en' ? 'Maintenance' : 'صيانة' }}</a>
+        <a (click)="goToReportIssue(); isMobileMenuOpen = false" class="mobile-nav-link">{{ currentLang === 'en' ? 'Maintenance' : 'صيانة' }}</a>
         <a routerLink="/software-projects" class="mobile-nav-link" (click)="isMobileMenuOpen = false">{{ currentLang === 'en' ? 'Software' : 'برمجيات' }}</a>
-        <a (click)="scrollToSection('about-section')" class="mobile-nav-link">{{ currentLang === 'en' ? 'About Us' : 'من نحن' }}</a>
+        <a (click)="scrollToSection('about-section'); isMobileMenuOpen = false" class="mobile-nav-link">{{ currentLang === 'en' ? 'About Us' : 'من نحن' }}</a>
         
+        <!-- Not Logged In - Mobile -->
         <div *ngIf="!isUserAuthenticated() && !isAdminAuthenticated()" class="pt-3 border-t border-white/20 mt-2 flex flex-col gap-2">
-          <button (click)="navigateToLogin()" class="w-full py-2 rounded-xl bg-indigo-600 text-white font-semibold">
-            <i class="fas fa-sign-in-alt mr-2"></i> {{ currentLang === 'en' ? 'Sign In' : 'تسجيل دخول' }}
+          <button (click)="navigateToLogin(); isMobileMenuOpen = false" class="w-full py-2 rounded-xl bg-indigo-600 text-white font-semibold">
+            <i class="fas fa-sign-in-alt ml-2"></i> {{ currentLang === 'en' ? 'Sign In' : 'تسجيل دخول' }}
           </button>
-          <button (click)="navigateToSignUp()" class="w-full py-2 rounded-xl bg-emerald-600 text-white font-semibold">
-            <i class="fas fa-user-plus mr-2"></i> {{ currentLang === 'en' ? 'Sign Up' : 'إنشاء حساب' }}
+          <button (click)="navigateToSignUp(); isMobileMenuOpen = false" class="w-full py-2 rounded-xl bg-emerald-600 text-white font-semibold">
+            <i class="fas fa-user-plus ml-2"></i> {{ currentLang === 'en' ? 'Sign Up' : 'إنشاء حساب' }}
           </button>
         </div>
         
+        <!-- User/Admin Menu - Mobile -->
         <div *ngIf="isUserAuthenticated() || isAdminAuthenticated()" class="pt-3 border-t border-white/20 mt-2">
-          <div class="flex items-center justify-between p-3 bg-white/10 rounded-xl mb-3">
-            <div class="flex items-center gap-2">
-              <i class="fas fa-user-circle text-2xl text-indigo-600"></i>
-              <div>
-                <p class="text-sm font-semibold text-gray-700">{{ getCurrentUserName() }}</p>
-                <p class="text-xs text-gray-500">{{ getCurrentUserEmail() }}</p>
-              </div>
+          <div class="flex items-center gap-3 p-3 bg-white/10 rounded-xl mb-3">
+            <i class="fas fa-user-circle text-2xl text-indigo-600"></i>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-gray-700 truncate">{{ getCurrentUserName() }}</p>
+              <p class="text-xs text-gray-500 truncate">{{ getCurrentUserEmail() }}</p>
             </div>
           </div>
           
           <div *ngIf="isUserAuthenticated()" class="flex flex-col gap-2">
-            <button (click)="goToMyIssues()" class="w-full text-left px-4 py-2 rounded-xl text-gray-700 hover:bg-white/20 transition-colors">
-              <i class="fas fa-list-alt mr-2 text-indigo-500"></i> {{ currentLang === 'en' ? 'My Reports' : 'تقاريري' }}
+            <button (click)="goToMyIssues(); isMobileMenuOpen = false" class="w-full text-right px-4 py-2 rounded-xl text-gray-700 hover:bg-white/20 transition-colors">
+              <i class="fas fa-list-alt ml-2 text-indigo-500"></i> {{ currentLang === 'en' ? 'My Reports' : 'تقاريري' }}
             </button>
           </div>
           
           <div *ngIf="isAdminAuthenticated()" class="flex flex-col gap-2">
-            <button (click)="goToAdminProducts()" class="w-full text-left px-4 py-2 rounded-xl text-gray-700 hover:bg-white/20 transition-colors">
-              <i class="fas fa-box-open mr-2 text-blue-500"></i> {{ currentLang === 'en' ? 'Admin Panel' : 'لوحة التحكم' }}
+            <button (click)="goToAdminProducts(); isMobileMenuOpen = false" class="w-full text-right px-4 py-2 rounded-xl text-gray-700 hover:bg-white/20 transition-colors">
+              <i class="fas fa-box-open ml-2 text-blue-500"></i> {{ currentLang === 'en' ? 'Admin Panel' : 'لوحة التحكم' }}
             </button>
           </div>
           
-          <button (click)="logout()" class="w-full mt-3 px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 text-white text-sm transition-all">
-            <i class="fas fa-sign-out-alt mr-2"></i> {{ currentLang === 'en' ? 'Logout' : 'تسجيل خروج' }}
+          <button (click)="logout(); isMobileMenuOpen = false" class="w-full mt-3 px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 text-white text-sm transition-all">
+            <i class="fas fa-sign-out-alt ml-2"></i> {{ currentLang === 'en' ? 'Logout' : 'تسجيل خروج' }}
           </button>
         </div>
       </div>

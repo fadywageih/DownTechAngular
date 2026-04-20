@@ -1,40 +1,65 @@
 import { CommonModule } from "@angular/common";
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { RouterModule, ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { SoftwareProjectResponseDto } from "../../../../core/models/software-project.model";
+import { SoftwareProjectRequestService } from "../../../../core/services/software-project-request.service";
+import { CreateSoftwareProjectRequestDto } from "../../../../core/models/software-project-request.model";
 import { LanguageService } from "../../../../core/services/language.service";
 import { SoftwareProjectService } from "../../../../core/services/software-project.service";
+import { AuthService } from "../../../../core/services/auth.service";
 
 declare const AOS: any;
+
+interface RequestFormData {
+  userName: string;
+  userEmail: string;
+  phoneNumber: string;
+}
 
 @Component({
   selector: 'app-software-project-details',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './software-project-details.component.html',
-  styleUrls: ['./software-project-details.component.css'] 
+  styleUrls: ['./software-project-details.component.css']
 })
 export class SoftwareProjectDetailsComponent implements OnInit, OnDestroy {
   project: SoftwareProjectResponseDto | null = null;
   isLoading = true;
   currentLang = 'en';
+  showRequestForm = false;
+  
+  requestForm: RequestFormData = {
+    userName: '',
+    userEmail: '',
+    phoneNumber: ''
+  };
+
   private subscriptions: Subscription = new Subscription();
 
   constructor(
     private projectService: SoftwareProjectService,
+    private softwareRequestService: SoftwareProjectRequestService,
     private route: ActivatedRoute,
     private router: Router,
     private languageService: LanguageService,
+    private authService: AuthService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    const sub = this.languageService.currentLang$.subscribe(lang => {
+    const langSub = this.languageService.currentLang$.subscribe(lang => {
       this.currentLang = lang;
       this.cdr.markForCheck();
     });
-    this.subscriptions.add(sub);
+    this.subscriptions.add(langSub);
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser) {
+      this.requestForm.userName = currentUser.displayName || '';
+      this.requestForm.userEmail = currentUser.email || '';
+    }
 
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -79,7 +104,6 @@ export class SoftwareProjectDetailsComponent implements OnInit, OnDestroy {
     this.router.navigate(['/software-projects']);
   }
 
-  // ✅ دوال محسنة للتعامل مع البيانات النصية من الباك اند
   getFrontendTypeName(): string {
     return this.project?.frontendType || 'Unknown';
   }
@@ -97,7 +121,6 @@ export class SoftwareProjectDetailsComponent implements OnInit, OnDestroy {
   }
 
   getLibraryName(library: string): string {
-    // ✅ المكتبات أصبحت string[] مباشرة من الباك اند
     return library || 'Unknown';
   }
 
@@ -105,5 +128,42 @@ export class SoftwareProjectDetailsComponent implements OnInit, OnDestroy {
     if (url) {
       window.open(url, '_blank');
     }
+  }
+  openRequestForm(): void {
+    if (!this.project) {
+      alert('Project not loaded');
+      return;
+    }
+    this.showRequestForm = true;
+  }
+  cancelRequest(): void {
+    this.showRequestForm = false;
+  }
+  submitRequest(): void {
+    if (!this.project) return;
+    
+    if (!this.requestForm.userName || !this.requestForm.userEmail) {
+      alert(this.currentLang === 'en' ? 'Please fill in your name and email' : 'الرجاء إدخال الاسم والبريد الإلكتروني');
+      return;
+    }
+
+    const request: CreateSoftwareProjectRequestDto = {
+      userName: this.requestForm.userName,
+      userEmail: this.requestForm.userEmail,
+phoneNumber: this.requestForm.phoneNumber ? this.requestForm.phoneNumber.trim() : '',
+      softwareProjectId: this.project.id,
+      details: `Request for software project: ${this.currentLang === 'en' ? this.project.nameEn : this.project.nameAr} (${this.project.frontendType} / ${this.project.backendType})`
+    };
+
+    this.softwareRequestService.createRequest(request).subscribe({
+      next: () => {
+        this.showRequestForm = false;
+        alert(this.currentLang === 'en' ? 'Request sent successfully!' : 'تم إرسال الطلب بنجاح!');
+      },
+      error: (error) => {
+        console.error('Request error:', error);
+        alert(this.currentLang === 'en' ? 'Failed to send request. Try again.' : 'فشل في إرسال الطلب. حاول مرة أخرى.');
+      }
+    });
   }
 }

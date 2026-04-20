@@ -1,46 +1,45 @@
 <div class="admin-products-container">
   <!-- Tabs -->
-<div class="tabs flex gap-2 mb-6 border-b border-white/20">
-    <button (click)="activeTab = 'products'" 
-      class="px-6 py-3 rounded-t-xl font-semibold transition-all"
+  <div class="tabs flex gap-2 mb-6 border-b border-white/20">
+    <button (click)="activeTab = 'products'" class="px-6 py-3 rounded-t-xl font-semibold transition-all"
       [class]="activeTab === 'products' ? 'bg-white/20 text-white border-b-2 border-indigo-500' : 'text-white/60 hover:text-white hover:bg-white/10'">
       <i class="fas fa-box-open mr-2"></i>
       {{ currentLang === 'en' ? 'Products' : 'المنتجات' }}
     </button>
-    <button (click)="activeTab = 'maintenance'" 
-      class="px-6 py-3 rounded-t-xl font-semibold transition-all"
+    <button (click)="activeTab = 'maintenance'" class="px-6 py-3 rounded-t-xl font-semibold transition-all"
       [class]="activeTab === 'maintenance' ? 'bg-white/20 text-white border-b-2 border-indigo-500' : 'text-white/60 hover:text-white hover:bg-white/10'">
       <i class="fas fa-tools mr-2"></i>
       {{ currentLang === 'en' ? 'Maintenance Issues' : 'مشاكل الصيانة' }}
     </button>
-    <button (click)="activeTab = 'software'" 
-      class="px-6 py-3 rounded-t-xl font-semibold transition-all"
+    <button (click)="activeTab = 'software'" class="px-6 py-3 rounded-t-xl font-semibold transition-all"
       [class]="activeTab === 'software' ? 'bg-white/20 text-white border-b-2 border-purple-500' : 'text-white/60 hover:text-white hover:bg-white/10'">
       <i class="fas fa-code mr-2"></i>
       {{ currentLang === 'en' ? 'Software Projects' : 'مشاريع برمجية' }}
     </button>
-       <button (click)="activeTab = 'orders'" 
-      class="px-6 py-3 rounded-t-xl font-semibold transition-all"
+    <button (click)="activeTab = 'orders'" class="px-6 py-3 rounded-t-xl font-semibold transition-all"
       [class]="activeTab === 'orders' ? 'bg-white/20 text-white border-b-2 border-amber-500' : 'text-white/60 hover:text-white hover:bg-white/10'">
       <i class="fas fa-shopping-cart mr-2"></i>
       {{ currentLang === 'en' ? 'Product Orders' : 'طلبات المنتجات' }}
     </button>
+    <button (click)="activeTab = 'softwarerequests'" class="px-6 py-3 rounded-t-xl font-semibold transition-all"
+      [class]="activeTab === 'softwarerequests' ? 'bg-white/20 text-white border-b-2 border-emerald-500' : 'text-white/60 hover:text-white hover:bg-white/10'">
+      <i class="fas fa-file-contract mr-2"></i>
+      {{ currentLang === 'en' ? 'Software Requests' : 'طلبات البرمجيات' }}
+    </button>
   </div>
-
-  <!-- ==================== Products Tab Content ==================== -->
   <div *ngIf="activeTab === 'products'">
-    <!-- Products content (unchanged) -->
     <div class="flex justify-between items-center mb-6">
       <div>
         <h1 class="text-2xl font-bold text-white mb-2">
           {{ currentLang === 'en' ? 'Product Management' : 'إدارة المنتجات' }}
         </h1>
         <p class="text-white/70">
-          {{ currentLang === 'en' ? 'Manage your products, add new ones, edit or delete existing products.' : 'إدارة منتجاتك، إضافة منتجات جديدة، تعديل أو حذف المنتجات الموجودة.' }}
+          {{ currentLang === 'en' ? 'Manage your products, add new ones, edit or delete existing products.' : 'إدارة
+          منتجاتك، إضافة منتجات جديدة، تعديل أو حذف المنتجات الموجودة.' }}
         </p>
       </div>
-      <button (click)="createProduct()" 
-              class="bg-black text-white px-6 py-3 rounded-xl transition-all flex items-center gap-2 shadow-lg">
+      <button (click)="createProduct()"
+        class="bg-black text-white px-6 py-3 rounded-xl transition-all flex items-center gap-2 shadow-lg">
         <i class="fas fa-plus"></i>
         {{ currentLang === 'en' ? 'Add Product' : 'إضافة منتج' }}
       </button>
@@ -52,46 +51,44 @@
         <div class="flex-1 min-w-[200px]">
           <div class="relative">
             <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-            <input
-              type="text"
-              [(ngModel)]="searchQuery"
-              (keyup.enter)="applyFilters()"
+            <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="applyFilters()"
               [placeholder]="currentLang === 'en' ? 'Search products...' : 'ابحث عن منتجات...'"
-              class="w-full pl-12 pr-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
+              class="w-full pl-12 pr-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
           </div>
         </div>
-        <select [(ngModel)]="selectedType" (change)="applyFilters()" 
-                class="px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <select [(ngModel)]="selectedType" (change)="applyFilters()"
+          class="px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
           <option [ngValue]="null">{{ currentLang === 'en' ? 'All Types' : 'جميع الأنواع' }}</option>
           <option *ngFor="let type of productTypes" [ngValue]="type.value">
             {{ currentLang === 'en' ? type.labelEn : type.labelAr }}
           </option>
         </select>
-        <select [(ngModel)]="selectedCondition" (change)="applyFilters()" 
-                class="px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <select [(ngModel)]="selectedCondition" (change)="applyFilters()"
+          class="px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
           <option [ngValue]="null">{{ currentLang === 'en' ? 'All Conditions' : 'جميع الحالات' }}</option>
           <option *ngFor="let condition of conditions" [ngValue]="condition.value">
             {{ currentLang === 'en' ? condition.labelEn : condition.labelAr }}
           </option>
         </select>
-        
-        <button (click)="resetFilters()" 
-                class="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all">
+
+        <button (click)="resetFilters()"
+          class="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all">
           <i class="fas fa-undo-alt mr-2"></i>
           {{ currentLang === 'en' ? 'Reset' : 'إعادة ضبط' }}
         </button>
       </div>
-      
+
       <!-- Active Filters -->
       <div *ngIf="getActiveFiltersCount() > 0" class="mt-4 flex flex-wrap gap-2">
         <span class="text-sm text-white/70">{{ currentLang === 'en' ? 'Active filters:' : 'الفلاتر النشطة:' }}</span>
         <span *ngIf="selectedType" class="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-sm">
-          {{ currentLang === 'en' ? productTypes.find(t => t.value === selectedType)?.labelEn : productTypes.find(t => t.value === selectedType)?.labelAr }}
+          {{ currentLang === 'en' ? productTypes.find(t => t.value === selectedType)?.labelEn : productTypes.find(t =>
+          t.value === selectedType)?.labelAr }}
           <i class="fas fa-times ml-2 cursor-pointer" (click)="selectedType = null; applyFilters()"></i>
         </span>
         <span *ngIf="selectedCondition" class="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-sm">
-          {{ currentLang === 'en' ? conditions.find(c => c.value === selectedCondition)?.labelEn : conditions.find(c => c.value === selectedCondition)?.labelAr }}
+          {{ currentLang === 'en' ? conditions.find(c => c.value === selectedCondition)?.labelEn : conditions.find(c =>
+          c.value === selectedCondition)?.labelAr }}
           <i class="fas fa-times ml-2 cursor-pointer" (click)="selectedCondition = null; applyFilters()"></i>
         </span>
         <span *ngIf="searchQuery" class="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-sm">
@@ -111,7 +108,8 @@
     <div *ngIf="!loading && products.length === 0" class="glass-card rounded-2xl p-12 text-center">
       <i class="fas fa-box-open text-6xl text-white/50 mb-4"></i>
       <p class="text-white/80 text-lg">{{ currentLang === 'en' ? 'No products found' : 'لا توجد منتجات' }}</p>
-      <button (click)="createProduct()" class="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all">
+      <button (click)="createProduct()"
+        class="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all">
         {{ currentLang === 'en' ? 'Add your first product' : 'أضف منتجك الأول' }}
       </button>
     </div>
@@ -121,12 +119,18 @@
         <table class="w-full">
           <thead class="bg-white/10">
             <tr>
-              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Product' : 'المنتج' }}</th>
-              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Type' : 'النوع' }}</th>
-              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Condition' : 'الحالة' }}</th>
-              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Price' : 'السعر' }}</th>
-              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Status' : 'الحالة' }}</th>
-              <th class="px-6 py-4 text-right text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Actions' : 'الإجراءات' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Product' :
+                'المنتج' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Type' :
+                'النوع' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Condition' :
+                'الحالة' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Price' :
+                'السعر' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Status' :
+                'الحالة' }}</th>
+              <th class="px-6 py-4 text-right text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Actions' :
+                'الإجراءات' }}</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-white/10">
@@ -136,23 +140,24 @@
                   <img [src]="getProductImage(product)" class="w-12 h-12 rounded-lg object-cover">
                   <div>
                     <p class="font-semibold text-white">{{ currentLang === 'en' ? product.nameEn : product.nameAr }}</p>
-                    <p class="text-sm text-white/60 line-clamp-1">{{ currentLang === 'en' ? product.descriptionEn : product.descriptionAr }}</p>
+                    <p class="text-sm text-white/60 line-clamp-1">{{ currentLang === 'en' ? product.descriptionEn :
+                      product.descriptionAr }}</p>
                   </div>
                 </div>
-               </td>
+              </td>
               <td class="px-6 py-4">
                 <span class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
                   {{ getProductTypeLabel(product) }}
                 </span>
-               </td>
+              </td>
               <td class="px-6 py-4">
                 <span class="px-3 py-1 rounded-full text-sm" [ngClass]="getConditionClass(product)">
                   {{ getConditionLabel(product) }}
                 </span>
-               </td>
+              </td>
               <td class="px-6 py-4">
                 <span class="font-semibold text-indigo-300">{{ formatPrice(product.basePrice) }}</span>
-               </td>
+              </td>
               <td class="px-6 py-4">
                 <span *ngIf="product.isActive" class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-sm">
                   {{ currentLang === 'en' ? 'Active' : 'نشط' }}
@@ -160,37 +165,52 @@
                 <span *ngIf="!product.isActive" class="px-3 py-1 bg-red-500/20 text-red-300 rounded-full text-sm">
                   {{ currentLang === 'en' ? 'Inactive' : 'غير نشط' }}
                 </span>
-               </td>
+              </td>
               <td class="px-6 py-4 text-right">
                 <div class="flex justify-end gap-2">
-                  <button (click)="viewProduct(product)" class="p-2 bg-blue-500/20 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-all" title="View">
+                  <button (click)="viewProduct(product)"
+                    class="p-2 bg-blue-500/20 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-all"
+                    title="View">
                     <i class="fas fa-eye"></i>
                   </button>
-                  <button (click)="editProduct(product)" class="p-2 bg-yellow-500/20 text-yellow-300 rounded-lg hover:bg-yellow-500/30 transition-all" title="Edit">
+                  <button (click)="editProduct(product)"
+                    class="p-2 bg-yellow-500/20 text-yellow-300 rounded-lg hover:bg-yellow-500/30 transition-all"
+                    title="Edit">
                     <i class="fas fa-edit"></i>
                   </button>
-                  <button (click)="softDeleteProduct(product)" class="p-2 bg-orange-500/20 text-orange-300 rounded-lg hover:bg-orange-500/30 transition-all" title="Soft Delete">
+                  <button (click)="softDeleteProduct(product)"
+                    class="p-2 bg-orange-500/20 text-orange-300 rounded-lg hover:bg-orange-500/30 transition-all"
+                    title="Soft Delete">
                     <i class="fas fa-trash-alt"></i>
                   </button>
-                  <button (click)="deleteProduct(product)" class="p-2 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-all" title="Hard Delete">
+                  <button (click)="deleteProduct(product)"
+                    class="p-2 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-all"
+                    title="Hard Delete">
                     <i class="fas fa-times-circle"></i>
                   </button>
                 </div>
-               </td>
-             </tr>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
-      <div *ngIf="pagedResult && pagedResult.totalPages > 1" class="px-6 py-4 border-t border-white/10 flex justify-between items-center">
-        <p class="text-sm text-white/60">{{ currentLang === 'en' ? 'Showing' : 'عرض' }} {{ getDisplayRange() }} {{ currentLang === 'en' ? 'products' : 'منتج' }}</p>
+      <div *ngIf="pagedResult && pagedResult.totalPages > 1"
+        class="px-6 py-4 border-t border-white/10 flex justify-between items-center">
+        <p class="text-sm text-white/60">{{ currentLang === 'en' ? 'Showing' : 'عرض' }} {{ getDisplayRange() }} {{
+          currentLang === 'en' ? 'products' : 'منتج' }}</p>
         <div class="flex gap-2">
-          <button (click)="changePage(pagedResult.pageNumber - 1)" [disabled]="!pagedResult.hasPreviousPage" class="px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+          <button (click)="changePage(pagedResult.pageNumber - 1)" [disabled]="!pagedResult.hasPreviousPage"
+            class="px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
             <i class="fas fa-chevron-left"></i>
           </button>
-          <span *ngFor="let page of getPageNumbers()" (click)="changePage(page)" class="px-4 py-2 rounded-lg cursor-pointer transition-all" [class.bg-indigo-600]="page === pagedResult.pageNumber" [class.hover:bg-white/20]="page !== pagedResult.pageNumber">
+          <span *ngFor="let page of getPageNumbers()" (click)="changePage(page)"
+            class="px-4 py-2 rounded-lg cursor-pointer transition-all"
+            [class.bg-indigo-600]="page === pagedResult.pageNumber"
+            [class.hover:bg-white/20]="page !== pagedResult.pageNumber">
             {{ page }}
           </span>
-          <button (click)="changePage(pagedResult.pageNumber + 1)" [disabled]="!pagedResult.hasNextPage" class="px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+          <button (click)="changePage(pagedResult.pageNumber + 1)" [disabled]="!pagedResult.hasNextPage"
+            class="px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
             <i class="fas fa-chevron-right"></i>
           </button>
         </div>
@@ -207,17 +227,18 @@
           {{ currentLang === 'en' ? 'Maintenance Issues' : 'مشاكل الصيانة' }}
         </h1>
         <p class="text-white/70">
-          {{ currentLang === 'en' ? 'Manage customer reported issues and maintenance requests.' : 'إدارة مشاكل العملاء وطلبات الصيانة.' }}
+          {{ currentLang === 'en' ? 'Manage customer reported issues and maintenance requests.' : 'إدارة مشاكل العملاء
+          وطلبات الصيانة.' }}
         </p>
       </div>
       <div class="flex gap-3">
-        <button (click)="refreshIssues()" 
-                class="bg-black text-white px-6 py-3 rounded-xl transition-all flex items-center gap-2 shadow-lg">
+        <button (click)="refreshIssues()"
+          class="bg-black text-white px-6 py-3 rounded-xl transition-all flex items-center gap-2 shadow-lg">
           <i class="fas fa-sync-alt"></i>
           {{ currentLang === 'en' ? 'Refresh' : 'تحديث' }}
         </button>
-        <button (click)="showIssueStats = true" 
-                class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl transition-all flex items-center gap-2 shadow-lg">
+        <button (click)="showIssueStats = true"
+          class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl transition-all flex items-center gap-2 shadow-lg">
           <i class="fas fa-chart-line"></i>
           {{ currentLang === 'en' ? 'Statistics' : 'إحصائيات' }}
         </button>
@@ -228,32 +249,28 @@
         <div class="flex-1 min-w-[200px]">
           <div class="relative">
             <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-            <input
-              type="text"
-              [(ngModel)]="issueSearchQuery"
-              (keyup.enter)="applyIssueFilters()"
+            <input type="text" [(ngModel)]="issueSearchQuery" (keyup.enter)="applyIssueFilters()"
               [placeholder]="currentLang === 'en' ? 'Search by name, model, phone...' : 'ابحث بالاسم، الموديل، رقم الهاتف...'"
-              class="w-full pl-12 pr-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
+              class="w-full pl-12 pr-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
           </div>
         </div>
-        <select [(ngModel)]="issueStatusFilter" (change)="applyIssueFilters()" 
-                class="px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <select [(ngModel)]="issueStatusFilter" (change)="applyIssueFilters()"
+          class="px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
           <option [ngValue]="null">{{ currentLang === 'en' ? 'All Status' : 'جميع الحالات' }}</option>
           <option [ngValue]="1">{{ currentLang === 'en' ? 'Pending' : 'قيد الانتظار' }}</option>
           <option [ngValue]="2">{{ currentLang === 'en' ? 'In Progress' : 'قيد المعالجة' }}</option>
           <option [ngValue]="3">{{ currentLang === 'en' ? 'Resolved' : 'تم الحل' }}</option>
           <option [ngValue]="4">{{ currentLang === 'en' ? 'Closed' : 'مغلق' }}</option>
         </select>
-        <select [(ngModel)]="issueProductTypeFilter" (change)="applyIssueFilters()" 
-                class="px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <select [(ngModel)]="issueProductTypeFilter" (change)="applyIssueFilters()"
+          class="px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
           <option [ngValue]="null">{{ currentLang === 'en' ? 'All Types' : 'جميع الأنواع' }}</option>
           <option [ngValue]="1">{{ currentLang === 'en' ? 'Laptop' : 'لابتوب' }}</option>
           <option [ngValue]="2">{{ currentLang === 'en' ? 'PC' : 'بي سي' }}</option>
           <option [ngValue]="3">{{ currentLang === 'en' ? 'Accessory' : 'إكسسوار' }}</option>
         </select>
-        <button (click)="resetIssueFilters()" 
-                class="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all">
+        <button (click)="resetIssueFilters()"
+          class="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all">
           <i class="fas fa-undo-alt mr-2"></i>
           {{ currentLang === 'en' ? 'Reset' : 'إعادة ضبط' }}
         </button>
@@ -265,20 +282,28 @@
     </div>
     <div *ngIf="!issuesLoading && issuesList.length === 0" class="glass-card rounded-2xl p-12 text-center">
       <i class="fas fa-tools text-6xl text-white/50 mb-4"></i>
-      <p class="text-white/80 text-lg">{{ currentLang === 'en' ? 'No maintenance issues found' : 'لا توجد مشاكل صيانة' }}</p>
+      <p class="text-white/80 text-lg">{{ currentLang === 'en' ? 'No maintenance issues found' : 'لا توجد مشاكل صيانة'
+        }}</p>
     </div>
     <div *ngIf="!issuesLoading && issuesList.length > 0" class="glass-card rounded-2xl overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full">
           <thead class="bg-white/10">
             <tr>
-              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Customer' : 'العميل' }}</th>
-              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Device' : 'الجهاز' }}</th>
-              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Model' : 'الموديل' }}</th>
-              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Description' : 'الوصف' }}</th>
-              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Status' : 'الحالة' }}</th>
-              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Date' : 'التاريخ' }}</th>
-              <th class="px-6 py-4 text-right text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Actions' : 'الإجراءات' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Customer' :
+                'العميل' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Device' :
+                'الجهاز' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Model' :
+                'الموديل' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Description' :
+                'الوصف' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Status' :
+                'الحالة' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Date' :
+                'التاريخ' }}</th>
+              <th class="px-6 py-4 text-right text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Actions' :
+                'الإجراءات' }}</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-white/10">
@@ -288,38 +313,34 @@
                   <p class="font-semibold text-white">{{ issue.customerName }}</p>
                   <p class="text-sm text-white/60">{{ issue.phoneNumber }}</p>
                 </div>
-               </td>
+              </td>
               <td class="px-6 py-4">
                 <span class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
                   {{ issue.productTypeName }}
                 </span>
-               </td>
+              </td>
               <td class="px-6 py-4 text-white">{{ issue.model }}</td>
               <td class="px-6 py-4">
                 <p class="text-white/80 line-clamp-2 max-w-xs">{{ issue.description }}</p>
-               </td>
+              </td>
               <td class="px-6 py-4">
-                <span class="px-3 py-1 rounded-full text-sm"
-                  [class.bg-yellow-500/20]="issue.statusValue === 1"
-                  [class.text-yellow-300]="issue.statusValue === 1"
-                  [class.bg-blue-500/20]="issue.statusValue === 2"
-                  [class.text-blue-300]="issue.statusValue === 2"
-                  [class.bg-green-500/20]="issue.statusValue === 3"
-                  [class.text-green-300]="issue.statusValue === 3"
-                  [class.bg-gray-500/20]="issue.statusValue === 4"
+                <span class="px-3 py-1 rounded-full text-sm" [class.bg-yellow-500/20]="issue.statusValue === 1"
+                  [class.text-yellow-300]="issue.statusValue === 1" [class.bg-blue-500/20]="issue.statusValue === 2"
+                  [class.text-blue-300]="issue.statusValue === 2" [class.bg-green-500/20]="issue.statusValue === 3"
+                  [class.text-green-300]="issue.statusValue === 3" [class.bg-gray-500/20]="issue.statusValue === 4"
                   [class.text-gray-300]="issue.statusValue === 4">
                   {{ issue.status }}
                 </span>
-               </td>
+              </td>
               <td class="px-6 py-4 text-white/60">{{ issue.createdAt | date:'short' }}</td>
               <td class="px-6 py-4 text-right">
-                <button (click)="viewIssueDetail(issue.id)" 
-                        class="p-2 bg-indigo-500/20 text-indigo-300 rounded-lg hover:bg-indigo-500/30 transition-all"
-                        title="View Details">
+                <button (click)="viewIssueDetail(issue.id)"
+                  class="p-2 bg-indigo-500/20 text-indigo-300 rounded-lg hover:bg-indigo-500/30 transition-all"
+                  title="View Details">
                   <i class="fas fa-eye"></i>
                 </button>
               </td>
-             </tr>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -334,17 +355,18 @@
           {{ currentLang === 'en' ? 'Software Projects Management' : 'إدارة المشاريع البرمجية' }}
         </h1>
         <p class="text-white/70">
-          {{ currentLang === 'en' ? 'Manage your software projects, add new ones, edit or delete existing projects.' : 'إدارة مشاريعك البرمجية، إضافة مشاريع جديدة، تعديل أو حذف المشاريع الموجودة.' }}
+          {{ currentLang === 'en' ? 'Manage your software projects, add new ones, edit or delete existing projects.' :
+          'إدارة مشاريعك البرمجية، إضافة مشاريع جديدة، تعديل أو حذف المشاريع الموجودة.' }}
         </p>
       </div>
       <div class="flex gap-3">
-        <button (click)="refreshSoftwareProjects()" 
-                class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-xl transition-all flex items-center gap-2 shadow-lg">
+        <button (click)="refreshSoftwareProjects()"
+          class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-xl transition-all flex items-center gap-2 shadow-lg">
           <i class="fas fa-sync-alt"></i>
           {{ currentLang === 'en' ? 'Refresh' : 'تحديث' }}
         </button>
-        <button (click)="createSoftwareProject()" 
-                class="bg-black text-white px-6 py-3 rounded-xl transition-all flex items-center gap-2 shadow-lg">
+        <button (click)="createSoftwareProject()"
+          class="bg-black text-white px-6 py-3 rounded-xl transition-all flex items-center gap-2 shadow-lg">
           <i class="fas fa-plus"></i>
           {{ currentLang === 'en' ? 'Add Project' : 'إضافة مشروع' }}
         </button>
@@ -359,86 +381,90 @@
           <label class="block text-white/70 text-sm mb-1">{{ currentLang === 'en' ? 'Search' : 'بحث' }}</label>
           <div class="relative">
             <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-            <input
-              type="text"
-              [(ngModel)]="softwareSearchQuery"
-              (keyup.enter)="filterSoftwareProjects()"
+            <input type="text" [(ngModel)]="softwareSearchQuery" (keyup.enter)="filterSoftwareProjects()"
               [placeholder]="currentLang === 'en' ? 'Search projects...' : 'ابحث عن مشاريع...'"
-              class="w-full pl-12 pr-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            >
-            <button *ngIf="softwareSearchQuery" (click)="softwareSearchQuery = ''; filterSoftwareProjects()" 
-                    class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+              class="w-full pl-12 pr-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-500">
+            <button *ngIf="softwareSearchQuery" (click)="softwareSearchQuery = ''; filterSoftwareProjects()"
+              class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
               <i class="fas fa-times"></i>
             </button>
           </div>
         </div>
-        
+
         <!-- Frontend Filter -->
         <div class="min-w-[180px]">
-          <label class="block text-white/70 text-sm mb-1">{{ currentLang === 'en' ? 'Frontend' : 'واجهة أمامية' }}</label>
-          <select [(ngModel)]="softwareFrontendFilter" (change)="filterSoftwareProjects()" 
-                  class="w-full px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-500">
+          <label class="block text-white/70 text-sm mb-1">{{ currentLang === 'en' ? 'Frontend' : 'واجهة أمامية'
+            }}</label>
+          <select [(ngModel)]="softwareFrontendFilter" (change)="filterSoftwareProjects()"
+            class="w-full px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-500">
             <option [ngValue]="null">{{ currentLang === 'en' ? 'All Frontend' : 'كل الواجهات' }}</option>
             <option *ngFor="let type of softwareFrontendTypes" [ngValue]="type.value">
               {{ currentLang === 'en' ? type.labelEn : type.labelAr }}
             </option>
           </select>
         </div>
-        
+
         <!-- Backend Filter -->
         <div class="min-w-[180px]">
           <label class="block text-white/70 text-sm mb-1">{{ currentLang === 'en' ? 'Backend' : 'باك اند' }}</label>
-          <select [(ngModel)]="softwareBackendFilter" (change)="filterSoftwareProjects()" 
-                  class="w-full px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-500">
+          <select [(ngModel)]="softwareBackendFilter" (change)="filterSoftwareProjects()"
+            class="w-full px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-500">
             <option [ngValue]="null">{{ currentLang === 'en' ? 'All Backend' : 'كل أنواع الباك اند' }}</option>
             <option *ngFor="let type of softwareBackendTypes" [ngValue]="type.value">
               {{ currentLang === 'en' ? type.labelEn : type.labelAr }}
             </option>
           </select>
         </div>
-        
+
         <!-- Database Filter -->
         <div class="min-w-[180px]">
-          <label class="block text-white/70 text-sm mb-1">{{ currentLang === 'en' ? 'Database' : 'قاعدة بيانات' }}</label>
-          <select [(ngModel)]="softwareDatabaseFilter" (change)="filterSoftwareProjects()" 
-                  class="w-full px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-500">
+          <label class="block text-white/70 text-sm mb-1">{{ currentLang === 'en' ? 'Database' : 'قاعدة بيانات'
+            }}</label>
+          <select [(ngModel)]="softwareDatabaseFilter" (change)="filterSoftwareProjects()"
+            class="w-full px-4 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-500">
             <option [ngValue]="null">{{ currentLang === 'en' ? 'All Databases' : 'كل قواعد البيانات' }}</option>
             <option *ngFor="let type of softwareDatabaseTypes" [ngValue]="type.value">
               {{ currentLang === 'en' ? type.labelEn : type.labelAr }}
             </option>
           </select>
         </div>
-        
+
         <!-- Reset Button -->
-        <button (click)="resetSoftwareFilters()" 
-                class="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all flex items-center gap-2">
+        <button (click)="resetSoftwareFilters()"
+          class="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all flex items-center gap-2">
           <i class="fas fa-undo-alt"></i>
           {{ currentLang === 'en' ? 'Reset' : 'إعادة ضبط' }}
         </button>
       </div>
-      
+
       <!-- Active Filters -->
       <div *ngIf="getSoftwareActiveFiltersCount() > 0" class="mt-4 flex flex-wrap gap-2">
         <span class="text-sm text-white/70">{{ currentLang === 'en' ? 'Active filters:' : 'الفلاتر النشطة:' }}</span>
-        
+
         <span *ngIf="softwareSearchQuery" class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
           "{{ softwareSearchQuery }}"
           <i class="fas fa-times ml-2 cursor-pointer" (click)="softwareSearchQuery = ''; filterSoftwareProjects()"></i>
         </span>
-        
-        <span *ngIf="softwareFrontendFilter !== null" class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
+
+        <span *ngIf="softwareFrontendFilter !== null"
+          class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
           {{ getSoftwareFrontendFilterLabel() }}
-          <i class="fas fa-times ml-2 cursor-pointer" (click)="softwareFrontendFilter = null; filterSoftwareProjects()"></i>
+          <i class="fas fa-times ml-2 cursor-pointer"
+            (click)="softwareFrontendFilter = null; filterSoftwareProjects()"></i>
         </span>
-        
-        <span *ngIf="softwareBackendFilter !== null" class="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-sm">
+
+        <span *ngIf="softwareBackendFilter !== null"
+          class="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-sm">
           {{ getSoftwareBackendFilterLabel() }}
-          <i class="fas fa-times ml-2 cursor-pointer" (click)="softwareBackendFilter = null; filterSoftwareProjects()"></i>
+          <i class="fas fa-times ml-2 cursor-pointer"
+            (click)="softwareBackendFilter = null; filterSoftwareProjects()"></i>
         </span>
-        
-        <span *ngIf="softwareDatabaseFilter !== null" class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-sm">
+
+        <span *ngIf="softwareDatabaseFilter !== null"
+          class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-sm">
           {{ getSoftwareDatabaseFilterLabel() }}
-          <i class="fas fa-times ml-2 cursor-pointer" (click)="softwareDatabaseFilter = null; filterSoftwareProjects()"></i>
+          <i class="fas fa-times ml-2 cursor-pointer"
+            (click)="softwareDatabaseFilter = null; filterSoftwareProjects()"></i>
         </span>
       </div>
     </div>
@@ -450,10 +476,12 @@
     </div>
 
     <!-- Software Empty State -->
-    <div *ngIf="!softwareLoading && filteredSoftwareProjects.length === 0" class="glass-card rounded-2xl p-12 text-center">
+    <div *ngIf="!softwareLoading && filteredSoftwareProjects.length === 0"
+      class="glass-card rounded-2xl p-12 text-center">
       <i class="fas fa-code text-6xl text-white/50 mb-4"></i>
       <p class="text-white/80 text-lg">{{ currentLang === 'en' ? 'No projects found' : 'لا توجد مشاريع' }}</p>
-      <button (click)="createSoftwareProject()" class="mt-4 px-6 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-all">
+      <button (click)="createSoftwareProject()"
+        class="mt-4 px-6 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-all">
         {{ currentLang === 'en' ? 'Add your first project' : 'أضف مشروعك الأول' }}
       </button>
     </div>
@@ -464,22 +492,30 @@
         <table class="w-full">
           <thead class="bg-white/10">
             <tr>
-              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Project' : 'المشروع' }}</th>
-              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Frontend' : 'واجهة أمامية' }}</th>
-              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Backend' : 'باك اند' }}</th>
-              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Database' : 'قاعدة بيانات' }}</th>
-              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Date' : 'التاريخ' }}</th>
-              <th class="px-6 py-4 text-right text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Actions' : 'الإجراءات' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Project' :
+                'المشروع' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Frontend' :
+                'واجهة أمامية' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Backend' :
+                'باك اند' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Database' :
+                'قاعدة بيانات' }}</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Date' :
+                'التاريخ' }}</th>
+              <th class="px-6 py-4 text-right text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Actions' :
+                'الإجراءات' }}</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-white/10">
             <tr *ngFor="let project of filteredSoftwareProjects" class="hover:bg-white/5 transition-all">
               <td class="px-6 py-4">
                 <div class="flex items-center gap-3">
-                  <img [src]="project.imageUrl" class="w-12 h-12 rounded-lg object-cover" (error)="$event.target.src='https://placehold.co/400x300/4f46e5/white?text=No+Image'">
+                  <img [src]="project.imageUrl" class="w-12 h-12 rounded-lg object-cover"
+                    (error)="$event.target.src='https://placehold.co/400x300/4f46e5/white?text=No+Image'">
                   <div>
                     <p class="font-semibold text-white">{{ currentLang === 'en' ? project.nameEn : project.nameAr }}</p>
-                    <p class="text-sm text-white/60 line-clamp-1 max-w-[200px]">{{ currentLang === 'en' ? project.descriptionEn : project.descriptionAr }}</p>
+                    <p class="text-sm text-white/60 line-clamp-1 max-w-[200px]">{{ currentLang === 'en' ?
+                      project.descriptionEn : project.descriptionAr }}</p>
                   </div>
                 </div>
               </td>
@@ -501,16 +537,24 @@
               <td class="px-6 py-4 text-white/60">{{ project.createdAt | date:'shortDate' }}</td>
               <td class="px-6 py-4 text-right">
                 <div class="flex justify-end gap-2">
-                  <button (click)="viewSoftwareProject(project.id)" class="p-2 bg-blue-500/20 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-all" title="View">
+                  <button (click)="viewSoftwareProject(project.id)"
+                    class="p-2 bg-blue-500/20 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-all"
+                    title="View">
                     <i class="fas fa-eye"></i>
                   </button>
-                  <button (click)="editSoftwareProject(project.id)" class="p-2 bg-yellow-500/20 text-yellow-300 rounded-lg hover:bg-yellow-500/30 transition-all" title="Edit">
+                  <button (click)="editSoftwareProject(project.id)"
+                    class="p-2 bg-yellow-500/20 text-yellow-300 rounded-lg hover:bg-yellow-500/30 transition-all"
+                    title="Edit">
                     <i class="fas fa-edit"></i>
                   </button>
-                  <button (click)="softDeleteSoftwareProject(project.id)" class="p-2 bg-orange-500/20 text-orange-300 rounded-lg hover:bg-orange-500/30 transition-all" title="Soft Delete">
+                  <button (click)="softDeleteSoftwareProject(project.id)"
+                    class="p-2 bg-orange-500/20 text-orange-300 rounded-lg hover:bg-orange-500/30 transition-all"
+                    title="Soft Delete">
                     <i class="fas fa-trash-alt"></i>
                   </button>
-                  <button (click)="deleteSoftwareProject(project.id)" class="p-2 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-all" title="Hard Delete">
+                  <button (click)="deleteSoftwareProject(project.id)"
+                    class="p-2 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-all"
+                    title="Hard Delete">
                     <i class="fas fa-times-circle"></i>
                   </button>
                 </div>
@@ -519,31 +563,128 @@
           </tbody>
         </table>
       </div>
-      
+
       <!-- Results count -->
       <div class="px-6 py-4 border-t border-white/10">
         <p class="text-sm text-white/60">
-          {{ currentLang === 'en' ? 'Showing' : 'عرض' }} {{ filteredSoftwareProjects.length }} 
-          {{ currentLang === 'en' ? 'of' : 'من' }} {{ softwareProjects.length }} 
+          {{ currentLang === 'en' ? 'Showing' : 'عرض' }} {{ filteredSoftwareProjects.length }}
+          {{ currentLang === 'en' ? 'of' : 'من' }} {{ softwareProjects.length }}
           {{ currentLang === 'en' ? 'projects' : 'مشروع' }}
         </p>
       </div>
     </div>
   </div>
 </div>
-  <div *ngIf="activeTab === 'orders'">
-    <app-admin-orders-list></app-admin-orders-list>
+<div *ngIf="activeTab === 'orders'">
+  <app-admin-orders-list></app-admin-orders-list>
+</div>
+
+<!-- ==================== Software Requests Tab Content ==================== -->
+<div *ngIf="activeTab === 'softwarerequests'">
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-white mb-2">
+        {{ currentLang === 'en' ? 'Software Requests' : 'طلبات البرمجيات' }}
+      </h1>
+      <p class="text-white/70">
+        {{ currentLang === 'en' ? 'Manage software project requests from users.' : 'إدارة طلبات البرمجيات من
+        المستخدمين.' }}
+      </p>
+    </div>
+    <button (click)="loadSoftwareRequests()"
+      class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl transition-all flex items-center gap-2 shadow-lg">
+      <i class="fas fa-sync-alt"></i>
+      {{ currentLang === 'en' ? 'Refresh' : 'تحديث' }}
+    </button>
   </div>
+
+  <!-- Loading State -->
+  <div *ngIf="softwareRequestsLoading" class="text-center py-12">
+    <i class="fas fa-spinner fa-spin text-4xl text-emerald-600"></i>
+    <p class="text-white/80 mt-4">{{ currentLang === 'en' ? 'Loading requests...' : 'جاري تحميل الطلبات...' }}</p>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!softwareRequestsLoading && softwareRequests.length === 0"
+    class="glass-card rounded-2xl p-12 text-center">
+    <i class="fas fa-file-contract text-6xl text-white/50 mb-4"></i>
+    <p class="text-white/80 text-lg">{{ currentLang === 'en' ? 'No software requests yet' : 'لا توجد طلبات برمجيات بعد'
+      }}</p>
+  </div>
+  <!-- Requests Table -->
+  <div *ngIf="!softwareRequestsLoading && softwareRequests.length > 0" class="glass-card rounded-2xl overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead class="bg-white/10">
+          <tr>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'User' :
+              'المستخدم' }}</th>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Contact' :
+              'معلومات التواصل' }}</th>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Project' :
+              'المشروع' }}</th>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Details' :
+              'التفاصيل' }}</th>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Status' :
+              'الحالة' }}</th>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-white">{{ currentLang === 'en' ? 'Date' :
+              'التاريخ' }}</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-white/10">
+          <tr *ngFor="let request of softwareRequests" class="hover:bg-white/5 transition-all">
+            <td class="px-6 py-4">
+              <p class="font-semibold text-white">{{ request.userName }}</p>
+            </td>
+            <td class="px-6 py-4">
+              <div>
+                <p class="text-sm text-white/80">
+                  <i class="fas fa-envelope mr-1 text-xs"></i>{{ request.userEmail }}
+                </p>
+                <p *ngIf="request.phoneNumber" class="text-sm text-white/80">
+                  <i class="fas fa-phone mr-1 text-xs"></i>{{ request.phoneNumber }}
+                </p>
+                <p class="text-sm text-gray-400" *ngIf="!request.phoneNumber">
+                  <i class="fas fa-phone mr-1 text-xs"></i>{{ currentLang === 'en' ? 'Not provided' : 'غير متوفر' }}
+                </p>
+              </div>
+            </td>
+            <td class="px-6 py-4 font-semibold text-emerald-300">{{ request.softwareProjectNameEn }}</td>
+            <td class="px-6 py-4">
+              <p class="text-white/80 line-clamp-2 max-w-md">{{ request.details }}</p>
+            </td>
+            <td class="px-6 py-4">
+              <span class="px-3 py-1 rounded-full text-sm" [class.bg-yellow-500/20]="request.status === 'Pending'"
+                [class.text-yellow-300]="request.status === 'Pending'"
+                [class.bg-blue-500/20]="request.status === 'Contacted'"
+                [class.text-blue-300]="request.status === 'Contacted'"
+                [class.bg-green-500/20]="request.status === 'Delivered'"
+                [class.text-green-300]="request.status === 'Delivered'"
+                [class.bg-red-500/20]="request.status === 'Rejected'"
+                [class.text-red-300]="request.status === 'Rejected'">
+                {{ request.status }}
+              </span>
+            </td>
+            <td class="px-6 py-4 text-white/60">{{ request.createdAt | date:'short' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 <!-- Statistics Modal -->
-<div *ngIf="showIssueStats" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" (click)="showIssueStats = false">
-  <div class="bg-white rounded-3xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto" (click)="$event.stopPropagation()">
+<div *ngIf="showIssueStats" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+  (click)="showIssueStats = false">
+  <div class="bg-white rounded-3xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto"
+    (click)="$event.stopPropagation()">
     <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-bold text-gray-800">{{ currentLang === 'en' ? 'Statistics Dashboard' : 'لوحة الإحصائيات' }}</h2>
+      <h2 class="text-2xl font-bold text-gray-800">{{ currentLang === 'en' ? 'Statistics Dashboard' : 'لوحة الإحصائيات'
+        }}</h2>
       <button (click)="showIssueStats = false" class="text-gray-400 hover:text-gray-600">
         <i class="fas fa-times text-2xl"></i>
       </button>
     </div>
-    
+
     <div *ngIf="statistics" class="space-y-6">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="bg-indigo-50 p-4 rounded-xl text-center">
@@ -564,7 +705,8 @@
         </div>
       </div>
       <div class="border-t pt-4">
-        <h3 class="font-semibold text-gray-800 mb-3">{{ currentLang === 'en' ? 'Issues by Type' : 'المشاكل حسب النوع' }}</h3>
+        <h3 class="font-semibold text-gray-800 mb-3">{{ currentLang === 'en' ? 'Issues by Type' : 'المشاكل حسب النوع' }}
+        </h3>
         <div class="space-y-2">
           <div *ngFor="let item of statistics.issuesByProductType | keyvalue" class="flex justify-between items-center">
             <span>{{ item.key }}</span>
@@ -573,8 +715,9 @@
         </div>
       </div>
       <div class="border-t pt-4">
-        <p class="text-gray-600">{{ currentLang === 'en' ? 'Average Resolution Time' : 'متوسط وقت الحل' }}: 
-          <span class="font-semibold">{{ statistics.averageResolutionTimeHours | number:'1.1-1' }} {{ currentLang === 'en' ? 'hours' : 'ساعة' }}</span>
+        <p class="text-gray-600">{{ currentLang === 'en' ? 'Average Resolution Time' : 'متوسط وقت الحل' }}:
+          <span class="font-semibold">{{ statistics.averageResolutionTimeHours | number:'1.1-1' }} {{ currentLang ===
+            'en' ? 'hours' : 'ساعة' }}</span>
         </p>
       </div>
     </div>

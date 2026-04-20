@@ -6,6 +6,8 @@ import { Subscription } from "rxjs";
 import { IssueResponseDto, IssueStatisticsDto } from "../../../../../core/models/issue.model";
 import { Product, ProductType, DeviceCondition, PagedResultDto, ProductFilterDto } from "../../../../../core/models/product.model";
 import { SoftwareProjectListDto, FrontendType, BackendType, DatabaseType } from "../../../../../core/models/software-project.model";
+import { SoftwareProjectRequestDto } from "../../../../../core/models/software-project-request.model";
+import { SoftwareProjectRequestService } from "../../../../../core/services/software-project-request.service";
 import { IssueService } from "../../../../../core/services/issue.service";
 import { LanguageService } from "../../../../../core/services/language.service";
 import { AdminProductApiService } from "../../../services/admin-product-api.service";
@@ -46,7 +48,10 @@ export class AdminProductsListComponent implements OnInit, OnDestroy {
   softwareFrontendFilter: FrontendType | null = null;
   softwareBackendFilter: BackendType | null = null;
   softwareDatabaseFilter: DatabaseType | null = null;
-  activeTab: 'products' | 'maintenance' | 'software' | 'orders' = 'products';
+  activeTab: 'products' | 'maintenance' | 'software' | 'orders' | 'softwarerequests' = 'products';
+
+  softwareRequests: SoftwareProjectRequestDto[] = [];
+  softwareRequestsLoading = false;
 
   currentLang = 'en';
   private subscriptions: Subscription = new Subscription();
@@ -90,6 +95,7 @@ export class AdminProductsListComponent implements OnInit, OnDestroy {
   constructor(
     private adminProductApi: AdminProductApiService,
     private adminSoftwareApi: AdminSoftwareProjectApiService,
+    private softwareRequestService: SoftwareProjectRequestService,
     private issueService: IssueService,
     private languageService: LanguageService,
     private router: Router,
@@ -105,6 +111,24 @@ export class AdminProductsListComponent implements OnInit, OnDestroy {
     this.loadProducts();
     this.loadIssues();
     this.loadSoftwareProjects();
+    this.loadSoftwareRequests();
+  }
+
+  loadSoftwareRequests(): void {
+    this.softwareRequestsLoading = true;
+    const sub = this.softwareRequestService.getRequests().subscribe({
+      next: (requests) => {
+        this.softwareRequests = requests;
+        this.softwareRequestsLoading = false;
+        this.cdr.markForCheck();
+      },
+      error: (error) => {
+        console.error('Error loading software requests:', error);
+        this.softwareRequestsLoading = false;
+        this.cdr.markForCheck();
+      }
+    });
+    this.subscriptions.add(sub);
   }
 
   ngOnDestroy(): void {
