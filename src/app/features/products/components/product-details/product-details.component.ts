@@ -7,8 +7,8 @@ import { Product, ProductUpgrade, UpgradeType, MediaType, CalculatePriceDto, Pri
 import { AuthService } from "../../../../core/services/auth.service";
 import { LanguageService } from "../../../../core/services/language.service";
 import { ProductService } from "../../../../core/services/product.service";
-import { CreateProductRequestDto } from "../../../../core/models/product-request.model";
 import { ProductApiService } from "../../services/product-api.service";
+import { environment } from "../../../../../environments/environment";
 
 declare const AOS: any;
 
@@ -148,7 +148,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   }
 
   getMainImage(): string {
-    const baseUrl = 'https://localhost:7058';
+const baseUrl = environment.apiUrl.replace('/api', '');
     const mainImage = this.product?.media?.find(m => m.isMain && m.mediaType === MediaType.Image);
     if (mainImage?.url) {
       if (mainImage.url.startsWith('/uploads')) {
@@ -160,7 +160,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   }
 
   getImages(): string[] {
-    const baseUrl = 'https://localhost:7058';
+const baseUrl = environment.apiUrl.replace('/api', '');
     return this.product?.media
       ?.filter(m => m.mediaType === MediaType.Image)
       .map(m => {
@@ -172,7 +172,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   }
 
   getVideo(): string | null {
-    const baseUrl = 'https://localhost:7058';
+const baseUrl = environment.apiUrl.replace('/api', '');
     const video = this.product?.media?.find(m => m.mediaType === MediaType.Video);
     if (video?.url) {
       if (video.url.startsWith('/uploads')) {

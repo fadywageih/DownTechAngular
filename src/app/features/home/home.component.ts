@@ -10,6 +10,7 @@ import { ProductService } from "../../core/services/product.service";
 import { FooterComponent } from "../../shared/components/footer/footer.component";
 import { ApiService } from "../../core/services/api.service";
 import { AboutComponent } from "../ViewOnHome/about/about.component";
+import { environment } from "../../../environments/environment";
 
 
 declare const AOS: any;
@@ -341,7 +342,7 @@ servicesData = [
   private productMediaCache = new Map<string, any[]>();
 
   getProductImage(product: Product): string {
-    const baseUrl = 'https://localhost:7058';
+const baseUrl = environment.apiUrl.replace('/api', '');
     if (product.media && product.media.length > 0) {
         const mainImage = product.media.find(m => m.isMain === true) || product.media[0];
         if (mainImage?.url) {

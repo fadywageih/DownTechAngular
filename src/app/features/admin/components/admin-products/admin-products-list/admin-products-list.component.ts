@@ -13,6 +13,7 @@ import { LanguageService } from "../../../../../core/services/language.service";
 import { AdminProductApiService } from "../../../services/admin-product-api.service";
 import { AdminSoftwareProjectApiService } from "../../../services/admin-software-project-api.service";
 import { AdminOrdersListComponent } from "../../admin-orders-list/admin-orders-list.component";
+import { environment } from "../../../../../../environments/environment";
 
 @Component({
   selector: 'app-admin-products-list',
@@ -222,7 +223,7 @@ export class AdminProductsListComponent implements OnInit, OnDestroy {
   }
 
   getProductImage(product: Product): string {
-    const baseUrl = 'https://localhost:7058';
+const baseUrl = environment.apiUrl.replace('/api', '');
     if (product.media && product.media.length > 0) {
       const mainImage = product.media.find(m => m.isMain === true) || product.media[0];
       if (mainImage?.url) {

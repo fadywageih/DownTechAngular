@@ -4,6 +4,7 @@ import { RouterModule } from "@angular/router";
 import { Product, MediaType } from "../../../../core/models/product.model";
 import { LanguageService } from "../../../../core/services/language.service";
 import { ProductService } from "../../../../core/services/product.service";
+import { environment } from "../../../../../environments/environment";
 
 @Component({
   selector: 'app-product-card',
@@ -37,7 +38,7 @@ export class ProductCardComponent implements OnInit {
   }
 
   loadMainImage(): void {
-    const baseUrl = 'https://localhost:7058';
+const baseUrl = environment.apiUrl.replace('/api', '');
     if (this.product.media && this.product.media.length > 0) {
       const mainImage = this.product.media.find(m => m.isMain === true) || this.product.media[0];
       if (mainImage?.url) {
