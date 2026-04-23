@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CreateSoftwareProjectRequestDto, SoftwareProjectRequestDto } from '../models/software-project-request.model';
 import { TokenService } from './token.service';   
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SoftwareProjectRequestService {
-  private readonly apiUrl = `https://localhost:7058/api/SoftwareProject`;
+  private readonly apiUrl = `${environment.apiUrl}/SoftwareProject`;
 
   constructor(
     private http: HttpClient,
