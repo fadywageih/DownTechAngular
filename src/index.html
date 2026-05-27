@@ -1,11 +1,44 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>TechHub | Laptops, Maintenance & Software Projects</title>
+  
+  <!-- ==================== SEO ==================== -->
+  <title>DownTech | لابتوبات - صيانة - حلول برمجية | Laptops, Maintenance & Software</title>
+  
+  <meta name="description" content="DownTech - بيع لابتوبات جيمنج، شراء كمبيوتر، صيانة أجهزة، بطاريات، شاشات، اكسسوارات. حلول برمجية، تطبيقات ويب، أنظمة AI. ضمان 6 شهور. Downtech laptops, computer maintenance, software solutions, AI systems.">
+  
+  <meta name="keywords" content="بيع لابتوبات, شراء لابتوب, لاب توب جيمنج, لاب توب مستعمل, كمبيوتر, صيانة كمبيوتر, صيانة لاب توب, بطاريات, بطارية لاب توب, شاشات, شاشة كمبيوتر, اكسسوارات, قطع غيار, هاردوير, سوفت وير, فورمات, تنصيب ويندوز, فايروسات, برمجة, برمجة مواقع, تطبيقات ويب, تطبيقات موبايل, تصميم مواقع, استضافة, سيرفرات, شبكات, حلول برمجية, ذكاء اصطناعي, AI, تعلم آلي, machine learning, ديب ليرنينج, deep learning, داتا ساينس, data science, بلوك تشين, blockchain, امن سيبراني, cybersecurity, استعادة بيانات, data recovery, كلاود, cloud, AWS, Azure, SEO, تسويق الكتروني, e-commerce, dropshipping, buy laptop, sell laptop, gaming laptop, RTX laptop, computer repair, laptop battery, laptop screen, hardware, software, web development, mobile apps, AI solutions, web design, hosting, domain, gaming PC, desktop, monitor, keyboard, mouse, headset, router, printer, scanner, IT services, tech support, programming, Python, JavaScript, Angular, ASP.NET, React, Vue, Node.js, database, SQL, MongoDB, Firebase, Docker, Kubernetes, Git, GitHub, Windows, Linux, Mac, iPhone, Android, Samsung, HP, Dell, Lenovo, Asus, Acer, MSI, Razer, Logitech, Intel, AMD, Nvidia, SSD, HDD, RAM, GPU, CPU, motherboard, power supply, cooling, Egypt, Cairo, Mansoura, Tanta, USA, UK, Canada, worldwide, شحن, توصيل, تركيب, صيانة, ضمان, تقسيط, كاش, فيزا, ماستركارد, فودافون كاش, down tech, dowtech, down-tech">
+  
+  <meta name="author" content="DownTech">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="googlebot" content="index, follow">
+  <meta name="theme-color" content="#0f2027">
+  <meta name="geo.region" content="EG">
+  <meta name="geo.placename" content="Egypt">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="DownTech | لابتوبات - صيانة - حلول برمجية">
+  <meta property="og:description" content="بيع لابتوبات جيمنج، صيانة كمبيوتر، بطاريات، شاشات. حلول برمجية وأنظمة AI. ضمان 6 شهور.">
+  <meta property="og:url" content="https://downtech.runasp.net">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="DownTech">
+  <meta property="og:locale" content="ar_EG">
+  <meta property="og:image" content="https://downtech.runasp.net/assets/images/logo.png">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DownTech | لابتوبات - صيانة - حلول برمجية">
+  <meta name="twitter:description" content="بيع لابتوبات جيمنج، صيانة كمبيوتر، بطاريات، شاشات. حلول برمجية وأنظمة AI.">
+  <meta name="twitter:image" content="https://downtech.runasp.net/assets/images/logo.png">
+  
+  <!-- ==================== Links ==================== -->
   <base href="/">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  
+  <!-- Favicon / Logo -->
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+  <link rel="apple-touch-icon" href="assets/images/logo.png">
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -16,9 +49,36 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
   
-  <!-- AOS Animation Library -->
+  <!-- AOS Animation -->
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  
+  <!-- Schema.org Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "DownTech",
+    "url": "https://downtech.runasp.net",
+    "logo": "https://downtech.runasp.net/assets/images/logo.png",
+    "description": "بيع لابتوبات جيمنج، صيانة كمبيوتر، حلول برمجية وأنظمة AI",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "EG"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+201225087241",
+      "contactType": "customer service"
+    },
+    "sameAs": [
+      "https://www.facebook.com/share/182Tqj1RLg/",
+      "https://www.instagram.com/downtechstore",
+      "https://www.youtube.com/@DOWNTECHSTORE",
+      "https://wa.me/201270114646"
+    ]
+  }
+  </script>
 </head>
 <body>
   <app-root></app-root>
